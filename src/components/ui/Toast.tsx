@@ -41,23 +41,34 @@ export function Toast({
   return (
     <div
       className={cn(
-        'flex items-center p-4 rounded-lg shadow-lg transition-all duration-300 transform',
+        'relative flex items-center p-4 rounded-xl shadow-xl backdrop-blur bg-white/80 dark:bg-slate-900/80 ring-1 transition-all duration-300 transform',
         {
-          'bg-green-50 border border-green-200 text-green-800': type === 'success',
-          'bg-red-50 border border-red-200 text-red-800': type === 'error',
-          'bg-blue-50 border border-blue-200 text-blue-800': type === 'info',
+          'ring-green-300/60 text-green-900 dark:text-green-200': type === 'success',
+          'ring-red-300/60 text-red-900 dark:text-red-200': type === 'error',
+          'ring-blue-300/60 text-blue-900 dark:text-blue-200': type === 'info',
         },
         isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
       )}
     >
-      <Icon className="h-5 w-5 mr-3 flex-shrink-0" />
-      <p className="flex-1 text-sm font-medium">{message}</p>
+      <div
+        className={cn(
+          'absolute left-0 top-0 bottom-0 w-1 rounded-l-xl',
+          {
+            'bg-gradient-to-b from-green-400 to-emerald-500': type === 'success',
+            'bg-gradient-to-b from-red-400 to-rose-500': type === 'error',
+            'bg-gradient-to-b from-blue-400 to-indigo-500': type === 'info',
+          }
+        )}
+      />
+      <Icon className="h-5 w-5 mr-3 ml-2 flex-shrink-0 opacity-90" />
+      <p className="flex-1 text-sm font-medium leading-snug">{message}</p>
       <button
         onClick={() => {
           setIsVisible(false);
           setTimeout(() => onRemove(id), 300);
         }}
-        className="ml-3 p-1 hover:bg-black hover:bg-opacity-10 rounded-full transition-colors"
+        className="ml-3 p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors"
+        aria-label="Dismiss notification"
       >
         <X className="h-4 w-4" />
       </button>

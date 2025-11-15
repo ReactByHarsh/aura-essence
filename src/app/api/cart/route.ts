@@ -105,9 +105,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { action, productId, quantity, selectedSize = '100ml' } = body;
 
-    if (!action || !productId) {
+    if (!action) {
       return NextResponse.json(
         { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Validate productId for actions that need it
+    if (action !== 'clear' && !productId) {
+      return NextResponse.json(
+        { error: 'Missing productId' },
         { status: 400 }
       );
     }

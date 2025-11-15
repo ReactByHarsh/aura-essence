@@ -43,9 +43,11 @@ export function Navbar() {
   const stackUser = useUser({ or: 'return-null' });
   const stackApp = useStackApp();
   const router = useRouter();
-    // Load cart on mount and when auth user changes
+    // Load cart on mount and when auth user changes (only if authenticated)
     useEffect(() => {
-      loadCart().catch(() => {});
+      if (stackUser?.id) {
+        loadCart().catch(() => {});
+      }
     }, [loadCart, stackUser?.id]);
   
   // Convert Stack user to simplified user object
@@ -209,6 +211,13 @@ export function Navbar() {
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         My Account
+                      </Link>
+                      <Link
+                        href="/orders"
+                        className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        My Orders
                       </Link>
                       <button
                         onClick={handleLogout}

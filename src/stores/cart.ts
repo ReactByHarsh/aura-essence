@@ -94,6 +94,9 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Failed to add item' }));
+        if (response.status === 401) {
+          throw new Error('Please sign in to add items to cart');
+        }
         throw new Error(errorData.error || 'Failed to add item to cart');
       }
 
@@ -188,6 +191,13 @@ export const useCartStore = create<CartState>((set, get) => ({
       }
 
       set({ items: [], totals: EMPTY_TOTALS });
+      
+      // Clear localStorage cache
+      try {
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem(CART_CACHE_KEY);
+        }
+      } catch {}
     } catch (error) {
       console.error('Error clearing cart:', error);
       const message = error instanceof Error ? error.message : 'Failed to clear cart';

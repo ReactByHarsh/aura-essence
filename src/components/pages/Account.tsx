@@ -37,12 +37,15 @@ export function Account() {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   
-  const user = stackUser ? {
-    id: stackUser.id,
-    email: stackUser.primaryEmail || '',
-    firstName: stackUser.displayName?.split(' ')[0] || '',
-    lastName: stackUser.displayName?.split(' ').slice(1).join(' ') || '',
-  } : null;
+  const user = React.useMemo(() => {
+    if (!stackUser) return null;
+    return {
+      id: stackUser.id,
+      email: stackUser.primaryEmail || '',
+      firstName: stackUser.displayName?.split(' ')[0] || '',
+      lastName: stackUser.displayName?.split(' ').slice(1).join(' ') || '',
+    };
+  }, [stackUser?.id, stackUser?.primaryEmail, stackUser?.displayName]);
 
   React.useEffect(() => {
     if (!stackUser) {
@@ -51,7 +54,7 @@ export function Account() {
   }, [stackUser, router]);
 
   React.useEffect(() => {
-    if (!user) {
+    if (!user?.id) {
       return;
     }
     const fetchOrders = async () => {
@@ -83,7 +86,7 @@ export function Account() {
     };
 
     fetchOrders();
-  }, [user]);
+  }, [user?.id]);
 
   if (!user) {
     return null;

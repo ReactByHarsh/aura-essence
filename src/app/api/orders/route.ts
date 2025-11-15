@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createShiprocketOrder } from '@/lib/shiprocket';
+import { stackServerApp } from '@/stack/server';
+import { createOrder, getUserOrders } from '@/lib/neon/orders';
 
 const COD_CHARGE = 49;
 
@@ -12,7 +14,6 @@ export async function POST(request: Request) {
       finalAmount,   // cart total after adding COD if applicable
       items,         // [{ name, units, selling_price, sku? }]
       shipping,      // { name, email, phone, address, city, state, pincode, country? }
-      // userId,     // optional, if you want to persist
     } = body || {};
 
     if (!amount || amount <= 0) {
@@ -27,15 +28,66 @@ export async function POST(request: Request) {
 
     if (paymentMethod === 'cod') {
       const codFinal = typeof finalAmount === 'number' ? finalAmount : amount + COD_CHARGE;
-      const shiprocketOrder = await createShiprocketOrder({
-        payment_method: 'COD',
-        cod_amount: codFinal,
-        order_amount: codFinal,
-        items,
-        customer: shipping,
-      });
+      
+      // Get authenticated user
+      const user = await stackServerApp.getUser({ tokenStore: request as NextRequest });
+      if (!user?.id) {
+        return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+      }
 
-      return NextResponse.json({ success: true, cod: true, finalAmount: codFinal, shiprocketOrder });
+      // Map items to cart format
+      const cartItems = items.map((i: any) => ({
+        product_id: i.sku || i.product_id || '',
+        quantity: i.units || 1,
+        price: i.selling_price || 0,
+      })).filter((ci: any) => ci.product_id);
+
+      if (cartItems.length === 0) {
+        return NextResponse.json({ error: 'No valid items in order' }, { status: 400 });
+      }
+
+      const shippingAddress = {
+        fullName: shipping.name,
+        address: shipping.address,
+        city: shipping.city,
+        state: shipping.state,
+        zipCode: shipping.pincode,
+        country: shipping.country || 'India',
+        phone: shipping.phone,
+      };
+
+      // Create order in database first
+      const order = await createOrder({
+        userId: user.id,
+        cartItems,
+        totalAmount: codFinal,
+        shippingAddress,
+        paymentMethod: 'cod',
+      });
+      
+      // console.log('[COD Order] Created in DB:', order.id);
+
+      // Then create Shiprocket order (optional, don't block if it fails)
+      let shiprocketOrder = null;
+      try {
+        shiprocketOrder = await createShiprocketOrder({
+          payment_method: 'COD',
+          cod_amount: codFinal,
+          order_amount: codFinal,
+          items,
+          customer: shipping,
+        });
+      } catch (shiprocketErr) {
+        console.warn('[COD Order] Shiprocket failed (non-blocking):', shiprocketErr);
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        cod: true, 
+        finalAmount: codFinal, 
+        orderId: order.id,
+        shiprocketOrder 
+      });
     }
 
     // Online: create Razorpay order (amount in paise)
@@ -77,8 +129,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: e?.message || 'Unexpected error' }, { status: 500 });
   }
 }
-import { stackServerApp } from '@/stack/server';
-import { getUserOrders } from '@/lib/neon/orders';
 
 export async function GET(request: NextRequest) {
   try {

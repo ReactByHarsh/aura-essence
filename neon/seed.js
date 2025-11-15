@@ -120,7 +120,7 @@ const products = [
 ];
 
 async function seedProducts() {
-  console.log('Starting product seeding...');
+  // console.log('Starting product seeding...');
   
   for (const product of products) {
     try {
@@ -149,17 +149,17 @@ async function seedProducts() {
           ${JSON.stringify(product.sizes)}::jsonb
         )
       `;
-      console.log(`✓ Seeded: ${product.name}`);
+      // console.log(`✓ Seeded: ${product.name}`);
     } catch (error) {
       console.error(`✗ Failed to seed ${product.name}:`, error.message);
     }
   }
   
-  console.log('\nSeeding complete!');
+  // console.log('\nSeeding complete!');
   
   // Verify
   const result = await sql`SELECT COUNT(*) as count FROM public.products`;
-  console.log(`Total products in database: ${result[0].count}`);
+  // console.log(`Total products in database: ${result[0].count}`);
 }
 
 seedProducts().catch(console.error);

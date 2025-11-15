@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Star, Heart, ShoppingBag, Truck, Shield, RotateCcw, ChevronRight, Sparkles, Flame, Award } from 'lucide-react';
 import { useCartStore } from '@/stores/cart';
+import { useToaster } from '@/components/ui/ToasterProvider';
+import { useUser } from '@stackframe/stack';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { ProductCard } from '@/components/commerce/ProductCard';
@@ -34,6 +36,8 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addItem } = useCartStore();
+  const toast = useToaster();
+  const stackUser = useUser({ or: 'return-null' });
 
   // Fetch product and related products via API if not prefetched
   useEffect(() => {
@@ -105,13 +109,20 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   }
 
   const handleAddToCart = async () => {
+    if (!stackUser) {
+      toast.info('Please sign in to add items to cart');
+      router.push('/handler/sign-in');
+      return;
+    }
+    
     if (product) {
       try {
         await addItem(product, quantity, selectedSize);
-        // console.log('✅ Added to cart:', product.name);
+        toast.success(`Added ${product.name} to cart`);
       } catch (error) {
         console.error('❌ Error adding to cart:', error);
-        // Could add a toast notification here for user feedback
+        const message = error instanceof Error ? error.message : 'Failed to add to cart';
+        toast.error(message);
       }
     }
   };

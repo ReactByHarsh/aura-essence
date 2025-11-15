@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/Input';
 import { checkoutSchema, type CheckoutForm } from '@/lib/schema';
 import { formatPrice } from '@/lib/utils';
 import Image from 'next/image';
+import { useToaster } from '@/components/ui/ToasterProvider';
 
 // Helper to dynamically load Razorpay script
 function loadRazorpay(): Promise<boolean> {
@@ -30,9 +31,10 @@ function loadRazorpay(): Promise<boolean> {
 
 export function Checkout() {
   const router = useRouter();
-  const { items, getSubtotal, getTax, getTotal, clearCart, openCart } = useCartStore();
+  const { items, getSubtotal, getTax, getTotal, clearCart, openCart, loadCart, closeCart } = useCartStore();
   const stackUser = useUser();
   const stackApp = useStackApp();
+  const toast = useToaster();
   
   const user = stackUser ? {
     id: stackUser.id,
@@ -40,6 +42,14 @@ export function Checkout() {
     firstName: stackUser.displayName?.split(' ')[0] || '',
     lastName: stackUser.displayName?.split(' ').slice(1).join(' ') || '',
   } : null;
+
+  // Load cart from database on mount and close cart drawer
+  React.useEffect(() => {
+    closeCart(); // Close cart drawer when entering checkout
+    if (stackUser) {
+      loadCart();
+    }
+  }, [stackUser, loadCart, closeCart]);
 
   const {
     register,
@@ -60,11 +70,12 @@ export function Checkout() {
   const shipping = getSubtotal() >= 100 ? 0 : 15;
   const baseTotal = getTotal() + shipping;
   const finalTotal = useMemo(() => baseTotal + (paymentMethod === 'cod' ? COD_CHARGE : 0), [baseTotal, paymentMethod]);
+  const [verifying, setVerifying] = useState(false);
 
   const onSubmit = async (data: CheckoutForm) => {
     try {
       if (!stackUser) {
-        alert('Please log in to place an order.');
+        toast.info('Please log in to place an order.');
         router.push('/handler/sign-in');
         return;
       }
@@ -101,12 +112,14 @@ export function Checkout() {
         const json = await res.json();
         if (!res.ok || !json.success) {
           console.error('COD order error', json);
-          alert(json?.error || 'Failed to place COD order.');
+          toast.error(json?.error || 'Failed to place COD order.');
           return;
         }
+        // console.log('[COD Order] Created successfully:', json.orderId);
         await clearCart();
-        alert(`COD order placed. Payable ₹${finalTotal}.`);
-        router.push('/account');
+        await loadCart(); // Reload cart to ensure it's empty
+        toast.success(`COD order placed. Payable ₹${finalTotal}.`);
+        router.push('/orders');
         return;
       }
 
@@ -124,19 +137,19 @@ export function Checkout() {
       const json = await res.json();
       if (!res.ok || !json.success || !json.razorpayOrder) {
         console.error('Order init error', json);
-        alert(json?.error || 'Failed to initialize online payment.');
+        toast.error(json?.error || 'Failed to initialize online payment.');
         return;
       }
 
       // Load Razorpay SDK
       const loaded = await loadRazorpay();
       if (!loaded) {
-        alert('Failed to load payment SDK. Check your connection.');
+        toast.error('Failed to load payment SDK. Check your connection.');
         return;
       }
       const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
       if (!key) {
-        alert('Payment configuration missing. Please contact support.');
+        toast.error('Payment configuration missing. Please contact support.');
         return;
       }
 
@@ -153,6 +166,7 @@ export function Checkout() {
         theme: { color: '#C9A227' },
         handler: async (response: any) => {
           try {
+            setVerifying(true);
             // Verify payment and fulfill via Shiprocket as prepaid
             const verifyRes = await fetch('/api/razorpay/verify', {
               method: 'POST',
@@ -167,23 +181,29 @@ export function Checkout() {
             const verifyJson = await verifyRes.json();
             if (!verifyRes.ok || !verifyJson.success) {
               console.error('Verify error', verifyJson);
-              alert('Payment verified, but fulfillment failed. Contact support.');
+              toast.error(verifyJson.error || 'Payment verified, but order saving failed. Contact support.');
+              setVerifying(false);
               return;
             }
+            
+            // console.log('[Payment Success] Order saved:', verifyJson.orderId);
             await clearCart();
-            alert('Payment successful! Your order has been placed.');
-            router.push('/account');
+            await loadCart(); // Reload cart to ensure it's empty
+            toast.success('Payment successful! Your order has been placed.');
+            router.push('/orders');
           } catch (e) {
             console.error('Post-payment error', e);
-            alert('Payment succeeded, but order saving failed. Please contact support.');
+            const errorMsg = e instanceof Error ? e.message : 'Unknown error occurred';
+            toast.error(`Payment succeeded, but order saving failed: ${errorMsg}. Please contact support.`);
+            setVerifying(false);
           }
         },
-        modal: { ondismiss: () => { alert('Payment cancelled. You can try again.'); } }
+        modal: { ondismiss: () => { toast.info('Payment cancelled. You can try again.'); } }
       });
       rzp.open();
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Unexpected error during checkout.');
+      toast.error('Unexpected error during checkout.');
     }
   };
   const handleBackToCart = useCallback(() => {
@@ -436,6 +456,14 @@ export function Checkout() {
           </div>
         </div>
       </div>
+      {verifying && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-xl px-6 py-5 shadow-2xl ring-1 ring-white/10 flex items-center gap-3">
+            <div className="h-5 w-5 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+            <p className="text-sm text-slate-700 dark:text-slate-200">Confirming payment and preparing your order…</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

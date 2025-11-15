@@ -5,6 +5,7 @@ import React, { Suspense } from 'react';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import dynamic from 'next/dynamic';
+import { ToasterProvider } from '@/components/ui/ToasterProvider';
 
 // Dynamic imports for better code splitting
 const Navbar = dynamic(() => import('@/components/layout/Navbar').then(mod => ({ default: mod.Navbar })), {
@@ -25,10 +26,7 @@ const CartDrawer = dynamic(
   { ssr: false }
 );
 
-const ToastContainer = dynamic(
-  () => import('@/components/ui/Toast').then(mod => mod.ToastContainer),
-  { ssr: false }
-);
+// Toast container is handled by ToasterProvider
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -39,7 +37,6 @@ function AppContent({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
       <Footer />
       <CartDrawer />
-      <ToastContainer />
     </div>
   );
 }
@@ -50,7 +47,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className}>
         <StackProvider app={stackClientApp}>
           <StackTheme>
-            <AppContent>{children}</AppContent>
+            <ToasterProvider>
+              <AppContent>{children}</AppContent>
+            </ToasterProvider>
           </StackTheme>
         </StackProvider>
       </body>
