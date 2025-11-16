@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       title: `${product.name} ${productType} Perfume - Aura Elixir`,
       description: product.description || `Discover ${product.name} - a premium ${productType} fragrance from Aura Elixir`,
       images: product.images && product.images.length > 0 ? [product.images[0]] : [],
-      type: 'product',
+      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
