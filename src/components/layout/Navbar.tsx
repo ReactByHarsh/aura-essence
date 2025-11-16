@@ -41,7 +41,7 @@ export function Navbar() {
   
   const collectionsRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLFormElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   
@@ -120,11 +120,7 @@ export function Navbar() {
           search: value.trim(), 
           limit: 8, 
           signal: abortControllerRef.current.signal 
-        });
-        
-        console.log('Search query:', value.trim());
-        console.log('Search results:', searchResults.products.length, searchResults.products.map(p => p.name));
-        
+        });        
         setSearchResults(searchResults.products);
       } catch (error: any) {
         if (error.name !== 'AbortError') {
