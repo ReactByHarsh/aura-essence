@@ -29,6 +29,11 @@ export function ProductCard({ product }: ProductCardProps) {
     return product.price;
   };
 
+  const getSlashedPrice = (price: number) => {
+    // Add ~43% markup to show as slashed price
+    return Math.round(price * 1.43);
+  };
+
   const getImageForIndex = (index: number) => {
     const image = product.images[index] ?? product.images[0];
     return image ?? '/perfume-logo.png';
@@ -124,47 +129,47 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      <div className="p-4 sm:p-5">
+      <div className="p-3 sm:p-5">
         {/* Brand & Type */}
-        <div className="flex items-center justify-between text-xs sm:text-sm text-slate-600 dark:text-gray-400 mb-1.5 sm:mb-1">
+        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-gray-400 mb-1">
           <span className="font-medium">{product.brand}</span>
           <span className="text-amber-600 dark:text-amber-400">{product.type}</span>
         </div>
 
         {/* Product name */}
-        <h3 className="font-semibold text-base sm:text-base text-slate-900 dark:text-white mb-2 line-clamp-1">
+        <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white mb-1.5 line-clamp-1">
           {product.name}
         </h3>
 
-        {/* Rating */}
-        <div className="flex items-center mb-2.5 sm:mb-2">
-          <div className="flex items-center">
-            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-            <span className="ml-1.5 text-sm font-medium text-slate-700 dark:text-gray-300">
+        {/* Rating and Price in one line with compact spacing for mobile */}
+        <div className="flex items-center justify-between gap-2 mb-1">
+          {/* Rating */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
+            <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-gray-300">
               {formatRating(product.rating)}
+            </span>
+          </div>
+
+          {/* Price - Compact for mobile */}
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+              ₹{getMinPrice()}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-gray-500 line-through">
+              ₹{getSlashedPrice(getMinPrice())}
+            </span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1 py-0.5 rounded">
+              -{Math.round((1 - getMinPrice() / getSlashedPrice(getMinPrice())) * 100)}%
             </span>
           </div>
         </div>
 
-        {/* Price */}
-        <div className="flex items-center space-x-2 mb-2">
-          <span className="font-bold text-lg sm:text-base text-slate-900 dark:text-white">
-            From {formatPrice(getMinPrice())}
-          </span>
-          {product.originalPrice && (
-            <span className="text-sm text-slate-500 dark:text-gray-500 line-through">
-              {formatPrice(product.originalPrice)}
-            </span>
-          )}
-        </div>
-
         {/* Top notes preview */}
-        <div className="mt-2">
-          <p className="text-xs text-slate-600 dark:text-gray-400 line-clamp-1">
-            {product.notes.top.slice(0, 2).join(', ')}
-            {product.notes.top.length > 2 && '...'}
-          </p>
-        </div>
+        <p className="text-xs text-slate-600 dark:text-gray-400 line-clamp-1">
+          {product.notes.top.slice(0, 2).join(', ')}
+          {product.notes.top.length > 2 && '...'}
+        </p>
       </div>
     </Link>
   );

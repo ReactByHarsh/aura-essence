@@ -22,6 +22,7 @@ export function Collections() {
   const params = useParams<{ category?: string }>() ?? {};
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [sortBy, setSortBy] = useState<'name' | 'price-low' | 'price-high' | 'rating'>('name');
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
@@ -47,6 +48,7 @@ export function Collections() {
   // Fetch products by category from Supabase
   useEffect(() => {
     let isMounted = true;
+    let requestInProgress = true;
     const abortController = new AbortController();
     
     setLoading(true);
@@ -60,7 +62,9 @@ export function Collections() {
           limit: 24,
           signal: abortController.signal 
         });
+        requestInProgress = false;
         const mapped = resp.products ?? [];
+        
         if (!isMounted) {
           return;
         }
@@ -69,15 +73,21 @@ export function Collections() {
         setTotalPages(resp.totalPages || 1);
         setErrorMessage(null);
       } catch (e: any) {
-        if (e.name === 'AbortError') {
-          // console.log('Products fetch aborted');
+        requestInProgress = false;
+        
+        // Check if component is still mounted before updating state
+        if (!isMounted) {
           return;
         }
-        console.error('Failed to load products', e);
-        if (isMounted) {
-          setProducts([]);
-          setErrorMessage('Unable to load products from Supabase.');
+        
+        // Don't show errors for aborted requests
+        if (e.name === 'AbortError') {
+          return;
         }
+        
+        console.error('Failed to load products', e);
+        setProducts([]);
+        setErrorMessage('Unable to load products from Supabase.');
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -85,7 +95,10 @@ export function Collections() {
     fetchData();
     return () => {
       isMounted = false;
-      abortController.abort();
+      // Only abort if request is still in progress
+      if (requestInProgress) {
+        abortController.abort();
+      }
     };
   }, [activeCategory, reloadToken]);
 
@@ -110,6 +123,23 @@ export function Collections() {
       setLoading(false);
     }
   }, [activeCategory, currentPage, totalPages, loading]);
+
+  // Sort products based on selected sort option
+  const sortedProducts = useMemo(() => {
+    const sorted = [...products];
+    switch (sortBy) {
+      case 'name':
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case 'price-low':
+        return sorted.sort((a, b) => a.price - b.price);
+      case 'price-high':
+        return sorted.sort((a, b) => b.price - a.price);
+      case 'rating':
+        return sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      default:
+        return sorted;
+    }
+  }, [products, sortBy]);
 
   return (
     <div className="min-h-screen">
@@ -192,6 +222,25 @@ export function Collections() {
             </div>
           )}
 
+          {/* Sort Dropdown */}
+          {products.length > 0 && (
+            <div className="mb-6 sm:mb-8 flex justify-end">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-gray-300">Sort by:</label>
+                <select 
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="px-4 py-2.5 rounded-lg border-2 border-purple-300 dark:border-purple-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-gray-200 font-medium hover:border-purple-400 transition-colors focus:outline-none focus:border-purple-500 shadow-sm"
+                >
+                  <option value="name">Product Name (A-Z)</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Top Rated</option>
+                </select>
+              </div>
+            </div>
+          )}
+
           {/* Products Display */}
           {loading ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
@@ -199,9 +248,9 @@ export function Collections() {
                 <div key={i} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
               ))}
             </div>
-          ) : products.length > 0 ? (
+          ) : sortedProducts.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {products.map(product => (
+              {sortedProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>

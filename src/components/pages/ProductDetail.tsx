@@ -163,6 +163,11 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
     return selectedSize === '20ml' ? 349 : selectedSize === '50ml' ? 499 : 699;
   };
 
+  const getSlashedPrice = (price: number): number => {
+    // Add ~43% markup to show as slashed price
+    return Math.round(price * 1.43);
+  };
+
   const getSillageDescription = (sillage: string) => {
     switch (sillage) {
       case 'soft': return 'Intimate - Close to skin projection';
@@ -372,6 +377,8 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                   {['20ml', '50ml', '100ml'].map((size) => {
                     const sizes = product.sizes as any;
                     const price = sizes?.[size]?.price || (size === '20ml' ? 349 : size === '50ml' ? 499 : 699);
+                    const slashedPrice = getSlashedPrice(price);
+                    const discount = Math.round((1 - price / slashedPrice) * 100);
                     return (
                       <button
                         key={size}
@@ -383,7 +390,11 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                         }`}
                       >
                         <div className="font-bold text-xs sm:text-sm">{size}</div>
-                        <div className="text-[9px] sm:text-[10px] text-purple-600 dark:text-purple-400 mt-0.5">{formatPrice(price)}</div>
+                        <div className="text-[9px] sm:text-[10px] text-purple-600 dark:text-purple-400 mt-0.5">
+                          <span className="font-bold">₹{price}</span>
+                          <span className="line-through text-[8px] sm:text-[9px] text-purple-400 dark:text-purple-500 ml-1">₹{slashedPrice}</span>
+                          <span className="text-[8px] font-bold text-red-600 dark:text-red-400 ml-0.5">-{discount}%</span>
+                        </div>
                       </button>
                     );
                   })}
@@ -397,71 +408,52 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 </p>
                 <div className="flex items-end space-x-2">
                   <span className="text-2xl sm:text-3xl font-bold text-purple-700 dark:text-purple-300">
-                    {formatPrice(getSizePrice())}
+                    ₹{getSizePrice()}
                   </span>
-                  {product.originalPrice && (
-                    <div className="flex items-end gap-1 pb-0.5">
-                      <span className="text-xs sm:text-sm text-purple-500 dark:text-purple-400 line-through">
-                        {formatPrice(product.originalPrice)}
-                      </span>
-                      <span className="text-[10px] sm:text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-md">
-                        -{Math.round((1 - getSizePrice() / product.originalPrice) * 100)}%
-                      </span>
-                    </div>
-                  )}
+                  <div className="flex items-end gap-1 pb-0.5">
+                    <span className="text-xs sm:text-sm text-purple-500 dark:text-purple-400 line-through">
+                      ₹{getSlashedPrice(getSizePrice())}
+                    </span>
+                    <span className="text-[10px] sm:text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-md">
+                      -{Math.round((1 - getSizePrice() / getSlashedPrice(getSizePrice())) * 100)}%
+                    </span>
+                  </div>
                 </div>
               </div>
 
               {/* Fragrance Notes */}
-              <div className="space-y-1.5 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800/50">
-                <h3 className="text-xs font-bold text-purple-700 dark:text-purple-300">
+              <div className="space-y-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800/50">
+                <h3 className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-widest">
                   Fragrance Profile
                 </h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5">
-                  <div className="p-1.5">
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-0.5">Top Notes</p>
+                <div className="grid grid-cols-3 gap-2 md:gap-3">
+                  <div>
+                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Top Notes</p>
                     <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'top' in product.notes
-                        ? (product.notes as any).top?.join(', ') || 'N/A'
-                        : 'N/A'}
+                        ? (product.notes as any).top?.join(', ') || '—'
+                        : '—'}
                     </p>
                   </div>
-                  <div className="p-1.5">
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-0.5">Heart Notes</p>
+                  <div>
+                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Heart Notes</p>
                     <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'heart' in product.notes
-                        ? (product.notes as any).heart?.join(', ') || 'N/A'
-                        : 'N/A'}
+                        ? (product.notes as any).heart?.join(', ') || '—'
+                        : '—'}
                     </p>
                   </div>
-                  <div className="p-1.5">
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-0.5">Base Notes</p>
+                  <div>
+                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Base Notes</p>
                     <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'base' in product.notes
-                        ? (product.notes as any).base?.join(', ') || 'N/A'
-                        : 'N/A'}
+                        ? (product.notes as any).base?.join(', ') || '—'
+                        : '—'}
                     </p>
                   </div>
                 </div>
               </div>
-
-              {/* Stock Status - Mobile Enhanced */}
-              {product.stock > 0 ? (
-                <div className="p-2.5 sm:p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-300 dark:border-green-700 rounded-lg shadow-sm">
-                  <p className="text-green-700 dark:text-green-300 font-bold flex items-center text-xs sm:text-sm gap-1.5">
-                    <span className="text-green-600 dark:text-green-400 text-base">✓</span>
-                    <span>In Stock ({product.stock} available)</span>
-                  </p>
-                </div>
-              ) : (
-                <div className="p-2.5 sm:p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-300 dark:border-red-700 rounded-lg shadow-sm">
-                  <p className="text-red-700 dark:text-red-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
-                    <span className="text-red-600 dark:text-red-400 text-base">✗</span>
-                    <span>Out of Stock</span>
-                  </p>
-                </div>
-              )}
 
               {/* Quantity and Add to Cart - Mobile Optimized */}
               <div className="space-y-3">
