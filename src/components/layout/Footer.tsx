@@ -96,20 +96,20 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a 
-                  href="#" 
+                <Link 
+                  href="/shipping-policy" 
                   className="text-gray-300 hover:text-purple-400 transition-all duration-300 inline-flex items-center group"
                 >
                   <span className="mr-2 group-hover:translate-x-1 transition-transform">→</span> Shipping Info
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
-                  href="#" 
+                <Link 
+                  href="/refund-policy" 
                   className="text-gray-300 hover:text-purple-400 transition-all duration-300 inline-flex items-center group"
                 >
                   <span className="mr-2 group-hover:translate-x-1 transition-transform">→</span> Returns & Exchanges
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -135,6 +135,22 @@ export function Footer() {
                   className="text-gray-300 hover:text-purple-400 transition-all duration-300 inline-flex items-center group"
                 >
                   <span className="mr-2 group-hover:translate-x-1 transition-transform">→</span> Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/shipping-policy" 
+                  className="text-gray-300 hover:text-purple-400 transition-all duration-300 inline-flex items-center group"
+                >
+                  <span className="mr-2 group-hover:translate-x-1 transition-transform">→</span> Shipping Policy
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/refund-policy" 
+                  className="text-gray-300 hover:text-purple-400 transition-all duration-300 inline-flex items-center group"
+                >
+                  <span className="mr-2 group-hover:translate-x-1 transition-transform">→</span> Refund Policy
                 </Link>
               </li>
               <li>

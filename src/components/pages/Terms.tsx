@@ -25,168 +25,43 @@ export function Terms() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-14 md:py-16">
         <div className="prose prose-lg max-w-none text-slate-600 dark:text-gray-300">
           <p className="text-sm text-slate-600 dark:text-gray-400 mb-8">
-            Last updated: January 15, 2025
+            Last updated: November 16, 2025
           </p>
 
+          {/* Business Information Box */}
+          <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900/30 dark:to-amber-900/30 border-l-4 border-purple-600 p-4 rounded-lg mb-8">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Business Information</h3>
+            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Business Name:</strong> Aura Elixir</p>
+            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Managed by:</strong> Harshavardhan Shinde</p>
+            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Email:</strong> help@auraelixir.co.in</p>
+            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Phone:</strong> +91 9028709575</p>
+            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
+          </div>
+
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Agreement to Terms
+              Welcome to Aura Elixir
             </h2>
-            <p className="mb-4">
-              These Terms of Service ("Terms") govern your use of the Aura Élixir website and 
-              services. By accessing or using our services, you agree to be bound by these Terms.
+            <p className="mb-4 text-slate-700 dark:text-gray-200">
+              Welcome to our website. If you continue to browse and use this website, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Aura Elixir's relationship with you in relation to this website.
+            </p>
+            <p className="mb-4 text-slate-700 dark:text-gray-200">
+              This website is operated by Aura Elixir. Throughout the site, the terms "we," "us," and "our" refer to Aura Elixir. Aura Elixir offers this website, including all information, tools, and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies, and notices stated here.
+            </p>
+            <p className="mb-4 text-slate-700 dark:text-gray-200">
+              By visiting our site and/or purchasing something from us, you engage in our "Service" and agree to be bound by the following terms and conditions ("Terms of Service", "Terms"). These Terms of Service apply to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/or contributors of content.
+            </p>
+            <p className="mb-4 text-slate-700 dark:text-gray-200">
+              Please read these Terms of Service carefully before accessing or using our website. By accessing or using any part of the site, you agree to be bound by these Terms of Service. If you do not agree to all the terms and conditions of this agreement, then you may not access the website or use any services. If these Terms of Service are considered an offer, acceptance is expressly limited to these Terms of Service.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Use of Our Services
+              Promotional Codes/Discounts
             </h2>
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Eligibility
-            </h3>
-            <p className="mb-4">
-              You must be at least 18 years old to use our services. By using our services, 
-              you represent that you meet this requirement.
-            </p>
-            
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Account Registration
-            </h3>
-            <p className="mb-4">
-              You may need to create an account to access certain features. You are responsible 
-              for maintaining the confidentiality of your account credentials.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Orders and Purchases
-            </h2>
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Product Information
-            </h3>
-            <p className="mb-4">
-              We strive to provide accurate product descriptions and images. However, we do not 
-              warrant that product descriptions are accurate, complete, reliable, or error-free.
-            </p>
-            
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Pricing and Payment
-            </h3>
-            <ul className="list-disc list-inside mb-4 space-y-2">
-              <li>All prices are in USD and subject to change without notice</li>
-              <li>Payment is due at the time of purchase</li>
-              <li>We accept major credit cards and other payment methods as displayed</li>
-              <li>Sales tax will be added where applicable</li>
-            </ul>
-            
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Order Acceptance
-            </h3>
-            <p className="mb-4">
-              We reserve the right to refuse or cancel orders at our discretion, including orders 
-              that appear fraudulent or violate these Terms.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Shipping and Delivery
-            </h2>
-            <ul className="list-disc list-inside mb-4 space-y-2">
-              <li>Delivery times are estimates and may vary</li>
-              <li>Risk of loss passes to you upon delivery</li>
-              <li>International shipping may be subject to customs duties and taxes</li>
-              <li>We are not responsible for delivery delays beyond our control</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Returns and Refunds
-            </h2>
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Return Policy
-            </h3>
-            <ul className="list-disc list-inside mb-4 space-y-2">
-              <li>Returns accepted within 30 days of delivery</li>
-              <li>Items must be unopened and in original packaging</li>
-              <li>Custom or personalized items are not returnable</li>
-              <li>Customer is responsible for return shipping costs</li>
-            </ul>
-            
-            <h3 className="text-xl font-medium text-slate-900 dark:text-white mb-3">
-              Refund Process
-            </h3>
-            <p className="mb-4">
-              Refunds will be processed to the original payment method within 5-10 business days 
-              after we receive and inspect the returned item.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Intellectual Property
-            </h2>
-            <p className="mb-4">
-              All content on our website, including text, graphics, logos, and images, is owned by 
-              Aura Élixir and protected by intellectual property laws. You may not use our 
-              content without written permission.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Prohibited Uses
-            </h2>
-            <p className="mb-4">You may not use our services:</p>
-            <ul className="list-disc list-inside mb-4 space-y-2">
-              <li>For any unlawful purpose or to solicit unlawful activity</li>
-              <li>To violate any international, federal, provincial, or state regulations or laws</li>
-              <li>To transmit or procure viruses, worms, or other computer code</li>
-              <li>To infringe upon or violate our intellectual property rights</li>
-              <li>To harass, abuse, insult, harm, defame, slander, or intimidate</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Disclaimers and Limitation of Liability
-            </h2>
-            <p className="mb-4">
-              Our services are provided "as is" without any warranties. To the maximum extent 
-              permitted by law, we disclaim all warranties and limit our liability for damages.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Privacy Policy
-            </h2>
-            <p className="mb-4">
-              Your privacy is important to us. Please review our Privacy Policy, which also governs 
-              your use of our services.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Changes to Terms
-            </h2>
-            <p className="mb-4">
-              We reserve the right to update these Terms at any time. Changes will be effective 
-              immediately upon posting. Your continued use constitutes acceptance of the modified Terms.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
-              Governing Law
-            </h2>
-            <p className="mb-4">
-              These Terms are governed by the laws of California, United States, without regard to 
-              conflict of law principles.
+            <p className="text-slate-700 dark:text-gray-200">
+              Promotional codes or discounts cannot be combined or used on sale items; they are also not applicable to any Bespoke Products.
             </p>
           </section>
 
@@ -194,13 +69,15 @@ export function Terms() {
             <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
               Contact Information
             </h2>
-            <p className="mb-4">
-              If you have questions about these Terms, please contact us:
+            <p className="mb-4 text-slate-700 dark:text-gray-200">
+              If you have questions about these Terms of Service, please contact us:
             </p>
-            <div className="bg-neutral-50 dark:bg-primary-900 p-4 rounded-lg">
-              <p className="mb-2">Email: legal@aura-essence.com</p>
-              <p className="mb-2">Phone: +1 (555) 123-4567</p>
-              <p>Address: 123 Luxury Lane, Beverly Hills, CA 90210</p>
+            <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900/30 dark:to-amber-900/30 border-l-4 border-purple-600 p-4 rounded-lg">
+              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Business Name:</strong> Aura Elixir</p>
+              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Managed by:</strong> Harshavardhan Shinde</p>
+              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Email:</strong> help@auraelixir.co.in</p>
+              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Phone:</strong> +91 9028709575</p>
+              <p className="text-slate-700 dark:text-gray-200"><strong>Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
             </div>
           </section>
         </div>
