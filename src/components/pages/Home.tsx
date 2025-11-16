@@ -29,18 +29,27 @@ export function Home({
   const [loading, setLoading] = useState(!prefetched);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const mountedRef = useRef(true);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const loadProducts = useCallback(async () => {
     if (!mountedRef.current) return;
+
+    // Cancel any ongoing requests
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    abortControllerRef.current = new AbortController();
+    const signal = abortControllerRef.current.signal;
 
     setLoading(true);
     setErrorMessage(null);
 
     try {
       const [featuredResult, menResult, womenResult] = await Promise.allSettled([
-        fetchFeatured(),
-        fetchProducts({ category: 'men', limit: 4 }),
-        fetchProducts({ category: 'women', limit: 4 }),
+        fetchFeatured(signal),
+        fetchProducts({ category: 'men', limit: 4, signal }),
+        fetchProducts({ category: 'women', limit: 4, signal }),
       ]);
 
       if (!mountedRef.current) {
@@ -60,7 +69,9 @@ export function Home({
           setNewProducts(newestProducts);
         }
       } else {
-        console.error('Failed to load featured products:', featuredResult.reason);
+        if (featuredResult.reason?.name !== 'AbortError') {
+          console.error('Failed to load featured products:', featuredResult.reason);
+        }
         setBestSellers([]);
         setNewProducts([]);
       }
@@ -69,7 +80,9 @@ export function Home({
         const menProductList = (menResult.value.products ?? []).slice(0, 4);
         setMenProducts(menProductList);
       } else {
-        console.error('Failed to load men products:', menResult.reason);
+        if (menResult.reason?.name !== 'AbortError') {
+          console.error('Failed to load men products:', menResult.reason);
+        }
         setMenProducts([]);
       }
 
@@ -77,7 +90,9 @@ export function Home({
         const womenProductList = (womenResult.value.products ?? []).slice(0, 4);
         setWomenProducts(womenProductList);
       } else {
-        console.error('Failed to load women products:', womenResult.reason);
+        if (womenResult.reason?.name !== 'AbortError') {
+          console.error('Failed to load women products:', womenResult.reason);
+        }
         setWomenProducts([]);
       }
 
@@ -88,7 +103,11 @@ export function Home({
       } else {
         setErrorMessage(null);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.name === 'AbortError') {
+        // console.log('Products fetch aborted');
+        return;
+      }
       console.error('Failed to load products:', error);
       if (!mountedRef.current) {
         return;
@@ -113,6 +132,9 @@ export function Home({
     }
     return () => {
       mountedRef.current = false;
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     };
   }, [loadProducts, prefetched]);
 
@@ -214,16 +236,6 @@ export function Home({
       {/* Best Sellers Section */}
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 sm:mb-16">
-            <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">MOST LOVED</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4 px-4">
-              Bestselling Fragrances
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
-              Our most coveted scents, chosen by connoisseurs worldwide
-            </p>
-          </div>
-
           {errorMessage && (
             <div className="mb-10 flex flex-col items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-center text-purple-700 dark:border-purple-900/30 dark:bg-purple-900/20 dark:text-purple-300">
               <p className="text-sm font-medium">{errorMessage}</p>
@@ -238,27 +250,34 @@ export function Home({
               </Button>
             </div>
           )}
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="bg-gray-100 dark:bg-slate-900 rounded-xl p-4 animate-pulse">
-                  <div className="aspect-square bg-gray-200 dark:bg-slate-800 rounded-lg mb-4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-slate-800 rounded mb-2 w-3/4"></div>
-                </div>
-              ))
-            ) : (
-              bestSellers.map((product: Product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
-          </div>
-          
-          <div className="text-center">
-            <Link href="/collections/men" className="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold text-base sm:text-lg px-6 py-3 rounded-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all">
-              View All Best Sellers <ChevronRight className="ml-2 h-5 w-5" />
-            </Link>
+
+          <div className="flex flex-col md:flex-row gap-8 sm:gap-12 items-center">
+            <div className="flex-1 text-center md:text-left">
+              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">MOST LOVED</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
+                Bestselling Fragrances
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+                Our most coveted scents, chosen by connoisseurs worldwide. These signature fragrances have captured hearts and become timeless favorites.
+              </p>
+              <Link href="/collections/men" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
+                View All Best Sellers <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+            
+            <div className="flex-1 w-full">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                {loading ? (
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <div key={index} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                  ))
+                ) : (
+                  bestSellers.map((product: Product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -336,30 +355,33 @@ export function Home({
       {/* New Arrivals */}
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 sm:mb-16">
-            <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">LATEST RELEASES</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4 px-4">
-              New Arrivals
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
-              Fresh additions to our luxury fragrance collection
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="bg-gray-100 dark:bg-slate-800 rounded-xl p-4 animate-pulse">
-                  <div className="aspect-square bg-gray-200 dark:bg-slate-700 rounded-lg mb-4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded mb-2 w-3/4"></div>
-                </div>
-              ))
-            ) : (
-              newProducts.map((product: Product) => (
-                <ProductCard key={product.id} product={product} />
-              ))
-            )}
+          <div className="flex flex-col md:flex-row-reverse gap-8 sm:gap-12 items-center">
+            <div className="flex-1 text-center md:text-left">
+              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">LATEST RELEASES</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
+                New Arrivals
+              </h2>
+              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+                Fresh additions to our luxury fragrance collection. Discover the latest masterpieces crafted by our perfumers.
+              </p>
+              <Link href="/collections/women" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
+                View All New Arrivals <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </div>
+            
+            <div className="flex-1 w-full">
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                {loading ? (
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <div key={index} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                  ))
+                ) : (
+                  newProducts.map((product: Product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>

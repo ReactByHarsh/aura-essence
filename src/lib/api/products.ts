@@ -11,6 +11,7 @@ export interface ListParams {
   search?: string
   page?: number
   limit?: number
+  signal?: AbortSignal
 }
 
 export async function fetchProducts(params: ListParams = {}) {
@@ -26,7 +27,9 @@ export async function fetchProducts(params: ListParams = {}) {
   if (params.page) qs.set('page', String(params.page))
   if (params.limit) qs.set('limit', String(params.limit))
 
-  const res = await fetch(`/api/products${qs.toString() ? `?${qs.toString()}` : ''}`)
+  const res = await fetch(`/api/products${qs.toString() ? `?${qs.toString()}` : ''}`, {
+    signal: params.signal
+  })
   if (!res.ok) throw new Error(`Failed to load products: ${res.status}`)
   const json = await res.json()
   return {
@@ -38,8 +41,8 @@ export async function fetchProducts(params: ListParams = {}) {
   }
 }
 
-export async function fetchFeatured() {
-  const res = await fetch('/api/products/featured')
+export async function fetchFeatured(signal?: AbortSignal) {
+  const res = await fetch('/api/products/featured', { signal })
   if (!res.ok) throw new Error(`Failed to load featured: ${res.status}`)
   const json = await res.json()
   return {
@@ -49,8 +52,8 @@ export async function fetchFeatured() {
   }
 }
 
-export async function fetchProduct(id: string) {
-  const res = await fetch(`/api/products/${id}`)
+export async function fetchProduct(id: string, signal?: AbortSignal) {
+  const res = await fetch(`/api/products/${id}`, { signal })
   if (res.status === 404) return null
   if (!res.ok) throw new Error(`Failed to load product: ${res.status}`)
   const json = await res.json()

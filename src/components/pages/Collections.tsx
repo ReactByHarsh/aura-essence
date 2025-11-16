@@ -47,11 +47,19 @@ export function Collections() {
   // Fetch products by category from Supabase
   useEffect(() => {
     let isMounted = true;
+    const abortController = new AbortController();
+    
     setLoading(true);
     setErrorMessage(null);
+    
     const fetchData = async () => {
       try {
-        const resp = await fetchProducts({ category: activeCategory, page: 1, limit: 24 });
+        const resp = await fetchProducts({ 
+          category: activeCategory, 
+          page: 1, 
+          limit: 24,
+          signal: abortController.signal 
+        });
         const mapped = resp.products ?? [];
         if (!isMounted) {
           return;
@@ -60,7 +68,11 @@ export function Collections() {
         setCurrentPage(1);
         setTotalPages(resp.totalPages || 1);
         setErrorMessage(null);
-      } catch (e) {
+      } catch (e: any) {
+        if (e.name === 'AbortError') {
+          // console.log('Products fetch aborted');
+          return;
+        }
         console.error('Failed to load products', e);
         if (isMounted) {
           setProducts([]);
@@ -73,6 +85,7 @@ export function Collections() {
     fetchData();
     return () => {
       isMounted = false;
+      abortController.abort();
     };
   }, [activeCategory, reloadToken]);
 
@@ -149,7 +162,7 @@ export function Collections() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 min-h-[56px] text-base font-semibold" asChild>
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 min-h-[56px] text-base font-semibold" asChild>
               <Link href="#products">
                 Shop Collection
               </Link>
@@ -164,15 +177,6 @@ export function Collections() {
       {/* Products Grid Section - Mobile First */}
       <section id="products" className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4">
-              Discover Our Collection
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
-              Each fragrance is carefully crafted to capture the essence of luxury and sophistication
-            </p>
-          </div>
           {errorMessage && (
             <div className="mb-6 sm:mb-8 flex flex-col items-center gap-3 rounded-xl border-2 border-purple-200 bg-purple-50 px-4 sm:px-6 py-4 sm:py-5 text-center text-purple-700 dark:border-purple-900/30 dark:bg-purple-900/20 dark:text-purple-300 shadow-lg">
               <p className="text-sm sm:text-base font-medium">{errorMessage}</p>
@@ -188,20 +192,15 @@ export function Collections() {
             </div>
           )}
 
-          {/* Products Grid - Optimized for Mobile */}
+          {/* Products Display */}
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="bg-gray-100 dark:bg-slate-900 rounded-2xl p-4 animate-pulse">
-                  <div className="aspect-square bg-gray-200 dark:bg-slate-800 rounded-xl mb-4"></div>
-                  <div className="h-4 bg-gray-200 dark:bg-slate-800 rounded mb-3"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-slate-800 rounded mb-2 w-3/4"></div>
-                  <div className="h-3 bg-gray-200 dark:bg-slate-800 rounded w-1/2"></div>
-                </div>
+                <div key={i} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {products.map(product => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -229,7 +228,7 @@ export function Collections() {
               <Button
                 onClick={handleLoadMore}
                 disabled={loading}
-                className="bg-amber-500 hover:bg-amber-600 text-white"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold"
               >
                 {loading ? 'Loading...' : 'Load More'}
               </Button>

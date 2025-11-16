@@ -238,14 +238,14 @@ export function Checkout() {
     <div className="min-h-screen bg-gradient-to-br from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 py-8 sm:py-10 md:py-12 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header - Mobile Optimized */}
-        <div className="flex items-center mb-8 sm:mb-10 md:mb-12">
+        <div className="flex items-center mb-6 sm:mb-8">
           <Button
             type="button"
             variant="ghost"
-            className="text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 min-h-[48px] px-4 sm:px-6"
+            className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 min-h-[44px] px-4 sm:px-6"
             onClick={handleBackToCart}
           >
-            <ArrowLeft className="h-5 w-5 mr-2" />
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Cart
           </Button>
         </div>
@@ -253,17 +253,17 @@ export function Checkout() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
           {/* Checkout Form - Mobile Enhanced */}
           <div>
-            <div className="mb-6 sm:mb-8">
-              <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-semibold tracking-widest uppercase">Secure Checkout</span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mt-2 leading-tight">
+            <div className="mb-5 sm:mb-6">
+              <span className="text-purple-600 dark:text-purple-400 text-[10px] sm:text-xs font-semibold tracking-widest uppercase">Secure Checkout</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-1.5 leading-tight">
                 Shipping Details
               </h1>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 sm:space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
               {/* Contact Information */}
               <div>
-                <h2 className="text-lg font-semibold text-primary-950 dark:text-neutral-100 mb-4">
+                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">
                   Contact Information
                 </h2>
                 <Input
@@ -285,7 +285,7 @@ export function Checkout() {
 
               {/* Shipping Address */}
               <div>
-                <h2 className="text-lg font-semibold text-primary-950 dark:text-neutral-100 mb-4">
+                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">
                   Shipping Address
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
@@ -335,30 +335,32 @@ export function Checkout() {
 
               {/* Payment Method (Online / COD) */}
               <div>
-                <h2 className="text-lg font-semibold text-primary-950 dark:text-neutral-100 mb-4">Payment Method</h2>
-                <div className="bg-neutral-50 dark:bg-primary-900 p-6 rounded-lg border border-primary-200 dark:border-primary-800 space-y-3">
-                  <label className="flex items-center gap-2 text-sm">
+                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">Payment Method</h2>
+                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800/50 space-y-2.5">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="payment"
                       value="online"
                       checked={paymentMethod === 'online'}
                       onChange={() => setPaymentMethod('online')}
+                      className="text-purple-600 focus:ring-purple-500"
                     />
-                    <span>Pay Online (UPI / Card)</span>
+                    <span className="text-purple-700 dark:text-purple-300 font-medium">Pay Online (UPI / Card)</span>
                   </label>
-                  <label className="flex items-center gap-2 text-sm">
+                  <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="payment"
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
+                      className="text-purple-600 focus:ring-purple-500"
                     />
-                    <span>Cash on Delivery (₹{COD_CHARGE} extra)</span>
+                    <span className="text-purple-700 dark:text-purple-300 font-medium">Cash on Delivery (₹{COD_CHARGE} extra)</span>
                   </label>
                   {paymentMethod === 'cod' && (
-                    <p className="text-xs text-amber-600">COD Charge: ₹{COD_CHARGE} added</p>
+                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">COD Charge: ₹{COD_CHARGE} added</p>
                   )}
                 </div>
               </div>
@@ -367,7 +369,7 @@ export function Checkout() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Processing...' : `Place Order - ${formatPrice(finalTotal)}`}
@@ -377,31 +379,31 @@ export function Checkout() {
 
           {/* Order Summary */}
           <div>
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl border border-slate-100 dark:border-slate-800 sticky top-8">
-              <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-6">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-5 shadow-lg border border-purple-200 dark:border-purple-800/50 sticky top-8">
+              <h2 className="text-lg sm:text-xl font-semibold text-purple-700 dark:text-purple-300 mb-4">
                 Order Summary
               </h2>
 
               {/* Order Items */}
-              <div className="space-y-4 mb-6">
+              <div className="space-y-2.5 mb-4">
                 {items.map(item => (
-                  <div key={item.id} className="flex items-center space-x-3">
+                  <div key={item.id} className="flex items-center space-x-2.5">
                     <Image
                       src={item.product.images[0]}
                       alt={item.product.name}
-                      width={48}
-                      height={48}
-                      className="object-cover rounded-md"
+                      width={40}
+                      height={40}
+                      className="object-cover rounded-md border border-purple-200 dark:border-purple-800"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                      <h3 className="text-xs font-medium text-slate-900 dark:text-white truncate">
                         {item.product.name}
                       </h3>
-                      <p className="text-xs text-slate-600 dark:text-gray-400">
+                      <p className="text-[10px] text-purple-600 dark:text-purple-400">
                         Qty: {item.quantity}
                       </p>
                     </div>
-                    <span className="text-sm font-medium text-slate-900 dark:text-white">
+                    <span className="text-xs font-medium text-purple-700 dark:text-purple-300">
                       {formatPrice(item.product.price * item.quantity)}
                     </span>
                   </div>
@@ -409,38 +411,38 @@ export function Checkout() {
               </div>
 
               {/* Totals */}
-              <div className="space-y-2 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-gray-400">Subtotal</span>
-                  <span className="text-slate-900 dark:text-white">
+              <div className="space-y-1.5 mb-4 pt-3 border-t border-purple-200 dark:border-purple-800/50">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600 dark:text-purple-400">Subtotal</span>
+                  <span className="text-slate-900 dark:text-white font-medium">
                     {formatPrice(getSubtotal())}
                   </span>
                 </div>
                 
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-gray-400">Tax</span>
-                  <span className="text-slate-900 dark:text-white">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600 dark:text-purple-400">Tax</span>
+                  <span className="text-slate-900 dark:text-white font-medium">
                     {formatPrice(getTax())}
                   </span>
                 </div>
 
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-gray-400">Shipping</span>
-                  <span className="text-slate-900 dark:text-white">
+                <div className="flex justify-between text-xs">
+                  <span className="text-purple-600 dark:text-purple-400">Shipping</span>
+                  <span className="text-slate-900 dark:text-white font-medium">
                     {shipping === 0 ? 'Free' : formatPrice(shipping)}
                   </span>
                 </div>
                 {paymentMethod === 'cod' && (
-                  <div className="flex justify-between text-sm text-amber-600">
+                  <div className="flex justify-between text-xs text-purple-600 dark:text-purple-400">
                     <span>COD Charge</span>
-                    <span>+ {formatPrice(COD_CHARGE)}</span>
+                    <span className="font-medium">+ {formatPrice(COD_CHARGE)}</span>
                   </div>
                 )}
                 
-                <div className="border-t border-slate-200 dark:border-slate-700 pt-2">
-                  <div className="flex justify-between text-lg font-semibold">
-                    <span className="text-slate-900 dark:text-white">Total</span>
-                    <span className="text-slate-900 dark:text-white">
+                <div className="border-t border-purple-200 dark:border-purple-800/50 pt-2 mt-2">
+                  <div className="flex justify-between text-base font-semibold">
+                    <span className="text-purple-700 dark:text-purple-300">Total</span>
+                    <span className="text-purple-700 dark:text-purple-300">
                       {formatPrice(finalTotal)}
                     </span>
                   </div>
@@ -448,8 +450,8 @@ export function Checkout() {
               </div>
 
               {/* Security Badge */}
-              <div className="text-center text-sm text-slate-600 dark:text-gray-400">
-                <Lock className="h-4 w-4 inline mr-1" />
+              <div className="text-center text-[10px] text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 py-2 rounded-lg">
+                <Lock className="h-3 w-3 inline mr-1" />
                 Your payment information is secure
               </div>
             </div>

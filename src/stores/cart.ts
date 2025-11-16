@@ -100,8 +100,48 @@ export const useCartStore = create<CartState>((set, get) => ({
         throw new Error(errorData.error || 'Failed to add item to cart');
       }
 
+      // Use the response data instead of reloading
       if (!options?.skipReload) {
-        await get().loadCart();
+        const data = await response.json();
+        const cartItems = data.items || [];
+        const totalsResponse = data.totals || data.summary || EMPTY_TOTALS;
+
+        const mappedItems: CartItem[] = cartItems.map((ci: any) => {
+          const imagesFromCart = ci.product_images && ci.product_images.length > 0 ? ci.product_images : null;
+
+          const product: Product = buildFallbackProduct(
+            ci.product_id,
+            ci.product_name,
+            ci.product_price,
+            imagesFromCart
+          );
+
+          return {
+            id: ci.id || `${ci.product_id}-${ci.selected_size ?? 'default'}`,
+            product,
+            quantity: ci.quantity,
+            selectedSize: ci.selected_size,
+            unitPrice: ci.product_price,
+            lineTotal: ci.total_price,
+          };
+        });
+
+        const resolvedTotals: CartTotalsState = {
+          subtotal: totalsResponse.subtotal ?? 0,
+          discount: totalsResponse.discount ?? 0,
+          total: totalsResponse.total ?? 0,
+          promotionText: totalsResponse.promotion_text ?? null,
+        };
+
+        set({ items: mappedItems, totals: resolvedTotals });
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(
+              CART_CACHE_KEY,
+              JSON.stringify({ items: mappedItems, totals: resolvedTotals })
+            )
+          }
+        } catch {}
       }
       // Don't auto-open cart, just update the count
     } catch (error) {
@@ -131,8 +171,48 @@ export const useCartStore = create<CartState>((set, get) => ({
         throw new Error(errorData.error || 'Failed to remove item from cart');
       }
 
+      // Use the response data instead of reloading
       if (!options?.skipReload) {
-        await get().loadCart();
+        const data = await response.json();
+        const cartItems = data.items || [];
+        const totalsResponse = data.totals || data.summary || EMPTY_TOTALS;
+
+        const mappedItems: CartItem[] = cartItems.map((ci: any) => {
+          const imagesFromCart = ci.product_images && ci.product_images.length > 0 ? ci.product_images : null;
+
+          const product: Product = buildFallbackProduct(
+            ci.product_id,
+            ci.product_name,
+            ci.product_price,
+            imagesFromCart
+          );
+
+          return {
+            id: ci.id || `${ci.product_id}-${ci.selected_size ?? 'default'}`,
+            product,
+            quantity: ci.quantity,
+            selectedSize: ci.selected_size,
+            unitPrice: ci.product_price,
+            lineTotal: ci.total_price,
+          };
+        });
+
+        const resolvedTotals: CartTotalsState = {
+          subtotal: totalsResponse.subtotal ?? 0,
+          discount: totalsResponse.discount ?? 0,
+          total: totalsResponse.total ?? 0,
+          promotionText: totalsResponse.promotion_text ?? null,
+        };
+
+        set({ items: mappedItems, totals: resolvedTotals });
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(
+              CART_CACHE_KEY,
+              JSON.stringify({ items: mappedItems, totals: resolvedTotals })
+            )
+          }
+        } catch {}
       }
     } catch (error) {
       console.error('Error removing item from cart:', error);
@@ -167,7 +247,47 @@ export const useCartStore = create<CartState>((set, get) => ({
         throw new Error(errorData.error || 'Failed to update cart quantity');
       }
 
-      await get().loadCart();
+      // Use the response data instead of reloading
+      const data = await response.json();
+      const cartItems = data.items || [];
+      const totalsResponse = data.totals || data.summary || EMPTY_TOTALS;
+
+      const mappedItems: CartItem[] = cartItems.map((ci: any) => {
+        const imagesFromCart = ci.product_images && ci.product_images.length > 0 ? ci.product_images : null;
+
+        const product: Product = buildFallbackProduct(
+          ci.product_id,
+          ci.product_name,
+          ci.product_price,
+          imagesFromCart
+        );
+
+        return {
+          id: ci.id || `${ci.product_id}-${ci.selected_size ?? 'default'}`,
+          product,
+          quantity: ci.quantity,
+          selectedSize: ci.selected_size,
+          unitPrice: ci.product_price,
+          lineTotal: ci.total_price,
+        };
+      });
+
+      const resolvedTotals: CartTotalsState = {
+        subtotal: totalsResponse.subtotal ?? 0,
+        discount: totalsResponse.discount ?? 0,
+        total: totalsResponse.total ?? 0,
+        promotionText: totalsResponse.promotion_text ?? null,
+      };
+
+      set({ items: mappedItems, totals: resolvedTotals });
+      try {
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(
+            CART_CACHE_KEY,
+            JSON.stringify({ items: mappedItems, totals: resolvedTotals })
+          )
+        }
+      } catch {}
     } catch (error) {
       console.error('Error updating cart quantity:', error);
       const message = error instanceof Error ? error.message : 'Failed to update cart quantity';

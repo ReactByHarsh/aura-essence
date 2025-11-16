@@ -41,11 +41,17 @@ export default function OrdersPage() {
 
   React.useEffect(() => {
     if (!stackUser?.id) return;
+    
+    const abortController = new AbortController();
+    
     const fetchOrders = async () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch('/api/orders?page=1&limit=10', { cache: 'no-store' });
+        const res = await fetch('/api/orders?page=1&limit=10', { 
+          cache: 'no-store',
+          signal: abortController.signal 
+        });
         if (!res.ok) throw new Error('Failed to fetch orders');
         const data = await res.json();
         const mapped: OrderDisplay[] = (data.orders || []).map((o: any) => ({
@@ -62,12 +68,20 @@ export default function OrdersPage() {
         }));
         setOrders(mapped);
       } catch (e: any) {
+        if (e.name === 'AbortError') {
+          // console.log('Orders fetch aborted');
+          return;
+        }
         setError(e?.message ?? 'Failed to load orders');
       } finally {
         setLoading(false);
       }
     };
     fetchOrders();
+    
+    return () => {
+      abortController.abort();
+    };
   }, [stackUser?.id]);
 
   return (
