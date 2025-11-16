@@ -2,6 +2,7 @@ import { ProductDetail } from '@/components/pages/ProductDetail';
 import { getProduct, getProducts } from '@/lib/neon/products';
 import type { Product as AppProduct } from '@/types';
 import type { Product as NeonProduct } from '@/lib/neon/products';
+import type { Metadata } from 'next';
 
 export const revalidate = 120; // Revalidate every 2 minutes
 
@@ -52,6 +53,41 @@ function neonToAppProduct(p: NeonProduct): AppProduct {
   };
 }
 
+// Generate dynamic metadata for each product page
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const product = await getProduct(params.id);
+  
+  if (!product) {
+    return {
+      title: 'Product Not Found | Aura Elixir',
+      description: 'The perfume you are looking for could not be found.',
+    };
+  }
+
+  const productType = product.type || 'EDP';
+  const category = product.category ? ` for ${product.category}` : '';
+  const notes = (product as any).notes;
+  const topNotes = notes?.top ? notes.top.join(', ') : '';
+  
+  return {
+    title: `${product.name} ${productType} Perfume${category} - Aura Elixir | Buy Online`,
+    description: `${product.description || `Buy ${product.name} ${productType} perfume${category} online at Aura Elixir.`} ${topNotes ? `Features notes of ${topNotes}.` : ''} Premium long-lasting fragrance with ${product.stock > 0 ? 'fast shipping' : 'limited availability'}. ₹${product.price}`,
+    keywords: `${product.name}, ${product.brand}, ${productType} perfume, ${product.category} fragrance, buy perfume online, Aura Elixir, luxury perfume India, ${topNotes}`,
+    openGraph: {
+      title: `${product.name} ${productType} Perfume - Aura Elixir`,
+      description: product.description || `Discover ${product.name} - a premium ${productType} fragrance from Aura Elixir`,
+      images: product.images && product.images.length > 0 ? [product.images[0]] : [],
+      type: 'product',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} ${productType} Perfume - Aura Elixir`,
+      description: product.description || `Premium ${productType} fragrance from Aura Elixir`,
+      images: product.images && product.images.length > 0 ? [product.images[0]] : [],
+    },
+  };
+}
+
 export default async function Page({ params }: { params: { id: string } }) {
   const neonProduct = await getProduct(params.id);
 
@@ -69,10 +105,49 @@ export default async function Page({ params }: { params: { id: string } }) {
   const appProduct: AppProduct | null = neonProduct ? neonToAppProduct(neonProduct) : null;
 
   return (
-    <ProductDetail
-      initialProduct={appProduct}
-      initialRelated={related}
-      prefetched={!!neonProduct}
-    />
+    <>
+      {/* Product Schema Structured Data */}
+      {appProduct && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": appProduct.name,
+              "brand": {
+                "@type": "Brand",
+                "name": appProduct.brand || "Aura Elixir"
+              },
+              "description": appProduct.description,
+              "image": appProduct.images && appProduct.images.length > 0 ? appProduct.images : [],
+              "offers": {
+                "@type": "Offer",
+                "url": `https://auraelixir.co.in/product/${appProduct.id}`,
+                "priceCurrency": "INR",
+                "price": appProduct.price,
+                "availability": appProduct.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "Aura Elixir"
+                }
+              },
+              "aggregateRating": appProduct.rating ? {
+                "@type": "AggregateRating",
+                "ratingValue": appProduct.rating,
+                "bestRating": "5",
+                "worstRating": "1"
+              } : undefined,
+              "category": "Perfume & Fragrance"
+            })
+          }}
+        />
+      )}
+      <ProductDetail
+        initialProduct={appProduct}
+        initialRelated={related}
+        prefetched={!!neonProduct}
+      />
+    </>
   );
 }
