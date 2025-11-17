@@ -132,7 +132,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="p-3 sm:p-5">
         {/* Brand & Type */}
         <div className="flex items-center justify-between text-xs text-slate-600 dark:text-gray-400 mb-1">
-          <span className="font-medium">{product.brand}</span>
+          {/* <span className="font-medium">{product.brand}</span> */}
           <span className="text-amber-600 dark:text-amber-400">{product.type}</span>
         </div>
 

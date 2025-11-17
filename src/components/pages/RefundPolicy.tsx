@@ -60,7 +60,7 @@ export function RefundPolicy() {
               <li><strong>Unopened Products:</strong> Full refunds accepted within 2 days of delivery for unopened, original packaging products</li>
               <li><strong>Trial/Decant Sizes (20ml):</strong> Strictly non-returnable, non-refundable, and non-exchangeable. We recommend decants to test products before purchasing full-size bottles</li>
               <li><strong>Opened or Used Fragrances:</strong> Returns and exchanges are not offered for opened, tested, or used fragrances for health and safety reasons</li>
-              <li><strong>Damaged/Defective Products:</strong> Returns accepted for damaged or defective products with proof (unboxing video). Contact us within 2 business days of delivery</li>
+              <li><strong>Damaged/Defective Products:</strong> Returns accepted for damaged or defective products with proof (unboxing video). Contact us within 2 business days of delivery. When approved, replacement will be provided in 7 days</li>
             </ul>
 
             <h3 className="text-lg font-semibold text-slate-800 dark:text-gray-100 mb-3">Return Process</h3>
@@ -94,6 +94,7 @@ export function RefundPolicy() {
               <li>Contact us within 2 business days with mandatory unboxing video</li>
               <li>Email: help@auraelixir.co.in or call +91 9028709575 (Monday-Friday, 11 AM - 6 PM)</li>
               <li>We will arrange for replacement or refund at our discretion</li>
+              <li>When damaged product is approved, replacement will be provided in 7 days</li>
               <li>Original shipping costs are non-refundable for damaged items; replacement shipping is on us</li>
             </ul>
           </section>
