@@ -196,80 +196,94 @@ export function Home({
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Premium Hero Section */}
-      <section className="relative min-h-[90vh] sm:min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Premium Hero Section - Clean & Elegant */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900">
+        {/* Background Image/Gradient - Subtle & Sophisticated */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1615634260167-c8cdede054de?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 dark:opacity-20 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:from-transparent dark:via-slate-900/50 dark:to-slate-900"></div>
         
-        <div className="relative z-10 text-center px-6 sm:px-4 max-w-4xl py-12">
-          <div className="mb-4 sm:mb-6 inline-block">
-            <span className="text-purple-400 text-xs sm:text-sm font-semibold tracking-widest">LUXURY FRAGRANCES</span>
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto py-12">
+          <div className="mb-6 inline-flex items-center gap-3 animate-fade-in">
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+            <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-medium tracking-[0.3em] uppercase">
+              Essence of Luxury
+            </span>
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
           </div>
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-wider text-white mb-4 sm:mb-6 leading-tight">
-            Aura Élixir
+          
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 leading-[1.1] font-serif">
+            Aura <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Élixir</span>
           </h1>
-          <p className="text-xl sm:text-2xl md:text-3xl text-gray-100 mb-6 sm:mb-8 tracking-wide font-light px-2">
-            Where Luxury Meets Artistry in Every Bottle
+          
+          <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+            Discover a collection of premium fragrances, meticulously crafted to elevate your presence and express your unique identity.
           </p>
-          <p className="text-base sm:text-lg text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed px-4">
-            Discover our curated collection of premium fragrances, each one a masterpiece crafted 
-            to elevate your presence and express your unique essence.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 min-h-[56px] text-base font-semibold" asChild>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up">
+            <Button 
+              size="lg" 
+              className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 min-h-[56px] px-8 rounded-full text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1" 
+              asChild
+            >
               <Link href="/collections/men">
-                Explore Now
+                Shop Collection
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button variant="secondary" size="lg" className="border-2 border-white text-white hover:bg-white/20 backdrop-blur-sm min-h-[56px] text-base font-semibold" asChild>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 min-h-[56px] px-8 rounded-full text-base font-medium backdrop-blur-sm" 
+              asChild
+            >
               <Link href="/about">Our Story</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Best Sellers Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
+      {/* Best Sellers Section - Clean Grid */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
           {errorMessage && (
-            <div className="mb-10 flex flex-col items-center gap-3 rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-center text-purple-700 dark:border-purple-900/30 dark:bg-purple-900/20 dark:text-purple-300">
+            <div className="mb-10 flex flex-col items-center gap-3 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-center text-red-600 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400">
               <p className="text-sm font-medium">{errorMessage}</p>
               <Button
                 size="sm"
-                variant="secondary"
+                variant="outline"
                 onClick={handleRetry}
                 disabled={loading}
-                className="border-purple-400 text-purple-700 dark:text-purple-300"
+                className="border-red-200 hover:bg-red-100 text-red-700"
               >
                 {loading ? 'Refreshing...' : 'Retry Now'}
               </Button>
             </div>
           )}
 
-          <div className="flex flex-col md:flex-row gap-8 sm:gap-12 items-center">
-            <div className="flex-1 text-center md:text-left">
-              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">MOST LOVED</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
-                Bestselling Fragrances
+          <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-start">
+            <div className="flex-1 md:sticky md:top-24 self-start text-center md:text-left">
+              <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">Most Loved</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
+                Bestselling <br/> Fragrances
               </h2>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Our most coveted scents, chosen by connoisseurs worldwide. These signature fragrances have captured hearts and become timeless favorites.
               </p>
-              <Link href="/collections/men" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
-                View All Best Sellers <ChevronRight className="ml-2 h-5 w-5" />
+              <Link 
+                href="/collections/men" 
+                className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
+              >
+                View All Best Sellers 
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             
             <div className="flex-1 w-full">
-              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
                   Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                    <div key={index} className="bg-slate-100 dark:bg-slate-900 rounded-2xl aspect-[3/4] animate-pulse"></div>
                   ))
                 ) : (
                   bestSellers.map((product: Product) => (
@@ -282,21 +296,24 @@ export function Home({
         </div>
       </section>
 
-      {/* Men's Collection Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900">
+      {/* Men's Collection Section - Alternating Background */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8 sm:gap-12 items-center">
+          <div className="flex flex-col md:flex-row-reverse gap-12 lg:gap-16 items-center">
             <div className="flex-1 text-center md:text-left">
-              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">FOR HIM</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
+              <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">For Him</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
                 Men's Collection
               </h2>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Bold, sophisticated fragrances that capture the essence of modern masculinity.
                 From fresh and crisp to deep and woody, find your signature scent.
               </p>
-              <Link href="/collections/men" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
-                Explore Men's <ChevronRight className="ml-2 h-5 w-5" />
+              <Link 
+                href="/collections/men" 
+                className="inline-flex items-center px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              >
+                Explore Men's <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
             
@@ -317,29 +334,32 @@ export function Home({
         </div>
       </section>
 
-      {/* Women's Collection Section */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
+      {/* Women's Collection Section - Clean White */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row-reverse gap-8 sm:gap-12 items-center">
+          <div className="flex flex-col md:flex-row-reverse gap-12 lg:gap-16 items-center">
             <div className="flex-1 text-center md:text-left">
-              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">FOR HER</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
+              <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">For Her</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
                 Women's Collection
               </h2>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Elegantly captivating fragrances that celebrate femininity and grace.
                 Discover floral, fruity, and oriental scents that turn heads.
               </p>
-              <Link href="/collections/women" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
-                Explore Women's <ChevronRight className="ml-2 h-5 w-5" />
+              <Link 
+                href="/collections/women" 
+                className="inline-flex items-center px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+              >
+                Explore Women's <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
             
             <div className="flex-1 w-full">
-              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
                   Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                    <div key={index} className="bg-slate-100 dark:bg-slate-900 rounded-2xl aspect-[3/4] animate-pulse"></div>
                   ))
                 ) : (
                   womenProducts.map((product: Product) => (
@@ -352,28 +372,32 @@ export function Home({
         </div>
       </section>
 
-      {/* New Arrivals */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900">
+      {/* New Arrivals - Subtle Background */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900/50">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row-reverse gap-8 sm:gap-12 items-center">
+          <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-center">
             <div className="flex-1 text-center md:text-left">
-              <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">LATEST RELEASES</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4">
+              <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">Latest Releases</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
                 New Arrivals
               </h2>
-              <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Fresh additions to our luxury fragrance collection. Discover the latest masterpieces crafted by our perfumers.
               </p>
-              <Link href="/collections/women" className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl min-h-[56px] text-base">
-                View All New Arrivals <ChevronRight className="ml-2 h-5 w-5" />
+              <Link 
+                href="/collections/women" 
+                className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
+              >
+                View All New Arrivals 
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             
             <div className="flex-1 w-full">
-              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
                   Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                    <div key={index} className="bg-slate-100 dark:bg-slate-900 rounded-2xl aspect-[3/4] animate-pulse"></div>
                   ))
                 ) : (
                   newProducts.map((product: Product) => (
@@ -386,19 +410,19 @@ export function Home({
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 sm:py-16 px-4 sm:px-6 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+      {/* Features Section - Minimalist */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {features.map((feature, index) => (
-              <div key={index} className="text-center p-6 sm:p-8 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-900/10 rounded-full mb-4 sm:mb-6 shadow-lg">
-                  <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 text-purple-600 dark:text-purple-400" />
+              <div key={index} className="text-center group">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900 mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="h-8 w-8 text-slate-900 dark:text-white" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-slate-900 dark:text-white mb-2 sm:mb-3">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
                   {feature.title}
                 </h3>
-                <p className="text-sm sm:text-base text-slate-600 dark:text-gray-400 leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
                   {feature.description}
                 </p>
               </div>
@@ -407,41 +431,45 @@ export function Home({
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10 sm:mb-16">
-            <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">CUSTOMER REVIEWS</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 mt-3 sm:mt-4 px-4">
-              Loved by Fragrance Enthusiasts
+      {/* Testimonials - Dark Luxury Theme */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-900 text-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-amber-500/30 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">Testimonials</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 font-serif">
+              Loved by Enthusiasts
             </h2>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 px-4">
+            <p className="text-slate-400 text-lg">
               Join thousands of satisfied customers worldwide
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-slate-100 dark:border-slate-700 relative overflow-hidden">
-                {/* Purple accent line */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-purple-600"></div>
-                
-                <div className="flex items-center mb-4 sm:mb-5">
+              <div key={index} className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                <div className="flex items-center mb-6 gap-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-purple-400 text-purple-400" />
+                    <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
                   ))}
                 </div>
-                <p className="text-slate-700 dark:text-gray-300 mb-5 sm:mb-6 leading-relaxed text-sm sm:text-base italic">
+                <p className="text-slate-300 mb-6 leading-relaxed italic font-light">
                   "{testimonial.comment}"
                 </p>
-                <div className="flex items-center justify-between">
-                  <p className="font-semibold text-slate-900 dark:text-white text-sm sm:text-base">
-                    {testimonial.name}
-                  </p>
-                  <div className="text-purple-600 dark:text-purple-400">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-purple-600 flex items-center justify-center text-sm font-bold">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white text-sm">
+                      {testimonial.name}
+                    </p>
+                    <p className="text-xs text-slate-500">Verified Buyer</p>
                   </div>
                 </div>
               </div>
@@ -450,8 +478,8 @@ export function Home({
         </div>
       </section>
 
-      {/* Brand Story Section - Premium Bottom CTA */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 bg-gradient-to-br from-slate-50 via-purple-50/30 to-purple-50/20 dark:from-slate-950 dark:via-purple-950/30 dark:to-purple-950/20 border-t border-slate-200 dark:border-slate-800">
+      {/* Brand Story Section - Clean Bottom CTA */}
+      <section className="py-20 sm:py-28 px-4 sm:px-6 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto text-center">
           <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">OUR LEGACY</span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 mt-3 sm:mt-4 px-4">

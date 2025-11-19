@@ -150,31 +150,32 @@ export function CartDrawer() {
         ref={drawerRef}
         className="fixed right-0 top-0 h-full w-full max-w-xl bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800 animate-slide-in-right"
       >
-        {/* Header - Premium Design with Purple Accents */}
-        <div className="flex items-center justify-between p-3.5 border-b border-purple-200 dark:border-purple-800/50 bg-gradient-to-r from-purple-50/50 via-white to-purple-50/50 dark:from-purple-900/10 dark:via-slate-950 dark:to-purple-900/10">
-          <div>
-            <h2 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-800 dark:from-purple-400 dark:to-purple-300 bg-clip-text text-transparent">
-              Shopping Cart
+        {/* Header - Clean & Organized */}
+        <div className="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-slate-900 dark:text-white" />
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+              Your Cart
             </h2>
-            <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold mt-0.5">
-              {items.reduce((t, i) => t + i.quantity, 0)} {items.reduce((t, i) => t + i.quantity, 0) === 1 ? 'item' : 'items'}
-            </p>
+            <span className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-medium px-2 py-0.5 rounded-full">
+              {items.reduce((t, i) => t + i.quantity, 0)}
+            </span>
           </div>
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={closeCart} 
-            className="hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-full transition-all duration-300 p-1.5"
+            className="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full p-2"
           >
-            <X className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <X className="h-5 w-5 text-slate-500 dark:text-slate-400" />
           </Button>
         </div>
 
         {/* Cart items */}
-        <div className="flex-1 overflow-y-auto p-4 bg-white dark:bg-slate-950">
+        <div className="flex-1 overflow-y-auto p-0 bg-white dark:bg-slate-950">
           {/* Error display */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg shadow-sm">
+            <div className="m-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg shadow-sm">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-red-700 dark:text-red-400 font-medium">{error}</p>
                 <button 
@@ -190,31 +191,31 @@ export function CartDrawer() {
           {/* Loading state */}
           {isLoading ? (
             <div className="text-center py-12 flex flex-col items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-14 w-14 border-4 border-t-amber-500 border-r-amber-500 border-b-transparent border-l-transparent"></div>
+              <div className="animate-spin rounded-full h-10 w-10 border-2 border-slate-900 dark:border-white border-t-transparent"></div>
               <p className="text-slate-600 dark:text-gray-400 mb-4 font-medium mt-6">
-                Loading your cart...
+                Loading...
               </p>
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center py-16 flex flex-col items-center justify-center h-full">
-              <div className="mb-6 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 p-8 rounded-full">
-                <ShoppingBag className="h-20 w-20 text-slate-400 dark:text-slate-600" />
+            <div className="text-center py-16 flex flex-col items-center justify-center h-full px-4">
+              <div className="mb-6 bg-slate-50 dark:bg-slate-900 p-6 rounded-full">
+                <ShoppingBag className="h-12 w-12 text-slate-300 dark:text-slate-600" />
               </div>
-              <p className="text-slate-900 dark:text-white mb-2 font-bold text-xl">
+              <p className="text-slate-900 dark:text-white mb-2 font-bold text-lg">
                 Your cart is empty
               </p>
-              <p className="text-sm text-slate-500 dark:text-gray-500 mb-8">
-                Discover our premium fragrances
+              <p className="text-sm text-slate-500 dark:text-gray-500 mb-8 max-w-xs mx-auto">
+                Looks like you haven't added anything to your cart yet.
               </p>
               <Button 
                 onClick={closeCart}
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-2.5 rounded-full font-medium transition-all"
               >
-                Continue Shopping
+                Start Shopping
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {items.map(item => {
                 const sizeValue = item.selectedSize ?? null;
                 const selectedSize = sizeValue ?? '20ml';
@@ -226,95 +227,82 @@ export function CartDrawer() {
                 const coverImage = item.product.images[0] ?? '/perfume-logo.png';
 
                 return (
-                  <div key={itemKey} className="flex space-x-2 border-b border-purple-100 dark:border-purple-900/30 pb-2 hover:bg-purple-50/30 dark:hover:bg-purple-900/10 -mx-2 px-2 py-1.5 rounded-lg transition-all duration-300 group">
-                    <div className="relative">
+                  <div key={itemKey} className="flex gap-4 p-4 hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors group relative">
+                    {/* Image */}
+                    <div className="relative w-20 h-20 flex-shrink-0 bg-slate-100 dark:bg-slate-800 rounded-md overflow-hidden border border-slate-200 dark:border-slate-700">
                       <Image
                         src={coverImage}
                         alt={item.product.name}
-                        width={70}
-                        height={70}
-                        className="object-cover rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-300 border border-purple-200 dark:border-purple-800/50"
+                        fill
+                        className="object-cover"
                       />
-                      {item.quantity > 1 && (
-                        <div className="absolute -top-1.5 -right-1.5 bg-gradient-to-br from-purple-500 to-purple-600 text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-md">
-                          {item.quantity}
-                        </div>
-                      )}
                       {isItemLoading && (
-                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-6 w-6 border-2 border-t-white border-r-white border-b-transparent border-l-transparent"></div>
+                        <div className="absolute inset-0 bg-white/60 dark:bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-10">
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-slate-900 dark:border-white border-t-transparent"></div>
                         </div>
                       )}
                     </div>
                     
-                    <div className="flex-1 min-w-0 space-y-0.5">
-                      <h3 className="font-bold text-slate-900 dark:text-white text-[11px] truncate leading-tight">
-                        {item.product.name}
-                      </h3>
-                      <p className="text-[9px] text-purple-600 dark:text-purple-400 font-semibold">
-                        {item.product.type}
-                      </p>
-                      
-                      {/* Size and Quantity on one line */}
-                      <div className="flex items-center gap-1.5 mt-1">
-                        {/* Size Dropdown */}
-                        <select
-                          value={selectedSize}
-                          onChange={(e) => handleSizeChange(item, e.target.value)}
-                          disabled={isItemLoading}
-                          className="px-1.5 py-0.5 text-[9px] border border-purple-200 dark:border-purple-800 rounded bg-white dark:bg-slate-900 text-purple-600 dark:text-purple-400 font-semibold disabled:opacity-50 hover:border-purple-400 dark:hover:border-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-400 transition-all flex-1 min-w-0"
-                        >
-                          {sizeOptions.map(size => {
-                            const priceForSize = item.product.sizes?.[size]?.price;
-                            const label = priceForSize !== undefined
-                              ? `${size}`
-                              : size;
-                            return (
-                              <option key={size} value={size}>
-                                {label}
-                              </option>
-                            );
-                          })}
-                        </select>
-
-                        {/* Quantity controls - compact */}
-                        <div className="flex items-center bg-purple-50 dark:bg-purple-900/20 rounded px-1 py-0.5 gap-0.5">
-                          <button
-                            onClick={() => handleQuantityChange(item, item.quantity - 1)}
-                            disabled={isItemLoading}
-                            className="p-0.5 hover:bg-purple-100 dark:hover:bg-purple-800/50 rounded transition-all disabled:opacity-50 text-purple-600 dark:text-purple-400"
-                          >
-                            <Minus className="h-2.5 w-2.5" />
-                          </button>
-                          <span className="text-[10px] font-bold w-4 text-center text-purple-700 dark:text-purple-300">{item.quantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(item, item.quantity + 1)}
-                            disabled={isItemLoading}
-                            className="p-0.5 hover:bg-purple-100 dark:hover:bg-purple-800/50 rounded transition-all disabled:opacity-50 text-purple-600 dark:text-purple-400"
-                          >
-                            <Plus className="h-2.5 w-2.5" />
-                          </button>
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col justify-between min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-slate-900 dark:text-white text-sm truncate pr-2">
+                            {item.product.name}
+                          </h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <select
+                              value={selectedSize}
+                              onChange={(e) => handleSizeChange(item, e.target.value)}
+                              disabled={isItemLoading}
+                              className="text-xs text-slate-500 dark:text-slate-400 bg-transparent border-none p-0 focus:ring-0 cursor-pointer hover:text-slate-800 dark:hover:text-slate-200 transition-colors font-medium"
+                            >
+                              {sizeOptions.map(size => (
+                                <option key={size} value={size}>{size}</option>
+                              ))}
+                            </select>
+                            <span className="text-slate-300 dark:text-slate-700">|</span>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {item.product.type}
+                            </p>
+                          </div>
                         </div>
-
-                        {/* Remove button */}
                         <button
                           onClick={() => handleRemoveItem(item)}
                           disabled={isItemLoading}
-                          className="p-0.5 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 dark:text-red-400 rounded transition-all disabled:opacity-50"
+                          className="text-slate-400 hover:text-red-500 dark:text-slate-500 dark:hover:text-red-400 transition-colors p-1 -mr-1"
                           title="Remove item"
                         >
-                          <Trash2 className="h-2.5 w-2.5" />
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                    </div>
-                    
-                    <div className="text-right flex flex-col justify-start">
-                      <p className="font-bold text-purple-700 dark:text-purple-300 text-xs">
-                        {formatPrice(lineTotal)}
-                      </p>
-                      <p className="text-[9px] text-purple-500 dark:text-purple-400">
-                        {formatPrice(unitPrice)} ea
-                      </p>
+                      
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="font-bold text-slate-900 dark:text-white text-sm">
+                          {formatPrice(lineTotal)}
+                        </div>
+
+                        {/* Quantity Control */}
+                        <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-md bg-white dark:bg-slate-900 shadow-sm">
+                          <button
+                            onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                            disabled={isItemLoading}
+                            className="p-1.5 px-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors disabled:opacity-50"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="px-1 text-xs font-semibold text-slate-900 dark:text-white min-w-[1.5rem] text-center">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => handleQuantityChange(item, item.quantity + 1)}
+                            disabled={isItemLoading}
+                            className="p-1.5 px-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors disabled:opacity-50"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
@@ -325,47 +313,67 @@ export function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-slate-200 dark:border-slate-700 p-4 bg-gradient-to-t from-slate-100 to-white dark:from-slate-900 dark:to-slate-950 space-y-3 shadow-2xl">
-            {/* Coupon Section */}
-            <CouponSelector
-              subtotal={totals.subtotal}
-              discount={totals.discount}
-              promotionText={totals.promotionText}
-              onApply={async (code) => applyCoupon(code)}
-              onClear={async () => clearCoupon()}
-            />
-
-            <div className="bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-purple-200 dark:border-purple-800/50 shadow">
-              <div className="flex justify-between items-baseline">
-                <span className="text-purple-700 dark:text-purple-300 font-bold text-sm">Total</span>
-                <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">{formatPrice(totals.total)}</span>
-              </div>
-              <div className="mt-1 text-[9px] text-purple-600 dark:text-purple-400 space-y-0.5">
-                <div className="flex justify-between"><span>Subtotal</span><span>{formatPrice(totals.subtotal)}</span></div>
-                {totals.discount > 0 && <div className="flex justify-between"><span>Discounts</span><span className="text-green-600 dark:text-green-400">-{formatPrice(totals.discount)}</span></div>}
-              </div>
+          <div className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
+            {/* Note Banner */}
+            <div className="bg-emerald-50 dark:bg-emerald-900/10 py-2 px-4 text-center border-b border-emerald-100 dark:border-emerald-900/20">
+              <p className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+                NOTE: Free shipping on all prepaid orders
+              </p>
             </div>
-            
-            <div className="space-y-1.5">
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-2.5 text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
-                onClick={() => {
-                  // Close the drawer first so the close animation can play,
-                  // then navigate to the checkout page after a short delay.
-                  closeCart();
-                  setTimeout(() => router.push('/checkout'), 250);
-                }}
-              >
-                Proceed to Checkout
-              </Button>
-              <Button 
-                type="button"
-                variant="secondary"
-                className="w-full border border-purple-400 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 font-semibold py-1.5 text-xs transition-all duration-300"
-                onClick={closeCart}
-              >
-                Continue Shopping
-              </Button>
+
+            <div className="p-4 space-y-4">
+              {/* Coupon Section */}
+              <CouponSelector
+                subtotal={totals.subtotal}
+                discount={totals.discount}
+                promotionText={totals.promotionText}
+                onApply={async (code) => applyCoupon(code)}
+                onClear={async () => clearCoupon()}
+              />
+
+              {/* Totals */}
+              <div className="space-y-2 pt-2">
+                <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(totals.subtotal)}</span>
+                </div>
+                {totals.discount > 0 && (
+                  <div className="flex justify-between text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    <span>Savings</span>
+                    <span>-{formatPrice(totals.discount)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-baseline pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <span className="text-base font-bold text-slate-900 dark:text-white">Total</span>
+                  <span className="text-xl font-bold text-slate-900 dark:text-white">{formatPrice(totals.total)}</span>
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="space-y-3 pt-2">
+                <Button 
+                  className="w-full bg-black hover:bg-slate-800 text-white font-bold h-12 text-sm transition-all duration-300 shadow-lg flex items-center justify-between px-6 group"
+                  onClick={() => {
+                    closeCart();
+                    setTimeout(() => router.push('/checkout'), 250);
+                  }}
+                >
+                  <span>BUY NOW</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1 opacity-80">
+                      {/* Simple payment indicators */}
+                      <div className="h-1.5 w-1.5 rounded-full bg-blue-500"></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+                      <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Button>
+                
+                <div className="flex items-center justify-center gap-1.5 opacity-50">
+                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Powered by Shiprocket</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -426,17 +434,17 @@ function CouponSelector({
   return (
     <>
       {/* Coupon Button/Display */}
-      <div className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-900/10 rounded-lg border-2 border-dashed border-purple-400 dark:border-purple-600 shadow-sm">
+      <div className="bg-slate-50 dark:bg-slate-900 rounded-lg border border-dashed border-amber-400 dark:border-amber-600 shadow-sm">
         {!activeCoupon ? (
           <button
             onClick={() => setShowModal(true)}
-            className="w-full p-2.5 flex items-center justify-between hover:bg-purple-100 dark:hover:bg-purple-900/20 transition-colors rounded-lg"
+            className="w-full p-2.5 flex items-center justify-between hover:bg-amber-50 dark:hover:bg-amber-900/10 transition-colors rounded-lg"
           >
             <div className="flex items-center gap-1.5">
-              <Tag className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400" />
-              <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">Apply Coupon</span>
+              <Tag className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+              <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">Apply Coupon</span>
             </div>
-            <ChevronRight className="h-3.5 w-3.5 text-purple-500 dark:text-purple-400" />
+            <ChevronRight className="h-3.5 w-3.5 text-amber-500 dark:text-amber-400" />
           </button>
         ) : (
           <div className="p-2.5 flex items-center justify-between">
@@ -444,7 +452,7 @@ function CouponSelector({
               <Tag className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
               <div>
                 <p className="text-xs font-bold text-green-700 dark:text-green-400">{activeCoupon.code} Applied</p>
-                <p className="text-[9px] text-purple-600 dark:text-purple-400">{activeCoupon.title} • Saved {formatPrice(discount)}</p>
+                <p className="text-[9px] text-slate-600 dark:text-slate-400">{activeCoupon.title} • Saved {formatPrice(discount)}</p>
               </div>
             </div>
             <button
@@ -464,15 +472,15 @@ function CouponSelector({
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           />
-          <div className="relative bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-hidden flex flex-col animate-slide-up border-t-4 border-purple-500">
+          <div className="relative bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl w-full max-w-md max-h-[85vh] overflow-hidden flex flex-col animate-slide-up border-t-4 border-amber-500">
             {/* Modal Header */}
-            <div className="p-3.5 border-b border-purple-200 dark:border-purple-800/50 flex items-center justify-between bg-gradient-to-r from-purple-50 to-white dark:from-purple-900/20 dark:to-slate-900">
-              <h3 className="text-base font-bold text-purple-700 dark:text-purple-300">Available Coupons</h3>
+            <div className="p-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-serif">Available Coupons</h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-full transition-colors"
+                className="p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors"
               >
-                <X className="h-4.5 w-4.5 text-purple-600 dark:text-purple-400" />
+                <X className="h-4.5 w-4.5 text-slate-500 dark:text-slate-400" />
               </button>
             </div>
 
@@ -485,9 +493,9 @@ function CouponSelector({
                 return (
                   <div
                     key={coupon.code}
-                    className={`p-3 rounded-xl border-2 transition-all ${
+                    className={`p-3 rounded-xl border transition-all ${
                       eligible
-                        ? 'border-purple-400 dark:border-purple-600 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 shadow-sm'
+                        ? 'border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/10 shadow-sm'
                         : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-70'
                     }`}
                   >
@@ -495,16 +503,16 @@ function CouponSelector({
                       <div className="flex-1">
                         <div className="flex items-center gap-1.5 mb-1">
                           <Tag className={`h-3.5 w-3.5 ${
-                            eligible ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'
+                            eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400'
                           }`} />
                           <span className={`font-bold text-xs ${
-                            eligible ? 'text-purple-700 dark:text-purple-300' : 'text-slate-600 dark:text-gray-400'
+                            eligible ? 'text-amber-700 dark:text-amber-300' : 'text-slate-600 dark:text-gray-400'
                           }`}>
                             {coupon.code}
                           </span>
                         </div>
                         <p className={`text-base font-bold mb-0.5 ${
-                          eligible ? 'text-purple-600 dark:text-purple-400' : 'text-slate-500 dark:text-gray-500'
+                          eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-gray-500'
                         }`}>
                           {coupon.discount}
                         </p>
@@ -528,7 +536,7 @@ function CouponSelector({
                         disabled={!eligible}
                         className={`${
                           eligible
-                            ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                            ? 'bg-amber-600 hover:bg-amber-700 text-white'
                             : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
                         } px-3 py-1.5 text-[10px] font-bold`}
                       >

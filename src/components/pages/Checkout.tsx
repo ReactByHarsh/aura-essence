@@ -14,21 +14,6 @@ import { formatPrice } from '@/lib/utils';
 import Image from 'next/image';
 import { useToaster } from '@/components/ui/ToasterProvider';
 
-// Helper to dynamically load Razorpay script
-function loadRazorpay(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if ((window as any).Razorpay) {
-      resolve(true);
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-}
-
 export function Checkout() {
   const router = useRouter();
   const { items, getSubtotal, getTax, getTotal, clearCart, openCart, loadCart, closeCart } = useCartStore();
@@ -123,84 +108,44 @@ export function Checkout() {
         return;
       }
 
-      // Online: create Razorpay order via unified /api/orders
-      const res = await fetch('/api/orders', {
+      // Online: create PhonePe payment
+      if (!user) {
+        toast.error('User not found. Please log in again.');
+        router.push('/handler/sign-in');
+        return;
+      }
+
+      const uniqueOrderId = `ORD_${Date.now()}_${user.id.substring(0, 8)}`;
+      
+      // Create PhonePe order
+      const phonepeRes = await fetch('/api/phonepe/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          paymentMethod: 'online',
-          amount: baseTotal, // no COD charge for prepaid
-          items: orderItems,
-          shipping: shippingDetails,
+          amount: baseTotal,
+          orderId: uniqueOrderId,
+          userId: user.id,
+          mobileNumber: data.phone || undefined,
         })
       });
-      const json = await res.json();
-      if (!res.ok || !json.success || !json.razorpayOrder) {
-        console.error('Order init error', json);
-        toast.error(json?.error || 'Failed to initialize online payment.');
+
+      const phonepeJson = await phonepeRes.json();
+      if (!phonepeRes.ok || !phonepeJson.success || !phonepeJson.paymentUrl) {
+        console.error('PhonePe order init error', phonepeJson);
+        toast.error(phonepeJson?.error || 'Failed to initialize payment.');
         return;
       }
 
-      // Load Razorpay SDK
-      const loaded = await loadRazorpay();
-      if (!loaded) {
-        toast.error('Failed to load payment SDK. Check your connection.');
-        return;
-      }
-      const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-      if (!key) {
-        toast.error('Payment configuration missing. Please contact support.');
-        return;
-      }
+      // Store order metadata in sessionStorage for verification
+      sessionStorage.setItem('pendingOrder', JSON.stringify({
+        orderId: uniqueOrderId,
+        items: orderItems,
+        shipping: shippingDetails,
+        amount: baseTotal,
+      }));
 
-      const amountPaise = Math.round(baseTotal * 100);
-      const rzp = new (window as any).Razorpay({
-        key,
-        amount: amountPaise,
-        currency: 'INR',
-        name: 'Aura Élixir',
-        description: 'Order Payment',
-        order_id: json.razorpayOrder.id,
-        prefill: { name: shippingDetails.name, email: shippingDetails.email },
-        notes: { address: `${data.address}, ${data.city}, ${data.state} ${data.zipCode}, ${data.country}` },
-        theme: { color: '#C9A227' },
-        handler: async (response: any) => {
-          try {
-            setVerifying(true);
-            // Verify payment and fulfill via Shiprocket as prepaid
-            const verifyRes = await fetch('/api/razorpay/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                orderMeta: { items: orderItems, shipping: shippingDetails, amount: baseTotal },
-              })
-            });
-            const verifyJson = await verifyRes.json();
-            if (!verifyRes.ok || !verifyJson.success) {
-              console.error('Verify error', verifyJson);
-              toast.error(verifyJson.error || 'Payment verified, but order saving failed. Contact support.');
-              setVerifying(false);
-              return;
-            }
-            
-            // console.log('[Payment Success] Order saved:', verifyJson.orderId);
-            await clearCart();
-            await loadCart(); // Reload cart to ensure it's empty
-            toast.success('Payment successful! Your order has been placed.');
-            router.push('/orders');
-          } catch (e) {
-            console.error('Post-payment error', e);
-            const errorMsg = e instanceof Error ? e.message : 'Unknown error occurred';
-            toast.error(`Payment succeeded, but order saving failed: ${errorMsg}. Please contact support.`);
-            setVerifying(false);
-          }
-        },
-        modal: { ondismiss: () => { toast.info('Payment cancelled. You can try again.'); } }
-      });
-      rzp.open();
+      // Redirect to PhonePe payment page
+      window.location.href = phonepeJson.paymentUrl;
     } catch (error) {
       console.error('Checkout error:', error);
       toast.error('Unexpected error during checkout.');
@@ -212,22 +157,22 @@ export function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-6">
-            <div className="inline-block bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 p-8 rounded-full">
-              <ShoppingBag className="h-16 w-16 text-amber-500 mx-auto opacity-75" />
+      <div className="min-h-screen bg-white dark:bg-slate-950 py-16 px-4 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center">
+          <div className="mb-8">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full mb-6">
+              <ShoppingBag className="h-10 w-10 text-slate-400" />
             </div>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
+              Your Cart is Empty
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+              Looks like you haven't added anything to your cart yet.
+            </p>
+            <Button size="lg" asChild className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-medium shadow-lg rounded-full px-8 min-h-[50px]">
+              <Link href="/collections/men">Start Shopping</Link>
+            </Button>
           </div>
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white mb-4">
-            Your Cart is Empty
-          </h1>
-          <p className="text-xl text-slate-600 dark:text-gray-300 mb-8">
-            Add items to your cart before proceeding to checkout
-          </p>
-          <Button size="lg" asChild className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg">
-            <Link href="/collections/men">Browse Collections</Link>
-          </Button>
         </div>
       </div>
     );
@@ -235,14 +180,14 @@ export function Checkout() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 py-8 sm:py-10 md:py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 sm:py-12 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header - Mobile Optimized */}
-        <div className="flex items-center mb-6 sm:mb-8">
+        {/* Header - Clean */}
+        <div className="flex items-center mb-8">
           <Button
             type="button"
             variant="ghost"
-            className="text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 min-h-[44px] px-4 sm:px-6"
+            className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 px-0 hover:px-4 transition-all"
             onClick={handleBackToCart}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -250,12 +195,12 @@ export function Checkout() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
-          {/* Checkout Form - Mobile Enhanced */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Checkout Form */}
           <div>
             <div className="mb-5 sm:mb-6">
-              <span className="text-purple-600 dark:text-purple-400 text-[10px] sm:text-xs font-semibold tracking-widest uppercase">Secure Checkout</span>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-1.5 leading-tight">
+              <span className="text-amber-600 dark:text-amber-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase">Secure Checkout</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-1.5 leading-tight font-serif">
                 Shipping Details
               </h1>
             </div>
@@ -263,7 +208,7 @@ export function Checkout() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
               {/* Contact Information */}
               <div>
-                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">
+                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
                   Contact Information
                 </h2>
                 <Input
@@ -285,7 +230,7 @@ export function Checkout() {
 
               {/* Shipping Address */}
               <div>
-                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">
+                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
                   Shipping Address
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
@@ -335,8 +280,8 @@ export function Checkout() {
 
               {/* Payment Method (Online / COD) */}
               <div>
-                <h2 className="text-base font-semibold text-purple-700 dark:text-purple-300 mb-3">Payment Method</h2>
-                <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800/50 space-y-2.5">
+                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">Payment Method</h2>
+                <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800 space-y-2.5">
                   <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
                       type="radio"
@@ -344,9 +289,9 @@ export function Checkout() {
                       value="online"
                       checked={paymentMethod === 'online'}
                       onChange={() => setPaymentMethod('online')}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-amber-600 focus:ring-amber-500"
                     />
-                    <span className="text-purple-700 dark:text-purple-300 font-medium">Pay Online (UPI / Card)</span>
+                    <span className="text-slate-900 dark:text-white font-medium">Pay Online (UPI / Card)</span>
                   </label>
                   <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
@@ -355,12 +300,12 @@ export function Checkout() {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
-                      className="text-purple-600 focus:ring-purple-500"
+                      className="text-amber-600 focus:ring-amber-500"
                     />
-                    <span className="text-purple-700 dark:text-purple-300 font-medium">Cash on Delivery (₹{COD_CHARGE} extra)</span>
+                    <span className="text-slate-900 dark:text-white font-medium">Cash on Delivery (₹{COD_CHARGE} extra)</span>
                   </label>
                   {paymentMethod === 'cod' && (
-                    <p className="text-[10px] text-purple-600 dark:text-purple-400 font-semibold">COD Charge: ₹{COD_CHARGE} added</p>
+                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">COD Charge: ₹{COD_CHARGE} added</p>
                   )}
                 </div>
               </div>
@@ -369,7 +314,7 @@ export function Checkout() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold"
+                className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 font-bold h-12 text-base shadow-md"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Processing...' : `Place Order - ${formatPrice(finalTotal)}`}
@@ -379,31 +324,32 @@ export function Checkout() {
 
           {/* Order Summary */}
           <div>
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-5 shadow-lg border border-purple-200 dark:border-purple-800/50 sticky top-8">
-              <h2 className="text-lg sm:text-xl font-semibold text-purple-700 dark:text-purple-300 mb-4">
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 sticky top-8">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
                 Order Summary
               </h2>
 
               {/* Order Items */}
-              <div className="space-y-2.5 mb-4">
+              <div className="space-y-3 mb-6">
                 {items.map(item => (
-                  <div key={item.id} className="flex items-center space-x-2.5">
-                    <Image
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      width={40}
-                      height={40}
-                      className="object-cover rounded-md border border-purple-200 dark:border-purple-800"
-                    />
+                  <div key={item.id} className="flex items-center space-x-3">
+                    <div className="relative w-12 h-12 rounded-md overflow-hidden border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+                      <Image
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xs font-medium text-slate-900 dark:text-white truncate">
+                      <h3 className="text-sm font-medium text-slate-900 dark:text-white truncate">
                         {item.product.name}
                       </h3>
-                      <p className="text-[10px] text-purple-600 dark:text-purple-400">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         Qty: {item.quantity}
                       </p>
                     </div>
-                    <span className="text-xs font-medium text-purple-700 dark:text-purple-300">
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">
                       {formatPrice(item.product.price * item.quantity)}
                     </span>
                   </div>
@@ -411,38 +357,38 @@ export function Checkout() {
               </div>
 
               {/* Totals */}
-              <div className="space-y-1.5 mb-4 pt-3 border-t border-purple-200 dark:border-purple-800/50">
-                <div className="flex justify-between text-xs">
-                  <span className="text-purple-600 dark:text-purple-400">Subtotal</span>
+              <div className="space-y-2 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
                   <span className="text-slate-900 dark:text-white font-medium">
                     {formatPrice(getSubtotal())}
                   </span>
                 </div>
                 
-                <div className="flex justify-between text-xs">
-                  <span className="text-purple-600 dark:text-purple-400">Tax</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-400">Tax</span>
                   <span className="text-slate-900 dark:text-white font-medium">
                     {formatPrice(getTax())}
                   </span>
                 </div>
 
-                <div className="flex justify-between text-xs">
-                  <span className="text-purple-600 dark:text-purple-400">Shipping</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-400">Shipping</span>
                   <span className="text-slate-900 dark:text-white font-medium">
                     {shipping === 0 ? 'Free' : formatPrice(shipping)}
                   </span>
                 </div>
                 {paymentMethod === 'cod' && (
-                  <div className="flex justify-between text-xs text-purple-600 dark:text-purple-400">
+                  <div className="flex justify-between text-sm text-amber-600 dark:text-amber-400">
                     <span>COD Charge</span>
                     <span className="font-medium">+ {formatPrice(COD_CHARGE)}</span>
                   </div>
                 )}
                 
-                <div className="border-t border-purple-200 dark:border-purple-800/50 pt-2 mt-2">
-                  <div className="flex justify-between text-base font-semibold">
-                    <span className="text-purple-700 dark:text-purple-300">Total</span>
-                    <span className="text-purple-700 dark:text-purple-300">
+                <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
+                  <div className="flex justify-between text-lg font-bold">
+                    <span className="text-slate-900 dark:text-white">Total</span>
+                    <span className="text-slate-900 dark:text-white">
                       {formatPrice(finalTotal)}
                     </span>
                   </div>
@@ -450,7 +396,7 @@ export function Checkout() {
               </div>
 
               {/* Security Badge */}
-              <div className="text-center text-[10px] text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 py-2 rounded-lg">
+              <div className="text-center text-[10px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 py-2 rounded-lg border border-slate-100 dark:border-slate-800">
                 <Lock className="h-3 w-3 inline mr-1" />
                 Your payment information is secure
               </div>

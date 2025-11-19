@@ -7,6 +7,13 @@ const COD_CHARGE = 49;
 
 export async function POST(request: Request) {
   try {
+    // Resolve CORS origin
+    const req = request as NextRequest;
+    const origin = req.headers.get('origin');
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const allowedOrigins = [appUrl, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
+    const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : appUrl || '';
+
     const body = await request.json();
     const {
       paymentMethod, // 'online' | 'cod'
@@ -81,60 +88,80 @@ export async function POST(request: Request) {
         console.warn('[COD Order] Shiprocket failed (non-blocking):', shiprocketErr);
       }
 
-      return NextResponse.json({ 
-        success: true, 
-        cod: true, 
-        finalAmount: codFinal, 
-        orderId: order.id,
-        shiprocketOrder 
-      });
+      return new NextResponse(
+        JSON.stringify({ 
+          success: true, 
+          cod: true, 
+          finalAmount: codFinal, 
+          orderId: order.id,
+          shiprocketOrder 
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+            'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Credentials': 'true',
+          },
+        }
+      );
     }
 
-    // Online: create Razorpay order (amount in paise)
-    const keyId = process.env.RAZORPAY_KEY_ID;
-    const keySecret = process.env.RAZORPAY_KEY_SECRET;
-    if (!keyId || !keySecret) {
-      return NextResponse.json({ error: 'Missing Razorpay credentials' }, { status: 500 });
-    }
-    const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64');
-    const payload = {
-      amount: Math.round(amount * 100),
-      currency: 'INR',
-      receipt: `rcpt_${Date.now()}`,
-      notes: { source: 'aura-elixir' },
-      payment_capture: 1,
-    };
-
-    const res = await fetch('https://api.razorpay.com/v1/orders', {
-      method: 'POST',
-      headers: { Authorization: authHeader, 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      cache: 'no-store',
-    });
-
-    if (!res.ok) {
-      const errText = await res.text();
-      return NextResponse.json({ error: 'Failed to create Razorpay order', details: errText }, { status: 502 });
-    }
-    const razorpayOrder = await res.json();
-
-    // Return order along with passthrough meta to verify step
-    return NextResponse.json({
-      success: true,
-      cod: false,
-      razorpayOrder,
-      orderMeta: { items, shipping, amount },
-    });
+    // Online payment is handled via PhonePe integration
+    // This route is only used for COD orders
+    return new NextResponse(
+      JSON.stringify({ 
+        error: 'Online payments should use PhonePe API at /api/phonepe/order' 
+      }),
+      {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      }
+    );
   } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'Unexpected error' }, { status: 500 });
+    return new NextResponse(
+      JSON.stringify({ error: e?.message || 'Unexpected error' }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      }
+    );
   }
 }
 
 export async function GET(request: NextRequest) {
   try {
+    // Resolve CORS origin
+    const origin = request.headers.get('origin');
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const allowedOrigins = [appUrl, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
+    const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : appUrl || '';
+
     const user = await stackServerApp.getUser({ tokenStore: request });
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Credentials': 'true',
+        },
+      });
     }
 
     const url = new URL(request.url);
@@ -152,12 +179,43 @@ export async function GET(request: NextRequest) {
         'Content-Type': 'application/json',
         // User-specific; do not cache publicly
         'Cache-Control': 'private, no-store',
+        ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
       },
     });
   } catch (err: any) {
     return new NextResponse(
       JSON.stringify({ error: err?.message || 'Failed to fetch orders' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { 
+        status: 500, 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          'Access-Control-Allow-Credentials': 'true',
+        } 
+      }
     );
   }
+}
+
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const allowedOrigins = [appUrl, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
+  const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : appUrl || '';
+
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      ...(allowOrigin ? { 'Access-Control-Allow-Origin': allowOrigin } : {}),
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
+      'Vary': 'Origin',
+    },
+  });
 }

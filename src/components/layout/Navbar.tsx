@@ -178,7 +178,7 @@ export function Navbar() {
               href="/" 
               className="hover:opacity-80 transition-opacity group"
             >
-              <span className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent hover:from-purple-300 hover:to-purple-700 transition-all duration-300">
+              <span className="text-3xl font-bold text-slate-900 dark:text-white font-serif tracking-tight">
                 Aura Élixir
               </span>
             </Link>
@@ -198,12 +198,12 @@ export function Navbar() {
               </Button>
               
               {isCollectionsOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-900 rounded-lg shadow-xl border border-gray-200 dark:border-slate-600/50 py-2 z-50 animate-slide-up backdrop-blur-sm">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-slide-up">
                   {collections.map(collection => (
                     <Link
                       key={collection.slug}
                       href={`/collections/${collection.slug}`}
-                      className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-amber-50 dark:hover:bg-amber-900/30 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
+                      className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
                       onClick={() => setIsCollectionsOpen(false)}
                     >
                       {collection.name}
@@ -222,16 +222,16 @@ export function Navbar() {
                   value={searchQuery}
                   onChange={(e) => handleSearchInput(e.target.value)}
                   onFocus={() => searchQuery && setShowSearchDropdown(true)}
-                  className="w-64 pl-10 border-gray-300 dark:border-slate-600 focus:border-amber-400 focus:ring-amber-400 rounded-lg bg-white dark:bg-slate-800/50 backdrop-blur-sm"
+                  className="w-64 pl-10 border-slate-200 dark:border-slate-700 focus:border-amber-500 focus:ring-amber-500 rounded-full bg-slate-50 dark:bg-slate-800/50 text-sm"
                 />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                 
                 {/* Search Dropdown */}
                 {showSearchDropdown && searchQuery.trim() && (
-                  <div className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-900 rounded-lg shadow-2xl border border-gray-200 dark:border-slate-600/50 z-50 max-h-96 overflow-y-auto">
+                  <div className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 z-50 max-h-96 overflow-y-auto">
                     {isSearching ? (
-                      <div className="p-4 text-center text-gray-600 dark:text-gray-400">
-                        <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                      <div className="p-4 text-center text-slate-500 dark:text-slate-400">
+                        <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500"></div>
                         <p className="mt-2 text-sm">Searching...</p>
                       </div>
                     ) : searchResults.length > 0 ? (
@@ -245,16 +245,16 @@ export function Navbar() {
                               setShowSearchDropdown(false);
                               setSearchResults([]);
                             }}
-                            className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors border-b border-gray-100 dark:border-slate-700/50 last:border-b-0"
+                            className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
                           >
                             {product.images?.[0] && (
-                              <div className="relative w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                              <div className="relative w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
                                 <Image
                                   src={product.images[0]}
                                   alt={product.name}
                                   fill
                                   className="object-cover"
-                                  sizes="48px"
+                                  sizes="40px"
                                 />
                               </div>
                             )}
@@ -262,7 +262,7 @@ export function Navbar() {
                               <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
                                 {product.name}
                               </p>
-                              <p className="text-xs text-slate-600 dark:text-gray-400">
+                              <p className="text-xs text-slate-500 dark:text-slate-400">
                                 {product.brand}
                               </p>
                             </div>
@@ -270,7 +270,7 @@ export function Navbar() {
                         ))}
                       </div>
                     ) : (
-                      <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                      <div className="p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
                         No products found
                       </div>
                     )}
@@ -382,7 +382,7 @@ export function Navbar() {
 
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-slate-600/50 py-4 space-y-4">
+          <div className="md:hidden border-t border-slate-100 dark:border-slate-800 py-4 space-y-4">
             {/* Mobile search */}
             <form onSubmit={(e) => e.preventDefault()} className="px-2 relative" ref={searchRef}>
               <Input
@@ -391,15 +391,15 @@ export function Navbar() {
                 value={searchQuery}
                 onChange={(e) => handleSearchInput(e.target.value)}
                 onFocus={() => searchQuery && setShowSearchDropdown(true)}
-                className="w-full border-gray-300 dark:border-slate-600 focus:border-amber-400 focus:ring-amber-400 rounded-lg bg-white dark:bg-slate-800/50 backdrop-blur-sm"
+                className="w-full border-slate-200 dark:border-slate-700 focus:border-amber-500 focus:ring-amber-500 rounded-lg bg-slate-50 dark:bg-slate-800/50"
               />
               
               {/* Mobile search dropdown */}
               {showSearchDropdown && searchQuery.trim() && (
-                <div className="absolute top-full left-2 right-2 mt-2 bg-white dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-900 rounded-lg shadow-2xl border border-gray-200 dark:border-slate-600/50 z-50 max-h-64 overflow-y-auto">
+                <div className="absolute top-full left-2 right-2 mt-2 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 z-50 max-h-64 overflow-y-auto">
                   {isSearching ? (
-                    <div className="p-4 text-center text-gray-600 dark:text-gray-400">
-                      <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                    <div className="p-4 text-center text-slate-500 dark:text-slate-400">
+                      <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500"></div>
                       <p className="mt-2 text-sm">Searching...</p>
                     </div>
                   ) : searchResults.length > 0 ? (
@@ -414,29 +414,29 @@ export function Navbar() {
                             setSearchResults([]);
                             setIsMenuOpen(false);
                           }}
-                          className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors"
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
                         >
                           {product.images && product.images[0] && (
-                            <div className="w-10 h-10 flex-shrink-0 rounded bg-gray-100 dark:bg-slate-700 overflow-hidden">
+                            <div className="w-10 h-10 flex-shrink-0 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
                               <Image
                                 src={product.images[0]}
                                 alt={product.name}
-                                width={40}
-                                height={40}
-                                className="w-full h-full object-cover"
+                                fill
+                                className="object-cover"
+                                sizes="40px"
                               />
                             </div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">{product.name}</p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">{product.brand}</p>
+                            <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{product.name}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{product.brand}</p>
                           </div>
-                          <p className="text-sm font-medium text-purple-600 dark:text-purple-400">₹{product.price}</p>
+                          <p className="text-sm font-medium text-amber-600 dark:text-amber-400">₹{product.price}</p>
                         </Link>
                       ))}
                     </div>
                   ) : (
-                    <div className="p-4 text-center text-gray-600 dark:text-gray-400">
+                    <div className="p-4 text-center text-slate-500 dark:text-slate-400">
                       <p className="text-sm">No products found</p>
                     </div>
                   )}
@@ -446,13 +446,13 @@ export function Navbar() {
 
             {/* Mobile collections */}
             <div className="px-2">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2 text-sm uppercase tracking-widest text-amber-600 dark:text-amber-300">Collections</h3>
-              <div className="space-y-2">
+              <h3 className="font-bold text-slate-900 dark:text-white mb-3 text-xs uppercase tracking-widest">Collections</h3>
+              <div className="space-y-1">
                 {collections.map(collection => (
                   <Link
                     key={collection.slug}
                     href={`/collections/${collection.slug}`}
-                    className="block text-sm text-slate-700 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-1.5"
+                    className="block text-sm text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {collection.name}

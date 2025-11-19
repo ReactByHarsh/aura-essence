@@ -414,6 +414,27 @@ export async function searchOrders(query: string, limit: number = 20): Promise<O
   return ordersWithItems;
 }
 
+// Find order by PhonePe transaction ID (stored in shipping_address metadata)
+export async function findOrderByTransactionId(merchantTransactionId: string): Promise<Order | null> {
+  try {
+    const result = await sql`
+      SELECT * FROM public.orders
+      WHERE shipping_address::jsonb @> jsonb_build_object('merchantTransactionId', ${merchantTransactionId}::text)
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    return mapOrder(result[0]);
+  } catch (error) {
+    console.error('Error finding order by transaction ID:', error);
+    return null;
+  }
+}
+
 // Helper to map DB row to Order type
 function mapOrder(row: any): Order {
   return {

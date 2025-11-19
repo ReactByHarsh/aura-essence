@@ -3,98 +3,98 @@ import React from 'react';
 
 export function Privacy() {
   return (
-    <div className="min-h-screen">
-      {/* Premium Hero Section - Mobile Optimized */}
-      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-amber-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-        
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Premium Hero Section - Clean */}
+      <section className="relative py-16 sm:py-24 overflow-hidden bg-slate-50 dark:bg-slate-900">
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6">
-          <div className="mb-4 sm:mb-6 inline-block">
-            <span className="text-amber-400 text-xs sm:text-sm font-semibold tracking-widest">LEGAL</span>
+          <div className="mb-6 inline-flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+            <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-medium tracking-[0.3em] uppercase">LEGAL</span>
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-wider text-white mb-3 sm:mb-4 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-8 leading-tight font-serif">
             Privacy Policy
           </h1>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-14 md:py-16">
-        <div className="prose prose-lg max-w-none text-slate-600 dark:text-gray-300">
-          <p className="text-sm text-slate-600 dark:text-gray-400 mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="prose prose-lg max-w-none text-slate-600 dark:text-slate-300">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 font-medium">
             Last updated: January 25, 2025
           </p>
 
           {/* Business Information Box */}
-          <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900/30 dark:to-amber-900/30 border-l-4 border-purple-600 p-4 rounded-lg mb-8">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Business Information</h3>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Business Name:</strong> Aura Elixir</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Managed by:</strong> Harshavardhan Shinde</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Email:</strong> help@auraelixir.co.in</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Phone:</strong> +91 9028709575</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
+          <div className="bg-slate-50 dark:bg-slate-900 border-l-4 border-amber-500 p-6 rounded-r-lg mb-10 shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 font-serif">Business Information</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
+              <p className="text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Business Name:</strong> Aura Elixir</p>
+              <p className="text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Managed by:</strong> Harshavardhan Shinde</p>
+              <p className="text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Email:</strong> help@auraelixir.co.in</p>
+              <p className="text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Phone:</strong> +91 9028709575</p>
+              <p className="text-slate-700 dark:text-slate-300 sm:col-span-2"><strong className="font-semibold text-slate-900 dark:text-white">Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
+            </div>
           </div>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
               Privacy Policy
             </h2>
-            <p className="mb-4 text-slate-700 dark:text-gray-200">
+            <p className="mb-4 text-slate-600 dark:text-slate-300 leading-relaxed">
               This Privacy Policy describes how Aura Elixir (the "Site", "we", "us", or "our") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from auraelixir.co.in (the "Site") or otherwise communicate with us regarding the Site (collectively, the "Services"). For purposes of this Privacy Policy, "you" and "your" means you as the user of the Services, whether you are a customer, website visitor, or another individual whose information we have collected pursuant to this Privacy Policy.
             </p>
-            <p className="text-slate-700 dark:text-gray-200">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Please read this Privacy Policy carefully. By using and accessing any of the Services, you agree to the collection, use, and disclosure of your information as described in this Privacy Policy. If you do not agree to this Privacy Policy, please do not use or access any of the Services.
             </p>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
               Changes to This Privacy Policy
             </h2>
-            <p className="text-slate-700 dark:text-gray-200">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               We may update this Privacy Policy from time to time, including to reflect changes to our practices or for other operational, legal, or regulatory reasons. We will post the revised Privacy Policy on the Site, update the "Last updated" date and take any other steps required by applicable law.
             </p>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
               How We Collect and Use Your Personal Information
             </h2>
-            <p className="mb-4 text-slate-700 dark:text-gray-200">
+            <p className="mb-4 text-slate-600 dark:text-slate-300 leading-relaxed">
               To provide the Services, we collect personal information about you from a variety of sources, as set out below. The information that we collect and use varies depending on how you interact with us.
             </p>
-            <p className="text-slate-700 dark:text-gray-200">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               In addition to the specific uses set out below, we may use information we collect about you to communicate with you, provide or improve the Services, comply with any applicable legal obligations, enforce any applicable terms of service, and to protect or defend the Services, our rights, and the rights of our users or others.
             </p>
           </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-4">
+          <section className="mb-10">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
               What Personal Information We Collect
             </h2>
-            <p className="mb-4 text-slate-700 dark:text-gray-200">
+            <p className="mb-4 text-slate-600 dark:text-slate-300 leading-relaxed">
               The types of personal information we obtain about you depends on how you interact with our Site and use our Services. When we use the term "personal information", we are referring to information that identifies, relates to, describes or can be associated with you.
             </p>
 
-            <h3 className="text-lg font-semibold text-slate-800 dark:text-gray-100 mb-3">Information We Collect Directly from You</h3>
-            <p className="mb-3 text-slate-700 dark:text-gray-200">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 font-serif">Information We Collect Directly from You</h3>
+            <p className="mb-3 text-slate-600 dark:text-slate-300 leading-relaxed">
               Information that you directly submit to us through our Services may include:
             </p>
-            <ul className="list-disc list-inside space-y-2 mb-4 text-slate-700 dark:text-gray-200">
+            <ul className="list-disc list-inside space-y-2 mb-4 text-slate-600 dark:text-slate-300 ml-4">
               <li>Contact details including your name, address, phone number, and email</li>
               <li>Order information including your name, billing address, shipping address, payment confirmation, email address, and phone number</li>
               <li>Account information including your username, password, security questions and other information used for account security purposes</li>
               <li>Customer support information including the information you choose to include in communications with us, for example, when sending a message through the Services</li>
             </ul>
-            <p className="text-slate-700 dark:text-gray-200">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
               Some features of the Services may require you to directly provide us with certain information about yourself. You may elect not to provide this information, but doing so may prevent you from using or accessing these features.
             </p>
 
-            <h3 className="text-lg font-semibold text-slate-800 dark:text-gray-100 mb-3 mt-6">Information We Collect About Your Usage</h3>
-            <p className="mb-3 text-slate-700 dark:text-gray-200">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 mt-8 font-serif">Information We Collect About Your Usage</h3>
+            <p className="mb-3 text-slate-600 dark:text-slate-300 leading-relaxed">
               We may also automatically collect certain information about your interaction with the Services ("Usage Data"). To do this, we may use cookies, pixels and similar technologies ("Cookies"). Usage Data may include information about how you access and use our Site and your account, including device information, browser information, information about your network connection, your IP address and other information regarding your interaction with the Services.
             </p>
 
@@ -273,11 +273,11 @@ export function Privacy() {
             <p className="mb-4 text-slate-700 dark:text-gray-200">
               Should you have any questions about our privacy practices or this Privacy Policy, or if you would like to exercise any of the rights available to you, please contact us:
             </p>
-            <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900/30 dark:to-amber-900/30 border-l-4 border-purple-600 p-4 rounded-lg">
-              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Business Name:</strong> Aura Elixir</p>
-              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Managed by:</strong> Harshavardhan Shinde</p>
-              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Email:</strong> help@auraelixir.co.in</p>
-              <p className="mb-2 text-slate-700 dark:text-gray-200"><strong>Phone:</strong> +91 9028709575</p>
+            <div className="bg-slate-50 dark:bg-slate-900 border-l-4 border-amber-500 p-6 rounded-r-lg shadow-sm">
+              <p className="mb-2 text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Business Name:</strong> Aura Elixir</p>
+              <p className="mb-2 text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Managed by:</strong> Harshavardhan Shinde</p>
+              <p className="mb-2 text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Email:</strong> help@auraelixir.co.in</p>
+              <p className="mb-2 text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Phone:</strong> +91 9028709575</p>
               <p className="text-slate-700 dark:text-gray-200"><strong>Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
             </div>
           </section>

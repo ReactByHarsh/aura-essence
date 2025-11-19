@@ -147,58 +147,56 @@ export function Collections() {
       <section className="py-4 px-4 sm:px-6 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto">
           <nav className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="flex items-center text-gray-600 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-300 transition-colors">
+            <Link href="/" className="flex items-center text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400 transition-colors">
               <Home className="h-4 w-4 mr-1" />
               Home
             </Link>
-            <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600" />
-            <span className="text-purple-600 dark:text-purple-300 font-medium">
+            <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
+            <span className="text-slate-900 dark:text-white font-medium">
               {categoryTitle}
             </span>
           </nav>
         </div>
       </section>
 
-      {/* Premium Hero Section for Collections - Mobile Optimized */}
-      <section className="relative py-16 sm:py-20 md:py-24 px-4 sm:px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
+      {/* Premium Hero Section for Collections - Clean & Modern */}
+      <section className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden bg-slate-50 dark:bg-slate-900">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="mb-4 sm:mb-6 inline-block">
-            <span className="text-purple-400 text-xs sm:text-sm font-semibold tracking-widest">
+          <div className="mb-6 inline-flex items-center gap-3 animate-fade-in">
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+            <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-medium tracking-[0.3em] uppercase">
               {activeCategory === 'men' ? 'FOR HIM' : 'FOR HER'}
             </span>
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
           </div>
-          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-wider text-white mb-3 sm:mb-4 mt-3 sm:mt-4 px-2 leading-tight ${
-            activeCategory === 'men' 
-              ? 'bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent' 
-              : 'bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 bg-clip-text text-transparent'
-          }`}>
+          
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 font-serif">
             {categoryTitle}
           </h1>
-          <p className="text-lg sm:text-xl text-gray-100 tracking-wide font-light max-w-2xl mx-auto px-4 mb-4 sm:mb-6">
+          
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 tracking-wide font-light max-w-2xl mx-auto px-4 mb-8">
             {categoryDescription}
           </p>
 
-          <p className="text-base sm:text-lg text-gray-200 max-w-3xl mx-auto px-4 mb-6 sm:mb-8 leading-relaxed">
+          <p className="text-base text-slate-500 dark:text-slate-400 max-w-3xl mx-auto px-4 mb-10 leading-relaxed">
             {activeCategory === 'men' 
               ? 'From woody earth tones to fresh aquatic notes, our men\'s collection features signature fragrances from renowned perfumers worldwide. Each scent is crafted with the finest ingredients for lasting impression and confidence.'
               : 'Elegant florals, sensual orientals, and sophisticated chypres define our women\'s collection. Discover fragrances that capture the essence of femininity, from delicate daytime scents to captivating evening aromas.'
             }
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200 min-h-[56px] text-base font-semibold" asChild>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+            <Button 
+              size="lg" 
+              className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 min-h-[56px] px-8 rounded-full text-base font-medium" 
+              asChild
+            >
               <Link href="#products">
                 Shop Collection
               </Link>
-            </Button>
-            <Button variant="secondary" size="lg" className="border-2 border-white text-white hover:bg-white/20 backdrop-blur-sm min-h-[56px] text-base font-semibold" asChild>
-              <Link href="/about">Learn More</Link>
             </Button>
           </div>
         </div>
@@ -208,14 +206,14 @@ export function Collections() {
       <section id="products" className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto">
           {errorMessage && (
-            <div className="mb-6 sm:mb-8 flex flex-col items-center gap-3 rounded-xl border-2 border-purple-200 bg-purple-50 px-4 sm:px-6 py-4 sm:py-5 text-center text-purple-700 dark:border-purple-900/30 dark:bg-purple-900/20 dark:text-purple-300 shadow-lg">
+            <div className="mb-6 sm:mb-8 flex flex-col items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 sm:px-6 py-4 sm:py-5 text-center text-red-700 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-300 shadow-sm">
               <p className="text-sm sm:text-base font-medium">{errorMessage}</p>
               <Button
                 size="lg"
                 variant="secondary"
                 onClick={handleRetry}
                 disabled={loading}
-                className="border-2 border-purple-400 text-purple-700 dark:text-purple-300 min-h-[48px] px-6 font-semibold"
+                className="border border-red-200 text-red-700 dark:text-red-300 min-h-[48px] px-6 font-semibold hover:bg-red-100 dark:hover:bg-red-900/40"
               >
                 {loading ? 'Refreshing...' : 'Retry Now'}
               </Button>
@@ -225,18 +223,25 @@ export function Collections() {
           {/* Sort Dropdown */}
           {products.length > 0 && (
             <div className="mb-6 sm:mb-8 flex justify-end">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-slate-700 dark:text-gray-300">Sort by:</label>
-                <select 
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="px-4 py-2.5 rounded-lg border-2 border-purple-300 dark:border-purple-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-gray-200 font-medium hover:border-purple-400 transition-colors focus:outline-none focus:border-purple-500 shadow-sm"
-                >
-                  <option value="name">Product Name (A-Z)</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Top Rated</option>
-                </select>
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider text-xs">Sort by</label>
+                <div className="relative">
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="appearance-none pl-4 pr-10 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 font-medium hover:border-amber-500 transition-colors focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 shadow-sm cursor-pointer text-sm"
+                  >
+                    <option value="name">Name (A-Z)</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -256,13 +261,13 @@ export function Collections() {
             </div>
           ) : (
             <div className="text-center py-16 sm:py-20 px-4">
-              <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 rounded-full mb-6 shadow-lg">
-                <ShoppingBag className="h-10 w-10 sm:h-12 sm:w-12 text-purple-600 dark:text-purple-400" />
+              <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 dark:bg-slate-900 rounded-full mb-6 shadow-sm border border-slate-100 dark:border-slate-800">
+                <ShoppingBag className="h-10 w-10 sm:h-12 sm:w-12 text-slate-400" />
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mb-3">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
                 No Products Found
               </h3>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-gray-400 mb-6">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-6">
                 Check back soon for new arrivals in our {categoryTitle.toLowerCase()}
               </p>
               <Button className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" asChild>

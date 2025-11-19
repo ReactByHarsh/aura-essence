@@ -3,39 +3,39 @@ import React from 'react';
 
 export function RefundPolicy() {
   return (
-    <div className="min-h-screen">
-      {/* Premium Hero Section - Mobile Optimized */}
-      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-amber-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      {/* Premium Hero Section - Clean */}
+      <section className="relative py-12 sm:py-16 overflow-hidden bg-slate-50 dark:bg-slate-900">
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6">
-          <div className="mb-4 sm:mb-6 inline-block">
-            <span className="text-amber-400 text-xs sm:text-sm font-semibold tracking-widest">POLICIES</span>
+          <div className="mb-3 sm:mb-4 inline-flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+            <span className="text-amber-600 dark:text-amber-400 text-[10px] sm:text-xs font-medium tracking-[0.3em] uppercase">POLICIES</span>
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-wider text-white mb-3 sm:mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 sm:mb-4 leading-tight font-serif">
             Refund Policy
           </h1>
         </div>
       </section>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-14 md:py-16">
-        <div className="prose prose-lg max-w-none text-slate-600 dark:text-gray-300">
-          <p className="text-sm text-slate-600 dark:text-gray-400 mb-8">
+        <div className="prose prose-lg max-w-none text-slate-600 dark:text-slate-300">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 font-medium">
             Last updated: January 25, 2025
           </p>
 
           {/* Business Information Box */}
-          <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-900/30 dark:to-amber-900/30 border-l-4 border-purple-600 p-4 rounded-lg mb-8">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">Business Information</h3>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Business Name:</strong> Aura Elixir</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Managed by:</strong> Harshavardhan Shinde</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Email:</strong> help@auraelixir.co.in</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Phone:</strong> +91 9028709575</p>
-            <p className="text-sm text-slate-700 dark:text-gray-200"><strong>Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
+          <div className="bg-slate-50 dark:bg-slate-900 border-l-4 border-amber-500 p-6 rounded-r-lg mb-8 shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 font-serif">Business Information</h3>
+            <div className="space-y-2">
+              <p className="text-sm text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Business Name:</strong> Aura Elixir</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Managed by:</strong> Harshavardhan Shinde</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Email:</strong> help@auraelixir.co.in</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Phone:</strong> +91 9028709575</p>
+              <p className="text-sm text-slate-700 dark:text-slate-300"><strong className="font-semibold text-slate-900 dark:text-white">Address:</strong> Balaji Colony, Barshi - 413401, Maharashtra, India</p>
+            </div>
           </div>
 
           <section className="mb-8">

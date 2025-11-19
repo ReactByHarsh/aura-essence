@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'accent' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'accent' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   children: React.ReactNode;
   asChild?: boolean;
@@ -23,6 +23,7 @@ export function Button({
       'btn-secondary': variant === 'secondary',
       'btn-accent': variant === 'accent',
       'hover:bg-primary-50 dark:hover:bg-primary-900': variant === 'ghost',
+      'border-2 border-primary-500 text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900': variant === 'outline',
     },
     {
       'px-3 py-1.5 text-sm': size === 'sm',

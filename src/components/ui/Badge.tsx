@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'accent' | 'success' | 'warning' | 'danger';
+  variant?: 'default' | 'accent' | 'success' | 'warning' | 'danger' | 'secondary';
   size?: 'sm' | 'md';
   className?: string;
 }
@@ -24,6 +24,7 @@ export function Badge({
           'bg-green-100 text-green-800': variant === 'success',
           'bg-yellow-100 text-yellow-800': variant === 'warning',
           'bg-red-100 text-red-800': variant === 'danger',
+          'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100': variant === 'secondary',
         },
         {
           'px-2 py-0.5 text-xs': size === 'sm',

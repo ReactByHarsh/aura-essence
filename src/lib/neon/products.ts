@@ -1,4 +1,5 @@
 import { sql } from './db';
+import { unstable_cache, revalidateTag } from 'next/cache';
 
 export interface Product {
   id: string;
@@ -47,7 +48,7 @@ export interface ProductsResponse {
 }
 
 // Get all products with optional filtering and pagination
-export async function getProducts(
+async function getProductsDb(
   filters: ProductFilters = {},
   page: number = 1,
   limit: number = 12
@@ -136,8 +137,13 @@ export async function getProducts(
   };
 }
 
+export const getProducts = unstable_cache(getProductsDb, ['products-list'], { 
+  revalidate: 3600, 
+  tags: ['products'] 
+});
+
 // Get a single product by ID
-export async function getProduct(id: string): Promise<Product | null> {
+async function getProductDb(id: string): Promise<Product | null> {
   const result = await sql`
     SELECT * FROM public.products
     WHERE id = ${id}::uuid
@@ -146,8 +152,13 @@ export async function getProduct(id: string): Promise<Product | null> {
   return result.length > 0 ? mapProduct(result[0]) : null;
 }
 
+export const getProduct = unstable_cache(getProductDb, ['product-detail'], { 
+  revalidate: 3600, 
+  tags: ['products'] 
+});
+
 // Get featured products
-export async function getFeaturedProducts(): Promise<{
+async function getFeaturedProductsDb(): Promise<{
   newProducts: Product[];
   bestSellers: Product[];
   onSale: Product[];
@@ -186,8 +197,13 @@ export async function getFeaturedProducts(): Promise<{
   };
 }
 
+export const getFeaturedProducts = unstable_cache(getFeaturedProductsDb, ['featured-products'], { 
+  revalidate: 3600, 
+  tags: ['products'] 
+});
+
 // Get products by category
-export async function getProductsByCategory(category: string, limit: number = 12): Promise<Product[]> {
+async function getProductsByCategoryDb(category: string, limit: number = 12): Promise<Product[]> {
   const products = await sql`
     SELECT id, name, brand, price, original_price, images, category, type, notes,
            rating, is_new, is_best_seller, is_on_sale, created_at, updated_at, stock, sizes
@@ -200,8 +216,13 @@ export async function getProductsByCategory(category: string, limit: number = 12
   return products.map(mapProduct);
 }
 
+export const getProductsByCategory = unstable_cache(getProductsByCategoryDb, ['products-by-category'], { 
+  revalidate: 3600, 
+  tags: ['products'] 
+});
+
 // Get products by brand
-export async function getProductsByBrand(brand: string, limit: number = 12): Promise<Product[]> {
+async function getProductsByBrandDb(brand: string, limit: number = 12): Promise<Product[]> {
   const products = await sql`
     SELECT id, name, brand, price, original_price, images, category, type, notes,
            rating, is_new, is_best_seller, is_on_sale, created_at, updated_at, stock, sizes
@@ -213,6 +234,11 @@ export async function getProductsByBrand(brand: string, limit: number = 12): Pro
 
   return products.map(mapProduct);
 }
+
+export const getProductsByBrand = unstable_cache(getProductsByBrandDb, ['products-by-brand'], { 
+  revalidate: 3600, 
+  tags: ['products'] 
+});
 
 // Search products
 export async function searchProducts(query: string, limit: number = 20): Promise<Product[]> {
@@ -233,7 +259,7 @@ export async function searchProducts(query: string, limit: number = 20): Promise
 }
 
 // Get all unique brands
-export async function getBrands(): Promise<string[]> {
+async function getBrandsDb(): Promise<string[]> {
   const result = await sql`
     SELECT DISTINCT brand
     FROM public.products
@@ -243,8 +269,13 @@ export async function getBrands(): Promise<string[]> {
   return result.map((row: any) => row.brand);
 }
 
+export const getBrands = unstable_cache(getBrandsDb, ['brands-list'], { 
+  revalidate: 86400, 
+  tags: ['products'] 
+});
+
 // Get all unique categories
-export async function getCategories(): Promise<string[]> {
+async function getCategoriesDb(): Promise<string[]> {
   const result = await sql`
     SELECT DISTINCT category
     FROM public.products
@@ -253,6 +284,11 @@ export async function getCategories(): Promise<string[]> {
 
   return result.map((row: any) => row.category);
 }
+
+export const getCategories = unstable_cache(getCategoriesDb, ['categories-list'], { 
+  revalidate: 86400, 
+  tags: ['products'] 
+});
 
 // Update product stock (admin function)
 export async function updateProductStock(productId: string, newStock: number): Promise<Product> {
@@ -267,6 +303,7 @@ export async function updateProductStock(productId: string, newStock: number): P
     throw new Error('Product not found');
   }
 
+  revalidateTag('products');
   return mapProduct(result[0]);
 }
 
@@ -287,6 +324,7 @@ export async function createProduct(product: Partial<Product>): Promise<Product>
     RETURNING *
   `;
 
+  revalidateTag('products');
   return mapProduct(result[0]);
 }
 

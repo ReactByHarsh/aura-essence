@@ -3,6 +3,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@stackframe/stack';
 import { formatPrice } from '@/lib/utils';
+import { Check, Package, Truck, Clock, ShoppingBag } from 'lucide-react';
 
 type OrderItemDisplay = {
   name: string;
@@ -19,11 +20,21 @@ type OrderDisplay = {
   items: OrderItemDisplay[];
 };
 
-const statusColors: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
+const STEPS = [
+  { id: 'pending', label: 'Order Placed', icon: ShoppingBag },
+  { id: 'processing', label: 'Processing', icon: Package },
+  { id: 'shipped', label: 'Shipped', icon: Truck },
+  { id: 'delivered', label: 'Delivered', icon: Check },
+];
+
+const getStepStatus = (currentStatus: string, stepId: string) => {
+  const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+  const currentIndex = statusOrder.indexOf(currentStatus);
+  const stepIndex = statusOrder.indexOf(stepId);
+
+  if (stepIndex < currentIndex) return 'completed';
+  if (stepIndex === currentIndex) return 'current';
+  return 'upcoming';
 };
 
 export default function OrdersPage() {
@@ -69,7 +80,6 @@ export default function OrdersPage() {
         setOrders(mapped);
       } catch (e: any) {
         if (e.name === 'AbortError') {
-          // console.log('Orders fetch aborted');
           return;
         }
         setError(e?.message ?? 'Failed to load orders');
@@ -85,56 +95,153 @@ export default function OrdersPage() {
   }, [stackUser?.id]);
 
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-primary-950">
-      <section className="relative py-12 sm:py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-amber-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      <section className="relative py-12 sm:py-16 overflow-hidden bg-slate-50 dark:bg-slate-900">
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
         <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <span className="text-amber-400 text-xs sm:text-sm font-semibold tracking-widest">YOUR ORDERS</span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-wider text-white mt-2">
+          <div className="mb-3 sm:mb-4 inline-flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+            <span className="text-amber-600 dark:text-amber-400 text-[10px] sm:text-xs font-medium tracking-[0.3em] uppercase">YOUR ORDERS</span>
+            <div className="h-[1px] w-8 bg-amber-500/50"></div>
+          </div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 leading-tight font-serif">
             Order History
           </h1>
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12">
-        <section className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-800 p-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <section className="space-y-8">
           {loading ? (
-            <p className="text-slate-600 dark:text-gray-400">Loading orders...</p>
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
+            </div>
           ) : error ? (
-            <p className="text-red-600 dark:text-red-400">{error}</p>
+            <div className="p-4 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 rounded-lg text-center">
+              <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+            </div>
           ) : orders.length === 0 ? (
-            <p className="text-slate-600 dark:text-gray-400">No orders yet.</p>
+            <div className="text-center py-16 bg-slate-50 dark:bg-slate-900 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShoppingBag className="w-8 h-8 text-slate-400" />
+              </div>
+              <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-1">No orders yet</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">Start shopping to see your orders here.</p>
+            </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {orders.map((order) => (
-                <div key={order.id} className="border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-slate-600 dark:text-gray-400">Order ID</p>
-                      <p className="font-semibold text-slate-900 dark:text-white">{order.id}</p>
-                    </div>
-                    <div>
-                      <span className={`px-2 py-1 rounded text-xs ${statusColors[order.status] || 'bg-slate-100 text-slate-800'}`}>{order.status}</span>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-slate-600 dark:text-gray-400">Total</p>
-                      <p className="font-semibold text-slate-900 dark:text-white">{formatPrice(order.total)}</p>
+                <div key={order.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                  {/* Order Header */}
+                  <div className="bg-slate-50/50 dark:bg-slate-800/30 p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap gap-6 justify-between items-center">
+                    <div className="flex flex-wrap gap-6 sm:gap-12">
+                      <div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mb-1">Order Placed</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white">
+                          {new Date(order.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mb-1">Total Amount</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white">{formatPrice(order.total)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mb-1">Order ID</p>
+                        <p className="text-sm font-mono text-slate-600 dark:text-slate-300">#{order.id.slice(0, 8)}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-3 flex gap-3 overflow-x-auto">
-                    {order.items.map((it, idx) => (
-                      <div key={idx} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-lg p-2 min-w-[220px]">
-                        <img src={it.image} alt={it.name} className="h-10 w-10 object-cover rounded" />
-                        <div>
-                          <p className="text-sm font-medium text-slate-900 dark:text-white">{it.name}</p>
-                          <p className="text-xs text-slate-600 dark:text-gray-400">{it.quantity} × {formatPrice(it.price)}</p>
+
+                  <div className="p-4 sm:p-6">
+                    {/* Tracker */}
+                    <div className="mb-8 sm:mb-10 mt-2">
+                      <div className="relative">
+                        {/* Progress Bar Background */}
+                        <div className="absolute top-5 left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-800 hidden sm:block"></div>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 sm:gap-0 relative">
+                          {STEPS.map((step, idx) => {
+                            const status = getStepStatus(order.status, step.id);
+                            const Icon = step.icon;
+                            
+                            return (
+                              <div key={step.id} className="flex sm:flex-col items-center sm:text-center gap-4 sm:gap-3 relative z-10">
+                                {/* Icon Circle */}
+                                <div className={`
+                                  w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors duration-300 shrink-0
+                                  ${status === 'completed' || status === 'current' 
+                                    ? 'bg-amber-500 border-amber-500 text-white' 
+                                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-300 dark:text-slate-600'}
+                                `}>
+                                  <Icon className="w-5 h-5" />
+                                </div>
+                                
+                                {/* Label */}
+                                <div className="flex flex-col sm:items-center">
+                                  <span className={`
+                                    text-sm font-bold uppercase tracking-wide
+                                    ${status === 'completed' || status === 'current' 
+                                      ? 'text-slate-900 dark:text-white' 
+                                      : 'text-slate-400 dark:text-slate-600'}
+                                  `}>
+                                    {step.label}
+                                  </span>
+                                  {status === 'current' && (
+                                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium mt-0.5">
+                                      In Progress
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Mobile Connector Line (Vertical) */}
+                                {idx !== STEPS.length - 1 && (
+                                  <div className={`
+                                    absolute left-5 top-10 bottom-[-24px] w-0.5 sm:hidden
+                                    ${status === 'completed' ? 'bg-amber-500' : 'bg-slate-100 dark:bg-slate-800'}
+                                  `}></div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
-                    ))}
+                    </div>
+
+                    {/* Order Items */}
+                    <div className="space-y-4 border-t border-slate-100 dark:border-slate-800 pt-6">
+                      {order.items.map((item, idx) => (
+                        <div key={idx} className="flex items-start gap-4 sm:gap-6">
+                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-800 overflow-hidden shrink-0">
+                            <img 
+                              src={item.image} 
+                              alt={item.name} 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white mb-1">
+                              {item.name}
+                            </h4>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                              Qty: {item.quantity}
+                            </p>
+                            <p className="text-sm font-medium text-slate-900 dark:text-white">
+                              {formatPrice(item.price)}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <button className="text-sm font-medium text-amber-600 hover:text-amber-700 dark:text-amber-500 dark:hover:text-amber-400 underline-offset-4 hover:underline">
+                              Write a Review
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}

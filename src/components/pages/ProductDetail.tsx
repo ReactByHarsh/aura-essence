@@ -96,12 +96,12 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   // Show loading state while params are being resolved
   if (isLoading || !id) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
         <div className="text-center">
           <div className="inline-block">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
           </div>
-          <p className="text-gray-300 mt-4">Loading product...</p>
+          <p className="text-slate-500 dark:text-slate-400 mt-4 font-medium tracking-wide">Loading Essence...</p>
         </div>
       </div>
     );
@@ -109,17 +109,17 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
 
   if (error || !product) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
         <div className="text-center px-4">
-          <h1 className="text-4xl font-bold text-amber-400 mb-4">Product Not Found</h1>
-          <p className="text-gray-300 mb-8 max-w-md">
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4 font-serif">Product Not Found</h1>
+          <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
             {error || 'Sorry, we couldn\'t find the product you\'re looking for. Please browse our collections or try searching again.'}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild className="bg-amber-500 hover:bg-amber-600 text-white">
+            <Button asChild className="bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900">
               <Link href="/collections/men">Browse Men's Collection</Link>
             </Button>
-            <Button asChild variant="secondary" className="border-amber-300 text-amber-300">
+            <Button asChild variant="outline" className="border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800">
               <Link href="/collections/women">Browse Women's Collection</Link>
             </Button>
           </div>
@@ -211,41 +211,35 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       {/* JSON-LD Script */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
 
-      {/* Premium Hero Section - Mobile Optimized */}
-      <section className="relative py-6 sm:py-10 md:py-12 px-4 sm:px-6 overflow-hidden bg-gradient-to-br from-purple-900 via-purple-800 to-slate-900">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-purple-400 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto">
-          {/* Breadcrumb - Mobile Optimized */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6 text-xs sm:text-sm flex-wrap">
-            <Link href="/" className="text-purple-300 hover:text-purple-200 transition-colors">
+      {/* Breadcrumb & Navigation - Clean */}
+      <section className="py-4 px-4 sm:px-6 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-16 z-30 backdrop-blur-sm bg-white/80 dark:bg-slate-950/80">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Home
             </Link>
-            <span className="text-purple-400/50">/</span>
+            <ChevronRight className="h-3 w-3" />
             <Link 
               href={`/collections/${product.category}`}
-              className="text-purple-300 hover:text-purple-200 capitalize transition-colors"
+              className="capitalize hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               {product.category === 'unisex' ? 'Unisex' : product.category}
             </Link>
-            <span className="text-purple-400/50">/</span>
-            <span className="text-gray-200 line-clamp-1">{product.name}</span>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-slate-900 dark:text-white font-medium line-clamp-1">{product.name}</span>
           </div>
 
-          {/* Back Button - Larger Touch Target */}
           <Button
-            variant="secondary"
-            className="mb-3 sm:mb-4 border-2 border-purple-400 text-purple-300 hover:bg-purple-400/20 min-h-[44px] px-6 font-semibold text-sm"
+            variant="ghost"
+            size="sm"
+            className="hidden sm:flex text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
             onClick={() => router.back()}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -254,126 +248,125 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
         </div>
       </section>
 
-      {/* Main Product Section - Mobile First */}
-      <section className="py-6 sm:py-8 md:py-10 px-4 sm:px-6 bg-white dark:bg-slate-950">
+      {/* Main Product Section - Clean Layout */}
+      <section className="py-8 sm:py-12 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-            {/* Product Images - Mobile Optimized */}
-            <div className="space-y-2.5 sm:space-y-3">
-              <div className="aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-slate-900 relative group shadow-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            {/* Product Images */}
+            <div className="space-y-4">
+              <div className="aspect-square overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 relative group">
                 <Image
                   src={product.images[selectedImageIndex]}
                   alt={product.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover hover:scale-110 transition-transform duration-500"
+                  className="object-cover hover:scale-105 transition-transform duration-700"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               
               {product.images.length > 1 && (
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 gap-3">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`aspect-square rounded-lg overflow-hidden border-2 transition-all hover:scale-105 transform shadow-sm min-h-[60px] sm:min-h-[80px] ${
+                      className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
                         selectedImageIndex === index
-                          ? 'border-purple-500 ring-2 ring-purple-400/50 shadow-md'
-                          : 'border-purple-200 dark:border-purple-800/50 hover:border-purple-400'
+                          ? 'border-slate-900 dark:border-white ring-1 ring-slate-900/10 dark:ring-white/10'
+                          : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'
                       }`}
                     >
-                      <Image
-                        src={image}
-                        alt={`${product.name} ${index + 1}`}
-                        width={96}
-                        height={96}
-                        className="object-cover hover:scale-110 transition-transform duration-300 w-full h-full"
-                      />
+                      <div className="relative w-full h-full bg-slate-50 dark:bg-slate-900">
+                        <Image
+                          src={image}
+                          alt={`${product.name} ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Product Info - Mobile Optimized */}
-            <div className="space-y-3 sm:space-y-4">
-              {/* Badges - Mobile Friendly */}
-              <div className="flex gap-1.5 flex-wrap">
+            {/* Product Info */}
+            <div className="space-y-6 sm:space-y-8">
+              {/* Badges - Clean */}
+              <div className="flex gap-2 flex-wrap">
                 {product.isNew && (
-                  <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 rounded-lg border border-purple-300 dark:border-purple-700 shadow-sm">
-                    <Sparkles className="h-3 w-3 text-purple-600 dark:text-purple-400" />
-                    <span className="text-[10px] sm:text-xs font-bold text-purple-700 dark:text-purple-300">New Arrival</span>
-                  </div>
+                  <Badge variant="secondary" className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700">
+                    <Sparkles className="h-3 w-3 mr-1 text-amber-500" />
+                    New Arrival
+                  </Badge>
                 )}
                 {product.isBestSeller && (
-                  <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 rounded-lg border border-purple-300 dark:border-purple-700 shadow-sm">
-                    <Award className="h-3 w-3 text-purple-600 dark:text-purple-400" />
-                    <span className="text-[10px] sm:text-xs font-bold text-purple-700 dark:text-purple-300">Best Seller</span>
-                  </div>
+                  <Badge variant="secondary" className="bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 border-amber-200 dark:border-amber-800/50">
+                    <Award className="h-3 w-3 mr-1" />
+                    Best Seller
+                  </Badge>
                 )}
                 {product.isOnSale && (
-                  <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/20 rounded-lg border border-red-300 dark:border-red-700 shadow-sm">
-                    <Flame className="h-3 w-3 text-red-600 dark:text-red-400" />
-                    <span className="text-[10px] sm:text-xs font-bold text-red-700 dark:text-red-300">Limited Offer</span>
-                  </div>
+                  <Badge variant="secondary" className="bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400 border-red-200 dark:border-red-800/50">
+                    <Flame className="h-3 w-3 mr-1" />
+                    Limited Offer
+                  </Badge>
                 )}
               </div>
 
-              {/* Title and Brand - Mobile Typography */}
-              <div className="space-y-1.5">
-                <p className="text-purple-600 dark:text-purple-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase">
+              {/* Title and Brand - Clean Typography */}
+              <div className="space-y-2">
+                <p className="text-amber-600 dark:text-amber-400 text-xs font-bold tracking-widest uppercase">
                   {product.brand}
                 </p>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-black dark:text-white leading-tight tracking-tight">
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white leading-tight font-serif">
                   {product.name}
                 </h1>
-                <p className="text-[10px] sm:text-xs text-slate-700 dark:text-gray-300 font-medium space-x-1.5">
-                  <span className="inline-block px-2.5 py-1 bg-purple-50 dark:bg-purple-900/20 rounded-md border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-[10px]">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-medium capitalize">
                     {product.type}
                   </span>
-                  <span className="inline-block px-2.5 py-1 bg-purple-50 dark:bg-purple-900/20 rounded-md border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-[10px]">
-                    {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+                  <span className="px-2.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-400 font-medium capitalize">
+                    {product.category}
                   </span>
-                </p>
+                </div>
               </div>
 
-              {/* Rating - Mobile Enhanced */}
-              <div className="flex items-center space-x-2 p-2.5 sm:p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800/50 shadow-sm">
+              {/* Rating - Clean */}
+              <div className="flex items-center space-x-2">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
+                      className={`h-4 w-4 ${
                         i < Math.round(product.rating)
-                          ? 'fill-purple-500 text-purple-500'
-                          : 'text-purple-300 dark:text-purple-700'
+                          ? 'fill-amber-400 text-amber-400'
+                          : 'text-slate-200 dark:text-slate-700'
                       }`}
                     />
                   ))}
                 </div>
-                <div className="text-[10px] sm:text-xs">
-                  <span className="font-bold text-purple-700 dark:text-purple-300">
+                <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <span className="font-medium text-slate-900 dark:text-white">
                     {formatRating(product.rating)}
                   </span>
-                  <span className="text-purple-600 dark:text-purple-400 ml-1">
-                    • 100+ reviews
-                  </span>
+                  <span className="mx-1">•</span>
+                  <span>100+ reviews</span>
                 </div>
               </div>
 
-              {/* Description - Mobile Readability */}
-              <p className="text-xs sm:text-sm text-slate-700 dark:text-gray-300 leading-relaxed">
+              {/* Description - Clean */}
+              <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed font-light">
                 {product.description}
               </p>
 
-              {/* Size Selection - Mobile Enhanced */}
-              <div className="space-y-2">
-                <label className="font-bold text-black dark:text-white text-xs sm:text-sm">
-                  Choose Size
+              {/* Size Selection - Clean */}
+              <div className="space-y-3">
+                <label className="font-medium text-slate-900 dark:text-white text-sm">
+                  Select Size
                 </label>
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                <div className="grid grid-cols-3 gap-3">
                   {['20ml', '50ml', '100ml'].map((size) => {
                     const sizes = product.sizes as any;
                     const price = sizes?.[size]?.price || (size === '20ml' ? 349 : size === '50ml' ? 499 : 699);
@@ -383,17 +376,15 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                       <button
                         key={size}
                         onClick={() => handleSizeChange(size)}
-                        className={`py-2.5 sm:py-3 px-2 rounded-lg border-2 font-semibold transition-all text-[10px] sm:text-xs min-h-[55px] sm:min-h-[60px] flex flex-col items-center justify-center shadow-sm hover:scale-105 ${
+                        className={`py-3 px-2 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${
                           selectedSize === size
-                            ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 text-purple-700 dark:text-purple-300 ring-2 ring-purple-400/50'
-                            : 'border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:border-purple-400 bg-white dark:bg-slate-900'
+                            ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-100 ring-1 ring-amber-500'
+                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
                         }`}
                       >
-                        <div className="font-bold text-xs sm:text-sm">{size}</div>
-                        <div className="text-[9px] sm:text-[10px] text-purple-600 dark:text-purple-400 mt-0.5">
+                        <span className="font-medium mb-1">{size}</span>
+                        <div className="text-xs flex items-center gap-1.5">
                           <span className="font-bold">₹{price}</span>
-                          <span className="line-through text-[8px] sm:text-[9px] text-purple-400 dark:text-purple-500 ml-1">₹{slashedPrice}</span>
-                          <span className="text-[8px] font-bold text-red-600 dark:text-red-400 ml-0.5">-{discount}%</span>
                         </div>
                       </button>
                     );
@@ -401,52 +392,52 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 </div>
               </div>
 
-              {/* Price Display - Mobile Prominent */}
-              <div className="p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 rounded-xl border-2 border-purple-300 dark:border-purple-700 shadow-md">
-                <p className="text-[10px] sm:text-xs text-purple-600 dark:text-purple-400 mb-1.5 uppercase tracking-widest font-bold">
-                  Price
-                </p>
-                <div className="flex items-end space-x-2">
-                  <span className="text-2xl sm:text-3xl font-bold text-purple-700 dark:text-purple-300">
-                    ₹{getSizePrice()}
-                  </span>
-                  <div className="flex items-end gap-1 pb-0.5">
-                    <span className="text-xs sm:text-sm text-purple-500 dark:text-purple-400 line-through">
+              {/* Price Display - Clean */}
+              <div className="py-4 border-t border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider font-medium">
+                    Total Price
+                  </p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold text-slate-900 dark:text-white font-serif">
+                      ₹{getSizePrice()}
+                    </span>
+                    <span className="text-lg text-slate-400 line-through">
                       ₹{getSlashedPrice(getSizePrice())}
                     </span>
-                    <span className="text-[10px] sm:text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded-md">
-                      -{Math.round((1 - getSizePrice() / getSlashedPrice(getSizePrice())) * 100)}%
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded">
+                      SAVE {Math.round((1 - getSizePrice() / getSlashedPrice(getSizePrice())) * 100)}%
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Fragrance Notes */}
-              <div className="space-y-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800/50">
-                <h3 className="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-widest">
+              {/* Fragrance Notes - Clean */}
+              <div className="space-y-3 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-2">
                   Fragrance Profile
                 </h3>
                 
-                <div className="grid grid-cols-3 gap-2 md:gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Top Notes</p>
-                    <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
+                    <p className="font-medium text-slate-700 dark:text-slate-300 text-xs mb-1">Top Notes</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'top' in product.notes
                         ? (product.notes as any).top?.join(', ') || '—'
                         : '—'}
                     </p>
                   </div>
                   <div>
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Heart Notes</p>
-                    <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
+                    <p className="font-medium text-slate-700 dark:text-slate-300 text-xs mb-1">Heart Notes</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'heart' in product.notes
                         ? (product.notes as any).heart?.join(', ') || '—'
                         : '—'}
                     </p>
                   </div>
                   <div>
-                    <p className="font-bold text-purple-700 dark:text-purple-300 text-[10px] mb-1">Base Notes</p>
-                    <p className="text-purple-600 dark:text-purple-400 text-[9px] leading-relaxed">
+                    <p className="font-medium text-slate-700 dark:text-slate-300 text-xs mb-1">Base Notes</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
                       {product.notes && typeof product.notes === 'object' && 'base' in product.notes
                         ? (product.notes as any).base?.join(', ') || '—'
                         : '—'}
@@ -455,72 +446,76 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 </div>
               </div>
 
-              {/* Quantity and Add to Cart - Mobile Optimized */}
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <label className="font-bold text-black dark:text-white text-xs sm:text-sm">
-                    Qty:
-                  </label>
-                  <div className="flex items-center border-2 border-purple-300 dark:border-purple-700 rounded-lg bg-white dark:bg-slate-900 shadow-sm">
+              {/* Quantity and Add to Cart - Clean */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3 sm:px-4 py-2 sm:py-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition font-bold text-purple-600 dark:text-purple-400 text-sm sm:text-base min-w-[40px] min-h-[40px]"
+                      className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-400"
                     >
                       −
                     </button>
-                    <span className="px-4 sm:px-5 py-2 sm:py-2.5 font-bold text-purple-700 dark:text-purple-300 text-sm sm:text-base border-l-2 border-r-2 border-purple-300 dark:border-purple-700 min-w-[50px] text-center">{quantity}</span>
+                    <span className="px-4 py-3 font-medium text-slate-900 dark:text-white min-w-[3rem] text-center border-l border-r border-slate-200 dark:border-slate-700">
+                      {quantity}
+                    </span>
                     <button
                       onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                      className="px-3 sm:px-4 py-2 sm:py-2.5 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition font-bold text-purple-600 dark:text-purple-400 text-sm sm:text-base min-w-[40px] min-h-[40px]"
+                      className="px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-400"
                     >
                       +
                     </button>
                   </div>
+                  
+                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                    {product.stock > 0 ? (
+                      <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                        In Stock
+                      </span>
+                    ) : (
+                      <span className="text-red-600 dark:text-red-400">Out of Stock</span>
+                    )}
+                  </div>
                 </div>
 
-                <div className="flex space-x-2">
+                <div className="flex gap-3">
                   <Button
                     onClick={handleAddToCart}
                     disabled={product.stock === 0}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold py-3 sm:py-3.5 text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] rounded-lg"
+                    className="flex-1 bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 h-12 text-base font-medium rounded-lg shadow-sm"
                   >
-                    <ShoppingBag className="h-4 w-4 mr-1.5" />
+                    <ShoppingBag className="h-5 w-5 mr-2" />
                     Add to Cart
                   </Button>
                   
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     onClick={() => setIsWishlisted(!isWishlisted)}
-                    className="px-4 sm:px-5 border-2 border-purple-300 dark:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all duration-300 py-3 sm:py-3.5 min-w-[48px] min-h-[48px] rounded-lg shadow-sm"
+                    className="h-12 w-12 p-0 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg"
                   >
                     <Heart 
-                      className={`h-4 w-4 transition-all ${
-                        isWishlisted ? 'fill-red-500 text-red-500' : 'text-purple-600 dark:text-purple-400'
+                      className={`h-5 w-5 transition-colors ${
+                        isWishlisted ? 'fill-red-500 text-red-500' : 'text-slate-400'
                       }`} 
                     />
                   </Button>
                 </div>
               </div>
 
-              {/* Features - Mobile Enhanced */}
-              <div className="space-y-2 sm:space-y-2.5 p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-900/20 rounded-xl border border-purple-300 dark:border-purple-700 shadow-md">
-                <div className="flex items-center text-purple-700 dark:text-purple-300 text-xs sm:text-sm gap-2.5 sm:gap-3 font-medium">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/40 dark:to-purple-900/20 rounded-full flex items-center justify-center">
-                    <Truck className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <span>Free shipping on orders over ₹5000</span>
+              {/* Features - Clean */}
+              <div className="grid grid-cols-1 gap-3 pt-4">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                  <Truck className="h-5 w-5 text-slate-400" />
+                  <span className="text-sm text-slate-600 dark:text-slate-300">Free shipping on orders over ₹5000</span>
                 </div>
-                <div className="flex items-center text-purple-700 dark:text-purple-300 text-xs sm:text-sm gap-2.5 sm:gap-3 font-medium">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/40 dark:to-purple-900/20 rounded-full flex items-center justify-center">
-                    <Shield className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <span>100% authentic guarantee</span>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                  <Shield className="h-5 w-5 text-slate-400" />
+                  <span className="text-sm text-slate-600 dark:text-slate-300">100% authentic guarantee</span>
                 </div>
-                <div className="flex items-center text-purple-700 dark:text-purple-300 text-xs sm:text-sm gap-2.5 sm:gap-3 font-medium">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/40 dark:to-purple-900/20 rounded-full flex items-center justify-center">
-                    <RotateCcw className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <span>30-day hassle-free returns</span>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                  <RotateCcw className="h-5 w-5 text-slate-400" />
+                  <span className="text-sm text-slate-600 dark:text-slate-300">30-day hassle-free returns</span>
                 </div>
               </div>
             </div>
