@@ -7,8 +7,10 @@ import { createPhonePeOrder } from '@/lib/phonepe';
  * Creates a PhonePe payment order and returns payment URL
  */
 export async function POST(request: NextRequest) {
+  console.log('[API] PhonePe Order Request received');
   try {
     const body = await request.json();
+    console.log('[API] Request body:', body);
     const { amount, orderId, userId, mobileNumber } = body || {};
 
     // Validate input
@@ -27,7 +29,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get app URL for callbacks
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Prefer env var, fallback to request origin (works for Vercel deployments)
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
     
     // Create PhonePe order
     const result = await createPhonePeOrder({
@@ -75,4 +78,13 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Health check for PhonePe Order API
+ * GET /api/phonepe/order
+ * Verifies if the route is reachable
+ */
+export async function GET() {
+  return NextResponse.json({ status: 'PhonePe Order API is working' });
 }

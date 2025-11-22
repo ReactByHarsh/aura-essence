@@ -52,18 +52,21 @@ export async function POST(request: NextRequest) {
     const statusResult = await checkPhonePeStatus(merchantTransactionId);
     
     if (!statusResult.success) {
-      console.error('Failed to verify payment status');
+      console.error('Failed to verify payment status:', statusResult.error);
+      // If status check fails, we can't trust the callback alone for security
+      // But for "no webhook" flow, we might want to be lenient? 
+      // No, security first.
       return NextResponse.json(
-        { error: 'Failed to verify payment' },
-        { status: 500 }
+        { error: 'Failed to verify payment status with gateway' },
+        { status: 502 }
       );
     }
 
     const paymentData = statusResult.data;
     
     // Check if payment was successful
-    if (paymentData.state !== 'COMPLETED' || code !== 'PAYMENT_SUCCESS') {
-      console.error('Payment not successful:', paymentData.state, code);
+    if (paymentData.state !== 'COMPLETED') {
+      console.error('Payment not successful:', paymentData.state);
       return NextResponse.json(
         { error: 'Payment not completed', status: paymentData.state },
         { status: 400 }
@@ -75,7 +78,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         merchantTransactionId,
-        transactionId,
+        transactionId: paymentData.transactionId,
         state: paymentData.state,
       },
       { status: 200 }
@@ -99,6 +102,10 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { merchantTransactionId, orderMeta } = body || {};
 
+    console.log('[Verify] Payment verification requested');
+    console.log('[Verify] merchantTransactionId:', merchantTransactionId);
+    console.log('[Verify] orderMeta:', orderMeta);
+
     if (!merchantTransactionId) {
       return NextResponse.json(
         { error: 'Missing merchant transaction ID' },
@@ -107,10 +114,12 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check payment status
+    console.log('[Verify] Checking payment status with PhonePe...');
     const statusResult = await checkPhonePeStatus(merchantTransactionId);
+    console.log('[Verify] Status result:', JSON.stringify(statusResult, null, 2));
     
     if (!statusResult.success || !statusResult.data) {
-      console.error('Payment verification failed');
+      console.error('[Verify] Payment verification failed:', statusResult.error);
       return NextResponse.json(
         { error: 'Payment verification failed' },
         { status: 400 }

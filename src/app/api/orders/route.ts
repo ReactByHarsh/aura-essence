@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     // Resolve CORS origin
     const req = request as NextRequest;
     const origin = req.headers.get('origin');
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin;
     const allowedOrigins = [appUrl, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
     const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : appUrl || '';
 
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
   try {
     // Resolve CORS origin
     const origin = request.headers.get('origin');
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
     const allowedOrigins = [appUrl, 'http://localhost:3000', 'http://127.0.0.1:3000'].filter(Boolean);
     const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : appUrl || '';
 
