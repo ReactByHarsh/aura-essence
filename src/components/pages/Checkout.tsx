@@ -20,7 +20,7 @@ export function Checkout() {
   const stackUser = useUser();
   const stackApp = useStackApp();
   const toast = useToaster();
-  
+
   const user = stackUser ? {
     id: stackUser.id,
     email: stackUser.primaryEmail || '',
@@ -36,6 +36,31 @@ export function Checkout() {
     }
   }, [stackUser, loadCart, closeCart]);
 
+  // Fetch shipping and COD configuration from backend
+  const [shippingConfig, setShippingConfig] = React.useState({ freeThreshold: 400, charge: 40 });
+  const [codCharge, setCodCharge] = React.useState(49);
+
+  React.useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            setShippingConfig({
+              freeThreshold: json.data.shipping.free_shipping_threshold,
+              charge: json.data.shipping.standard_shipping_charge
+            });
+            setCodCharge(json.data.cod.amount);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch settings:', error);
+      }
+    }
+    fetchSettings();
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -50,11 +75,10 @@ export function Checkout() {
     }
   });
 
-  const COD_CHARGE = 49;
   const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
-  const shipping = getSubtotal() >= 100 ? 0 : 15;
+  const shipping = getSubtotal() >= shippingConfig.freeThreshold ? 0 : shippingConfig.charge;
   const baseTotal = getTotal() + shipping;
-  const finalTotal = useMemo(() => baseTotal + (paymentMethod === 'cod' ? COD_CHARGE : 0), [baseTotal, paymentMethod]);
+  const finalTotal = useMemo(() => baseTotal + (paymentMethod === 'cod' ? codCharge : 0), [baseTotal, paymentMethod, codCharge]);
   const [verifying, setVerifying] = useState(false);
 
   const onSubmit = async (data: CheckoutForm) => {
@@ -116,7 +140,7 @@ export function Checkout() {
       }
 
       const uniqueOrderId = `ORD_${Date.now()}_${user.id.substring(0, 8)}`;
-      
+
       // Create PhonePe order
       const phonepeRes = await fetch('/api/phonepe/order', {
         method: 'POST',
@@ -302,10 +326,10 @@ export function Checkout() {
                       onChange={() => setPaymentMethod('cod')}
                       className="text-amber-600 focus:ring-amber-500"
                     />
-                    <span className="text-slate-900 dark:text-white font-medium">Cash on Delivery (₹{COD_CHARGE} extra)</span>
+                    <span className="text-slate-900 dark:text-white font-medium">Cash on Delivery (₹{codCharge} extra)</span>
                   </label>
                   {paymentMethod === 'cod' && (
-                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">COD Charge: ₹{COD_CHARGE} added</p>
+                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">COD Charge: ₹{codCharge} added</p>
                   )}
                 </div>
               </div>
@@ -364,7 +388,7 @@ export function Checkout() {
                     {formatPrice(getSubtotal())}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600 dark:text-slate-400">Tax</span>
                   <span className="text-slate-900 dark:text-white font-medium">
@@ -381,10 +405,10 @@ export function Checkout() {
                 {paymentMethod === 'cod' && (
                   <div className="flex justify-between text-sm text-amber-600 dark:text-amber-400">
                     <span>COD Charge</span>
-                    <span className="font-medium">+ {formatPrice(COD_CHARGE)}</span>
+                    <span className="font-medium">+ {formatPrice(codCharge)}</span>
                   </div>
                 )}
-                
+
                 <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
                   <div className="flex justify-between text-lg font-bold">
                     <span className="text-slate-900 dark:text-white">Total</span>

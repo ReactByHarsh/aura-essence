@@ -42,9 +42,9 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   // Fetch product and related products via API if not prefetched
   useEffect(() => {
     if (prefetched) return;
-    
+
     const abortController = new AbortController();
-    
+
     async function loadProductData() {
       if (!id) return;
       try {
@@ -58,11 +58,11 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
         }
         setProduct(productData as any);
         try {
-          const response = await fetchProducts({ 
-            category: productData.category, 
-            page: 1, 
+          const response = await fetchProducts({
+            category: productData.category,
+            page: 1,
             limit: 4,
-            signal: abortController.signal 
+            signal: abortController.signal
           });
           const related = response.products.filter(p => p.id !== id).slice(0, 4);
           setRelatedProducts(related);
@@ -87,7 +87,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
       }
     }
     loadProductData();
-    
+
     return () => {
       abortController.abort();
     };
@@ -134,7 +134,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
       router.push('/handler/sign-in');
       return;
     }
-    
+
     if (product) {
       try {
         await addItem(product, quantity, selectedSize);
@@ -158,9 +158,9 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   const getSizePrice = (): number => {
     const sizes = product?.sizes as any;
     if (sizes && sizes[selectedSize]) {
-      return sizes[selectedSize].price || (selectedSize === '20ml' ? 349 : selectedSize === '50ml' ? 499 : 699);
+      return sizes[selectedSize].price || (selectedSize === '20ml' ? 269 : selectedSize === '50ml' ? 499 : 699);
     }
-    return selectedSize === '20ml' ? 349 : selectedSize === '50ml' ? 499 : 699;
+    return selectedSize === '20ml' ? 269 : selectedSize === '50ml' ? 499 : 699;
   };
 
   const getSlashedPrice = (price: number): number => {
@@ -226,7 +226,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
               Home
             </Link>
             <ChevronRight className="h-3 w-3" />
-            <Link 
+            <Link
               href={`/collections/${product.category}`}
               className="capitalize hover:text-slate-900 dark:hover:text-white transition-colors"
             >
@@ -264,18 +264,17 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                   priority
                 />
               </div>
-              
+
               {product.images.length > 1 && (
                 <div className="grid grid-cols-4 gap-3">
                   {product.images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
-                      className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                        selectedImageIndex === index
+                      className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${selectedImageIndex === index
                           ? 'border-slate-900 dark:border-white ring-1 ring-slate-900/10 dark:ring-white/10'
                           : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'
-                      }`}
+                        }`}
                     >
                       <div className="relative w-full h-full bg-slate-50 dark:bg-slate-900">
                         <Image
@@ -339,11 +338,10 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.round(product.rating)
+                      className={`h-4 w-4 ${i < Math.round(product.rating)
                           ? 'fill-amber-400 text-amber-400'
                           : 'text-slate-200 dark:text-slate-700'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -369,18 +367,17 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 <div className="grid grid-cols-3 gap-3">
                   {['20ml', '50ml', '100ml'].map((size) => {
                     const sizes = product.sizes as any;
-                    const price = sizes?.[size]?.price || (size === '20ml' ? 349 : size === '50ml' ? 499 : 699);
+                    const price = sizes?.[size]?.price || (size === '20ml' ? 269 : size === '50ml' ? 499 : 699);
                     const slashedPrice = getSlashedPrice(price);
                     const discount = Math.round((1 - price / slashedPrice) * 100);
                     return (
                       <button
                         key={size}
                         onClick={() => handleSizeChange(size)}
-                        className={`py-3 px-2 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${
-                          selectedSize === size
+                        className={`py-3 px-2 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${selectedSize === size
                             ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-100 ring-1 ring-amber-500'
                             : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
-                        }`}
+                          }`}
                       >
                         <span className="font-medium mb-1">{size}</span>
                         <div className="text-xs flex items-center gap-1.5">
@@ -417,7 +414,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-2">
                   Fragrance Profile
                 </h3>
-                
+
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <p className="font-medium text-slate-700 dark:text-slate-300 text-xs mb-1">Top Notes</p>
@@ -466,7 +463,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                       +
                     </button>
                   </div>
-                  
+
                   <div className="text-sm text-slate-500 dark:text-slate-400">
                     {product.stock > 0 ? (
                       <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
@@ -488,16 +485,15 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                     <ShoppingBag className="h-5 w-5 mr-2" />
                     Add to Cart
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     onClick={() => setIsWishlisted(!isWishlisted)}
                     className="h-12 w-12 p-0 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg"
                   >
-                    <Heart 
-                      className={`h-5 w-5 transition-colors ${
-                        isWishlisted ? 'fill-red-500 text-red-500' : 'text-slate-400'
-                      }`} 
+                    <Heart
+                      className={`h-5 w-5 transition-colors ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-slate-400'
+                        }`}
                     />
                   </Button>
                 </div>
@@ -540,7 +536,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 Explore other premium scents in our {product.category === 'men' ? "men's" : product.category === 'women' ? "women's" : "curated"} collection
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
               {relatedProducts.map(relatedProduct => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
@@ -548,9 +544,9 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
             </div>
 
             <div className="text-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8 text-lg" 
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8 text-lg"
                 asChild
               >
                 <Link href={`/collections/${product.category}`}>

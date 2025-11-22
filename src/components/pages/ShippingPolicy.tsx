@@ -7,7 +7,7 @@ export function ShippingPolicy() {
       {/* Premium Hero Section - Clean */}
       <section className="relative py-12 sm:py-16 overflow-hidden bg-slate-50 dark:bg-slate-900">
         <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        
+
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6">
           <div className="mb-3 sm:mb-4 inline-flex items-center gap-3">
             <div className="h-[1px] w-8 bg-amber-500/50"></div>
@@ -111,7 +111,7 @@ export function ShippingPolicy() {
 
             <h3 className="text-lg font-semibold text-slate-800 dark:text-gray-100 mb-3">Logistics Partners</h3>
             <p className="text-slate-700 dark:text-gray-200">
-              We work with India's most reliable and respected courier companies, including major providers like Shiprocket partners and premium logistics services. These partners are selected based on their reliability, track record, and ability to handle delicate luxury products securely.
+              We work with India's most reliable and respected courier companies, including major premium logistics services. These partners are selected based on their reliability, track record, and ability to handle delicate luxury products securely.
             </p>
           </section>
 

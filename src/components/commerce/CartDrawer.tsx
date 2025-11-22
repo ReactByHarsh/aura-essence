@@ -140,13 +140,13 @@ export function CartDrawer() {
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={closeCart}
       />
-      
+
       {/* Drawer */}
-      <div 
+      <div
         ref={drawerRef}
         className="fixed right-0 top-0 h-full w-full max-w-xl bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 shadow-2xl flex flex-col border-l border-slate-200 dark:border-slate-800 animate-slide-in-right"
       >
@@ -161,10 +161,10 @@ export function CartDrawer() {
               {items.reduce((t, i) => t + i.quantity, 0)}
             </span>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={closeCart} 
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={closeCart}
             className="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full p-2"
           >
             <X className="h-5 w-5 text-slate-500 dark:text-slate-400" />
@@ -178,7 +178,7 @@ export function CartDrawer() {
             <div className="m-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg shadow-sm">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-red-700 dark:text-red-400 font-medium">{error}</p>
-                <button 
+                <button
                   onClick={clearError}
                   className="text-red-500 hover:text-red-700 dark:text-red-400 transition-colors"
                 >
@@ -187,7 +187,7 @@ export function CartDrawer() {
               </div>
             </div>
           )}
-          
+
           {/* Loading state */}
           {isLoading ? (
             <div className="text-center py-12 flex flex-col items-center justify-center h-full">
@@ -207,7 +207,7 @@ export function CartDrawer() {
               <p className="text-sm text-slate-500 dark:text-gray-500 mb-8 max-w-xs mx-auto">
                 Looks like you haven't added anything to your cart yet.
               </p>
-              <Button 
+              <Button
                 onClick={closeCart}
                 className="bg-slate-900 hover:bg-slate-800 text-white px-8 py-2.5 rounded-full font-medium transition-all"
               >
@@ -242,7 +242,7 @@ export function CartDrawer() {
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Content */}
                     <div className="flex-1 flex flex-col justify-between min-w-0">
                       <div className="flex justify-between items-start gap-2">
@@ -276,7 +276,7 @@ export function CartDrawer() {
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
-                      
+
                       <div className="flex justify-between items-end mt-3">
                         <div className="font-bold text-slate-900 dark:text-white text-sm">
                           {formatPrice(lineTotal)}
@@ -348,10 +348,10 @@ export function CartDrawer() {
                   <span className="text-xl font-bold text-slate-900 dark:text-white">{formatPrice(totals.total)}</span>
                 </div>
               </div>
-              
+
               {/* Action Buttons */}
               <div className="space-y-3 pt-2">
-                <Button 
+                <Button
                   className="w-full bg-black hover:bg-slate-800 text-white font-bold h-12 text-sm transition-all duration-300 shadow-lg flex items-center justify-between px-6 group"
                   onClick={() => {
                     closeCart();
@@ -369,10 +369,6 @@ export function CartDrawer() {
                     <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Button>
-                
-                <div className="flex items-center justify-center gap-1.5 opacity-50">
-                  <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">Powered by Shiprocket</span>
-                </div>
               </div>
             </div>
           </div>
@@ -468,7 +464,7 @@ function CouponSelector({
       {/* Coupon Selection Modal */}
       {showModal && (
         <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div 
+          <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowModal(false)}
           />
@@ -493,27 +489,23 @@ function CouponSelector({
                 return (
                   <div
                     key={coupon.code}
-                    className={`p-3 rounded-xl border transition-all ${
-                      eligible
+                    className={`p-3 rounded-xl border transition-all ${eligible
                         ? 'border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/10 shadow-sm'
                         : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-70'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2.5">
                       <div className="flex-1">
                         <div className="flex items-center gap-1.5 mb-1">
-                          <Tag className={`h-3.5 w-3.5 ${
-                            eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400'
-                          }`} />
-                          <span className={`font-bold text-xs ${
-                            eligible ? 'text-amber-700 dark:text-amber-300' : 'text-slate-600 dark:text-gray-400'
-                          }`}>
+                          <Tag className={`h-3.5 w-3.5 ${eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400'
+                            }`} />
+                          <span className={`font-bold text-xs ${eligible ? 'text-amber-700 dark:text-amber-300' : 'text-slate-600 dark:text-gray-400'
+                            }`}>
                             {coupon.code}
                           </span>
                         </div>
-                        <p className={`text-base font-bold mb-0.5 ${
-                          eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-gray-500'
-                        }`}>
+                        <p className={`text-base font-bold mb-0.5 ${eligible ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-gray-500'
+                          }`}>
                           {coupon.discount}
                         </p>
                         <p className="text-[10px] text-slate-600 dark:text-gray-400 mb-1.5 leading-snug">
@@ -534,11 +526,10 @@ function CouponSelector({
                         size="sm"
                         onClick={() => handleApplyCoupon(coupon.code)}
                         disabled={!eligible}
-                        className={`${
-                          eligible
+                        className={`${eligible
                             ? 'bg-amber-600 hover:bg-amber-700 text-white'
                             : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
-                        } px-3 py-1.5 text-[10px] font-bold`}
+                          } px-3 py-1.5 text-[10px] font-bold`}
                       >
                         Apply
                       </Button>

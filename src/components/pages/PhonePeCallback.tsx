@@ -22,18 +22,18 @@ export default function PhonePeCallback() {
         // console.log('[Callback] Already verifying, skipping...');
         return;
       }
-      
+
       setIsVerifying(true);
       hasVerifiedRef.current = true;
-      
+
       try {
         // PhonePe v2 sends different parameters - check all possible ones
-        const merchantOrderId = searchParams.get('merchantOrderId') || 
-                                searchParams.get('merchantTransactionId') ||
-                                searchParams.get('orderId');
-        const transactionId = searchParams.get('transactionId') || 
-                             searchParams.get('providerReferenceId');
-        
+        const merchantOrderId = searchParams.get('merchantOrderId') ||
+          searchParams.get('merchantTransactionId') ||
+          searchParams.get('orderId');
+        const transactionId = searchParams.get('transactionId') ||
+          searchParams.get('providerReferenceId');
+
         // console.log('[Callback] URL params:', {
         //   merchantOrderId,
         //   transactionId,
@@ -46,7 +46,7 @@ export default function PhonePeCallback() {
           if (pendingOrderStr) {
             const orderMeta = JSON.parse(pendingOrderStr);
             // console.log('[Callback] Using orderId from sessionStorage:', orderMeta.orderId);
-            
+
             // Verify payment with backend using orderId from sessionStorage
             const verifyRes = await fetch('/api/phonepe/verify', {
               method: 'PUT',
@@ -63,12 +63,14 @@ export default function PhonePeCallback() {
               console.error('Verify error', verifyJson);
               setStatus('failed');
               setMessage(verifyJson.error || 'Payment verification failed');
-              toast.error('Payment verification failed. Please contact support.');
+              toast.error('Payment failed. Redirecting to homepage...');
+              // Redirect to homepage after 3 seconds
+              setTimeout(() => router.push('/'), 3000);
               return;
             }
 
             // Success path
-            try { sessionStorage.setItem(`payment:verified:${orderMeta.orderId}`, '1'); } catch {}
+            try { sessionStorage.setItem(`payment:verified:${orderMeta.orderId}`, '1'); } catch { }
             sessionStorage.removeItem('pendingOrder');
             await clearCart();
             await loadCart();
@@ -81,7 +83,8 @@ export default function PhonePeCallback() {
 
           setStatus('failed');
           setMessage('Invalid payment reference');
-          toast.error('Payment verification failed');
+          toast.error('Payment failed. Redirecting to homepage...');
+          setTimeout(() => router.push('/'), 3000);
           return;
         }
 
@@ -90,7 +93,8 @@ export default function PhonePeCallback() {
         if (!pendingOrderStr) {
           setStatus('failed');
           setMessage('Order details not found');
-          toast.error('Order information missing');
+          toast.error('Payment failed. Redirecting to homepage...');
+          setTimeout(() => router.push('/'), 3000);
           return;
         }
 
@@ -120,12 +124,14 @@ export default function PhonePeCallback() {
           console.error('Verify error', verifyJson);
           setStatus('failed');
           setMessage(verifyJson.error || 'Payment verification failed');
-          toast.error('Payment verification failed. Please contact support.');
+          toast.error('Payment failed. Redirecting to homepage...');
+          // Redirect to homepage after 3 seconds
+          setTimeout(() => router.push('/'), 3000);
           return;
         }
 
         // Clear sessionStorage
-        try { sessionStorage.setItem(`payment:verified:${orderMeta.orderId}`, '1'); } catch {}
+        try { sessionStorage.setItem(`payment:verified:${orderMeta.orderId}`, '1'); } catch { }
         sessionStorage.removeItem('pendingOrder');
 
         // Clear cart
@@ -145,7 +151,8 @@ export default function PhonePeCallback() {
         console.error('Payment verification error:', error);
         setStatus('failed');
         setMessage('An error occurred during payment verification');
-        toast.error('Payment verification failed');
+        toast.error('Payment failed. Redirecting to homepage...');
+        setTimeout(() => router.push('/'), 3000);
       } finally {
         setIsVerifying(false);
       }
@@ -202,11 +209,14 @@ export default function PhonePeCallback() {
             <p className="text-slate-600 dark:text-slate-400 mb-6">
               {message}
             </p>
+            <p className="text-sm text-slate-500 dark:text-slate-500 mb-4">
+              Redirecting to homepage in 3 seconds...
+            </p>
             <button
-              onClick={() => router.push('/checkout')}
+              onClick={() => router.push('/')}
               className="bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 font-medium py-3 px-8 rounded-lg transition-colors"
             >
-              Try Again
+              Go to Homepage
             </button>
           </>
         )}

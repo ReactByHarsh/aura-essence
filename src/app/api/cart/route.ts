@@ -2,15 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stackServerApp } from '@/stack/server';
 import { getCartItems, addToCart, updateCartItemQuantity, removeFromCart, clearCart, ensureUserProfile } from '@/lib/neon/cart';
 import { getProduct } from '@/lib/neon/products';
+import { getDefaultPrices } from '@/lib/neon/settings';
 
-// Helper function to get price by size (fallbacks)
-function getSizePrice(selectedSize: string): number {
-  const sizePrices: Record<string, number> = {
-    '20ml': 349,
-    '50ml': 499,
-    '100ml': 699,
-  };
-  return sizePrices[selectedSize] || sizePrices['100ml'];
+// Helper function to get price by size (fetches from database)
+async function getSizePrice(selectedSize: string): Promise<number> {
+  const prices = await getDefaultPrices();
+  return prices[selectedSize as keyof typeof prices] || prices['100ml'];
 }
 
 export async function GET(request: NextRequest) {

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createShiprocketOrder } from '@/lib/shiprocket';
 import { stackServerApp } from '@/stack/server';
 import { createOrder, getUserOrders } from '@/lib/neon/orders';
 
@@ -35,7 +34,7 @@ export async function POST(request: Request) {
 
     if (paymentMethod === 'cod') {
       const codFinal = typeof finalAmount === 'number' ? finalAmount : amount + COD_CHARGE;
-      
+
       // Get authenticated user
       const user = await stackServerApp.getUser({ tokenStore: request as NextRequest });
       if (!user?.id) {
@@ -71,30 +70,15 @@ export async function POST(request: Request) {
         shippingAddress,
         paymentMethod: 'cod',
       });
-      
+
       // console.log('[COD Order] Created in DB:', order.id);
 
-      // Then create Shiprocket order (optional, don't block if it fails)
-      let shiprocketOrder = null;
-      try {
-        shiprocketOrder = await createShiprocketOrder({
-          payment_method: 'COD',
-          cod_amount: codFinal,
-          order_amount: codFinal,
-          items,
-          customer: shipping,
-        });
-      } catch (shiprocketErr) {
-        console.warn('[COD Order] Shiprocket failed (non-blocking):', shiprocketErr);
-      }
-
       return new NextResponse(
-        JSON.stringify({ 
-          success: true, 
-          cod: true, 
-          finalAmount: codFinal, 
-          orderId: order.id,
-          shiprocketOrder 
+        JSON.stringify({
+          success: true,
+          cod: true,
+          finalAmount: codFinal,
+          orderId: order.id
         }),
         {
           status: 200,
@@ -112,8 +96,8 @@ export async function POST(request: Request) {
     // Online payment is handled via PhonePe integration
     // This route is only used for COD orders
     return new NextResponse(
-      JSON.stringify({ 
-        error: 'Online payments should use PhonePe API at /api/phonepe/order' 
+      JSON.stringify({
+        error: 'Online payments should use PhonePe API at /api/phonepe/order'
       }),
       {
         status: 400,
@@ -188,14 +172,14 @@ export async function GET(request: NextRequest) {
   } catch (err: any) {
     return new NextResponse(
       JSON.stringify({ error: err?.message || 'Failed to fetch orders' }),
-      { 
-        status: 500, 
-        headers: { 
+      {
+        status: 500,
+        headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
           'Access-Control-Allow-Credentials': 'true',
-        } 
+        }
       }
     );
   }
