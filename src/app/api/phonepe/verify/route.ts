@@ -3,6 +3,7 @@ import { checkPhonePeStatus, verifyPhonePeCallback } from '@/lib/phonepe';
 import { stackServerApp } from '@/stack/server';
 import { createOrder, updatePaymentStatus, findOrderByTransactionId } from '@/lib/neon/orders';
 import { sql } from '@/lib/neon/db';
+import { sendOrderNotification } from '@/lib/notifications';
 
 /**
  * PhonePe Payment Callback Handler
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     // Check payment status from PhonePe
     const statusResult = await checkPhonePeStatus(merchantTransactionId);
-    
+
     if (!statusResult.success) {
       console.error('Failed to verify payment status:', statusResult.error);
       // If status check fails, we can't trust the callback alone for security
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     const paymentData = statusResult.data;
-    
+
     // Check if payment was successful
     if (paymentData.state !== 'COMPLETED') {
       console.error('Payment not successful:', paymentData.state);
@@ -117,7 +118,7 @@ export async function PUT(request: NextRequest) {
     console.log('[Verify] Checking payment status with PhonePe...');
     const statusResult = await checkPhonePeStatus(merchantTransactionId);
     console.log('[Verify] Status result:', JSON.stringify(statusResult, null, 2));
-    
+
     if (!statusResult.success || !statusResult.data) {
       console.error('[Verify] Payment verification failed:', statusResult.error);
       return NextResponse.json(
@@ -147,7 +148,7 @@ export async function PUT(request: NextRequest) {
       const existingOrder = await findOrderByTransactionId(merchantTransactionId);
       if (existingOrder) {
         // console.log('[verify] Order already exists for transaction:', merchantTransactionId);
-        try { await sql`SELECT pg_advisory_unlock(hashtext(${lockKey}))`; } catch {}
+        try { await sql`SELECT pg_advisory_unlock(hashtext(${lockKey}))`; } catch { }
         return NextResponse.json(
           {
             success: true,
@@ -158,7 +159,7 @@ export async function PUT(request: NextRequest) {
           { status: 200 }
         );
       }
-      
+
       // Continue with order creation below inside the lock
     } finally {
       // If we acquired lock, keep it until after create to guard creates
@@ -224,6 +225,14 @@ export async function PUT(request: NextRequest) {
     // Update payment status
     await updatePaymentStatus(order.id, 'paid');
 
+    // Send notification
+    await sendOrderNotification(order.id, {
+      amount: amount,
+      items: items,
+      shipping: shipping,
+      paymentMethod: 'online'
+    });
+
     const response = NextResponse.json(
       {
         success: true,
@@ -232,9 +241,9 @@ export async function PUT(request: NextRequest) {
       },
       { status: 200 }
     );
-    
+
     // Release advisory lock if it was acquired
-    try { await sql`SELECT pg_advisory_unlock(hashtext(${lockKey}))`; } catch {}
+    try { await sql`SELECT pg_advisory_unlock(hashtext(${lockKey}))`; } catch { }
 
     return response;
   } catch (error: any) {

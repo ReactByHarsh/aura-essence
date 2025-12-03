@@ -29,6 +29,28 @@ export function CartDrawer() {
   const router = useRouter();
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [shippingConfig, setShippingConfig] = useState({ freeThreshold: 400, charge: 40 });
+
+  // Fetch shipping configuration
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const res = await fetch('/api/settings?type=shipping');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            setShippingConfig({
+              freeThreshold: json.data.free_shipping_threshold,
+              charge: json.data.standard_shipping_charge
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch shipping settings:', error);
+      }
+    }
+    fetchSettings();
+  }, []);
 
   // Click outside handler
   useEffect(() => {
@@ -317,7 +339,10 @@ export function CartDrawer() {
             {/* Note Banner */}
             <div className="bg-emerald-50 dark:bg-emerald-900/10 py-2 px-4 text-center border-b border-emerald-100 dark:border-emerald-900/20">
               <p className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
-                NOTE: Free shipping on all prepaid orders
+                {totals.subtotal >= shippingConfig.freeThreshold
+                  ? '🎉 FREE SHIPPING APPLIED!'
+                  : `Add ${formatPrice(shippingConfig.freeThreshold - totals.subtotal)} more for FREE SHIPPING`
+                }
               </p>
             </div>
 
@@ -343,9 +368,22 @@ export function CartDrawer() {
                     <span>-{formatPrice(totals.discount)}</span>
                   </div>
                 )}
+                {/* Shipping Charge */}
+                <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <span>Shipping</span>
+                  <span className="font-medium">
+                    {totals.subtotal >= shippingConfig.freeThreshold ? (
+                      <span className="text-emerald-600 dark:text-emerald-400">FREE</span>
+                    ) : (
+                      formatPrice(shippingConfig.charge)
+                    )}
+                  </span>
+                </div>
                 <div className="flex justify-between items-baseline pt-2 border-t border-slate-100 dark:border-slate-800">
                   <span className="text-base font-bold text-slate-900 dark:text-white">Total</span>
-                  <span className="text-xl font-bold text-slate-900 dark:text-white">{formatPrice(totals.total)}</span>
+                  <span className="text-xl font-bold text-slate-900 dark:text-white">
+                    {formatPrice(totals.total + (totals.subtotal >= shippingConfig.freeThreshold ? 0 : shippingConfig.charge))}
+                  </span>
                 </div>
               </div>
 
@@ -490,8 +528,8 @@ function CouponSelector({
                   <div
                     key={coupon.code}
                     className={`p-3 rounded-xl border transition-all ${eligible
-                        ? 'border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/10 shadow-sm'
-                        : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-70'
+                      ? 'border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/10 shadow-sm'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 opacity-70'
                       }`}
                   >
                     <div className="flex items-start justify-between gap-2.5">
@@ -527,8 +565,8 @@ function CouponSelector({
                         onClick={() => handleApplyCoupon(coupon.code)}
                         disabled={!eligible}
                         className={`${eligible
-                            ? 'bg-amber-600 hover:bg-amber-700 text-white'
-                            : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
+                          ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                          : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
                           } px-3 py-1.5 text-[10px] font-bold`}
                       >
                         Apply

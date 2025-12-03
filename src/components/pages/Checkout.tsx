@@ -2,17 +2,60 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, CreditCard, Lock, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '@/stores/cart';
 import { useUser, useStackApp } from '@stackframe/stack';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { SearchableSelect } from '@/components/ui/SearchableSelect';
 import { checkoutSchema, type CheckoutForm } from '@/lib/schema';
 import { formatPrice } from '@/lib/utils';
 import Image from 'next/image';
 import { useToaster } from '@/components/ui/ToasterProvider';
+
+const COUNTRIES = [
+  { value: 'India', label: 'India' },
+  { value: 'USA', label: 'United States' },
+  { value: 'UK', label: 'United Kingdom' },
+  { value: 'Canada', label: 'Canada' },
+  { value: 'Australia', label: 'Australia' },
+];
+
+const INDIAN_STATES = [
+  { value: 'Andhra Pradesh', label: 'Andhra Pradesh' },
+  { value: 'Arunachal Pradesh', label: 'Arunachal Pradesh' },
+  { value: 'Assam', label: 'Assam' },
+  { value: 'Bihar', label: 'Bihar' },
+  { value: 'Chhattisgarh', label: 'Chhattisgarh' },
+  { value: 'Goa', label: 'Goa' },
+  { value: 'Gujarat', label: 'Gujarat' },
+  { value: 'Haryana', label: 'Haryana' },
+  { value: 'Himachal Pradesh', label: 'Himachal Pradesh' },
+  { value: 'Jharkhand', label: 'Jharkhand' },
+  { value: 'Karnataka', label: 'Karnataka' },
+  { value: 'Kerala', label: 'Kerala' },
+  { value: 'Madhya Pradesh', label: 'Madhya Pradesh' },
+  { value: 'Maharashtra', label: 'Maharashtra' },
+  { value: 'Manipur', label: 'Manipur' },
+  { value: 'Meghalaya', label: 'Meghalaya' },
+  { value: 'Mizoram', label: 'Mizoram' },
+  { value: 'Nagaland', label: 'Nagaland' },
+  { value: 'Odisha', label: 'Odisha' },
+  { value: 'Punjab', label: 'Punjab' },
+  { value: 'Rajasthan', label: 'Rajasthan' },
+  { value: 'Sikkim', label: 'Sikkim' },
+  { value: 'Tamil Nadu', label: 'Tamil Nadu' },
+  { value: 'Telangana', label: 'Telangana' },
+  { value: 'Tripura', label: 'Tripura' },
+  { value: 'Uttar Pradesh', label: 'Uttar Pradesh' },
+  { value: 'Uttarakhand', label: 'Uttarakhand' },
+  { value: 'West Bengal', label: 'West Bengal' },
+  { value: 'Delhi', label: 'Delhi' },
+];
+
+
 
 export function Checkout() {
   const router = useRouter();
@@ -64,6 +107,7 @@ export function Checkout() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
@@ -245,9 +289,14 @@ export function Checkout() {
                   <Input
                     label="Phone Number"
                     type="tel"
-                    placeholder="10-digit mobile"
+                    placeholder="10-digit mobile number"
+                    startAdornment={<span className="text-slate-500 font-medium">+91</span>}
                     {...register('phone')}
                     error={errors.phone?.message}
+                    maxLength={10}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').slice(0, 10);
+                    }}
                   />
                 </div>
               </div>
@@ -281,22 +330,44 @@ export function Checkout() {
                       {...register('city')}
                       error={errors.city?.message}
                     />
-                    <Input
-                      label="State"
-                      {...register('state')}
-                      error={errors.state?.message}
+                    <Controller
+                      control={control}
+                      name="state"
+                      render={({ field }) => (
+                        <SearchableSelect
+                          label="State"
+                          options={INDIAN_STATES}
+                          value={field.value}
+                          onChange={field.onChange}
+                          error={errors.state?.message}
+                          placeholder="Select State"
+                        />
+                      )}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <Input
-                      label="ZIP Code"
+                      label="Pin Code"
                       {...register('zipCode')}
                       error={errors.zipCode?.message}
+                      maxLength={6}
+                      onInput={(e) => {
+                        e.currentTarget.value = e.currentTarget.value.replace(/\D/g, '').slice(0, 6);
+                      }}
                     />
-                    <Input
-                      label="Country"
-                      {...register('country')}
-                      error={errors.country?.message}
+                    <Controller
+                      control={control}
+                      name="country"
+                      render={({ field }) => (
+                        <SearchableSelect
+                          label="Country"
+                          options={COUNTRIES}
+                          value={field.value}
+                          onChange={field.onChange}
+                          error={errors.country?.message}
+                          placeholder="Select Country"
+                        />
+                      )}
                     />
                   </div>
                 </div>

@@ -80,7 +80,7 @@ export function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Link 
+    <Link
       href={`/product/${product.id}`}
       className="group block bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:scale-[1.02]"
     >
@@ -94,7 +94,7 @@ export function ProductCard({ product }: ProductCardProps) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         />
-        
+
         {/* Badges */}
         <div className="absolute top-3 left-3 space-y-1">
           {product.isNew && <Badge variant="accent" size="sm">New</Badge>}
@@ -107,20 +107,19 @@ export function ProductCard({ product }: ProductCardProps) {
           onClick={handleWishlist}
           className="absolute top-3 right-3 p-2.5 sm:p-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-full shadow-lg hover:scale-110 transition-transform duration-200 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
         >
-          <Heart 
-            className={`h-5 w-5 sm:h-4 sm:w-4 transition-colors ${
-              isWishlisted 
-                ? 'fill-red-500 text-red-500' 
+          <Heart
+            className={`h-5 w-5 sm:h-4 sm:w-4 transition-colors ${isWishlisted
+                ? 'fill-red-500 text-red-500'
                 : 'text-slate-600 dark:text-gray-400'
-            }`} 
+              }`}
           />
         </button>
 
-        {/* Quick add to cart */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {/* Quick add to cart - Desktop only */}
+        <div className="hidden sm:block absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Button
             onClick={handleAddToCart}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg min-h-[44px] sm:min-h-[36px] font-semibold"
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg min-h-[36px] font-semibold"
             size="sm"
           >
             <ShoppingBag className="h-4 w-4 mr-2" />

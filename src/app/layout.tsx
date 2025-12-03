@@ -48,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>Aura Elixir - Premium Luxury Perfumes & Fragrances Online India</title>
         <meta name="description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women. Shop premium EDP, EDT, and niche fragrances online in India with fast shipping." />
         <meta name="keywords" content="luxury perfumes, premium fragrances, perfumes for men, perfumes for women, EDP perfume, EDT fragrance, niche perfumes India, buy perfumes online, Aura Elixir, long lasting perfumes, designer fragrances, combo perfume packs" />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://auraelixir.co.in/" />
@@ -56,14 +56,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta property="og:description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women. Shop premium EDP, EDT, and niche fragrances online in India." />
         <meta property="og:image" content="https://auraelixir.co.in/perfume-logo.png" />
         <meta property="og:site_name" content="Aura Elixir" />
-        
+
         {/* Twitter */}
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:url" content="https://auraelixir.co.in/" />
         <meta property="twitter:title" content="Aura Elixir - Premium Luxury Perfumes & Fragrances Online India" />
         <meta property="twitter:description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women." />
         <meta property="twitter:image" content="https://auraelixir.co.in/perfume-logo.png" />
-        
+
         {/* Additional SEO Meta Tags */}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow" />
@@ -73,20 +73,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.placename" content="Barshi, Maharashtra, India" />
         <meta name="geo.position" content="18.2346;75.6958" />
         <meta name="ICBM" content="18.2346, 75.6958" />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href="https://auraelixir.co.in/" />
-        
+
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
-        
+
         {/* Theme Color */}
         <meta name="theme-color" content="#7c3aed" />
-        
+
         {/* Verification (add later with actual codes) */}
         {/* <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> */}
-        
+
         {/* Structured Data - Organization Schema */}
         <script
           type="application/ld+json"
@@ -121,7 +121,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             })
           }}
         />
-        
+
         {/* Structured Data - Local Business Schema */}
         <script
           type="application/ld+json"

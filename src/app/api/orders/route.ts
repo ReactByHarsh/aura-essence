@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stackServerApp } from '@/stack/server';
 import { createOrder, getUserOrders } from '@/lib/neon/orders';
+import { sendOrderNotification } from '@/lib/notifications';
 
 const COD_CHARGE = 49;
 
@@ -71,7 +72,13 @@ export async function POST(request: Request) {
         paymentMethod: 'cod',
       });
 
-      // console.log('[COD Order] Created in DB:', order.id);
+      // Send notification
+      await sendOrderNotification(order.id, {
+        amount: codFinal,
+        items: items,
+        shipping: shipping,
+        paymentMethod: 'cod'
+      });
 
       return new NextResponse(
         JSON.stringify({

@@ -7,13 +7,13 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  
+
   // Performance optimizations
   swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn'] } : false,
   },
-  
+
   // Modular imports for reduced bundle size
   modularizeImports: {
     'lucide-react': {
@@ -21,7 +21,7 @@ const nextConfig = {
       skipDefaultConversion: true,
     },
   },
-  
+
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -35,30 +35,30 @@ const nextConfig = {
       { protocol: 'https', hostname: 'wnaxppdlvfcfeluxlvxn.supabase.co' }
     ],
   },
-  
+
   // Production optimizations
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
   compress: true,
-  
+
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: ['lucide-react', '@stackframe/stack', 'zustand'],
     webpackBuildWorker: true,
   },
-  
+
   webpack: (config, { isServer, dev }) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
       '@': path.resolve(__dirname, 'src'),
     };
-    
+
     // Suppress specific warnings from Stack Auth UI library
     config.ignoreWarnings = [
       { module: /node_modules\/@stackframe\/stack/ },
       { module: /node_modules\/@stackframe\/stack-ui/ },
     ];
-    
+
     // Production optimizations
     if (!dev) {
       config.optimization = {
@@ -82,10 +82,10 @@ const nextConfig = {
         },
       };
     }
-    
+
     return config;
   },
-  
+
   // Suppress specific build warnings
   onDemandEntries: {
     maxInactiveAge: 60 * 1000,

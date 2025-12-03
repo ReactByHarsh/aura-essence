@@ -272,8 +272,8 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
                       className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${selectedImageIndex === index
-                          ? 'border-slate-900 dark:border-white ring-1 ring-slate-900/10 dark:ring-white/10'
-                          : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'
+                        ? 'border-slate-900 dark:border-white ring-1 ring-slate-900/10 dark:ring-white/10'
+                        : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'
                         }`}
                     >
                       <div className="relative w-full h-full bg-slate-50 dark:bg-slate-900">
@@ -339,8 +339,8 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                     <Star
                       key={i}
                       className={`h-4 w-4 ${i < Math.round(product.rating)
-                          ? 'fill-amber-400 text-amber-400'
-                          : 'text-slate-200 dark:text-slate-700'
+                        ? 'fill-amber-400 text-amber-400'
+                        : 'text-slate-200 dark:text-slate-700'
                         }`}
                     />
                   ))}
@@ -375,8 +375,8 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                         key={size}
                         onClick={() => handleSizeChange(size)}
                         className={`py-3 px-2 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${selectedSize === size
-                            ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-100 ring-1 ring-amber-500'
-                            : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
+                          ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-100 ring-1 ring-amber-500'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
                           }`}
                       >
                         <span className="font-medium mb-1">{size}</span>

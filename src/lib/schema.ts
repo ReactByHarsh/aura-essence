@@ -18,13 +18,13 @@ export const signupSchema = z.object({
 
 export const checkoutSchema = z.object({
   email: z.string().email('Invalid email address'),
-  phone: z.string().min(10, 'Phone is required'),
+  phone: z.string().regex(/^\d{10}$/, 'Phone number must be exactly 10 digits'),
   firstName: z.string().min(2, 'First name is required'),
   lastName: z.string().min(2, 'Last name is required'),
   address: z.string().min(5, 'Address is required'),
   city: z.string().min(2, 'City is required'),
   state: z.string().min(2, 'State is required'),
-  zipCode: z.string().min(5, 'ZIP code is required'),
+  zipCode: z.string().min(5, 'Pin Code is required'),
   country: z.string().min(2, 'Country is required'),
 });
 
