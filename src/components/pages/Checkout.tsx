@@ -59,7 +59,7 @@ const INDIAN_STATES = [
 
 export function Checkout() {
   const router = useRouter();
-  const { items, getSubtotal, getTax, getTotal, clearCart, openCart, loadCart, closeCart } = useCartStore();
+  const { items, getSubtotal, getTax, getTotal, clearCart, openCart, loadCart, closeCart, totals, couponCode } = useCartStore();
   const stackUser = useUser();
   const stackApp = useStackApp();
   const toast = useToaster();
@@ -127,6 +127,8 @@ export function Checkout() {
 
   const onSubmit = async (data: CheckoutForm) => {
     try {
+      console.log('[Checkout] Form submitted, paymentMethod:', paymentMethod);
+
       if (!stackUser) {
         toast.info('Please log in to place an order.');
         router.push('/handler/sign-in');
@@ -150,33 +152,7 @@ export function Checkout() {
         country: data.country || 'India',
       };
 
-      if (paymentMethod === 'cod') {
-        const res = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            paymentMethod: 'cod',
-            amount: baseTotal,
-            finalAmount: finalTotal,
-            items: orderItems,
-            shipping: shippingDetails,
-          })
-        });
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-          console.error('COD order error', json);
-          toast.error(json?.error || 'Failed to place COD order.');
-          return;
-        }
-        // console.log('[COD Order] Created successfully:', json.orderId);
-        await clearCart();
-        await loadCart(); // Reload cart to ensure it's empty
-        toast.success(`COD order placed. Payable ₹${finalTotal}.`);
-        router.push('/orders');
-        return;
-      }
-
-      // Online: create PhonePe payment
+      // All orders (both online and COD) now go through PhonePe payment gateway
       if (!user) {
         toast.error('User not found. Please log in again.');
         router.push('/handler/sign-in');
@@ -184,13 +160,14 @@ export function Checkout() {
       }
 
       const uniqueOrderId = `ORD_${Date.now()}_${user.id.substring(0, 8)}`;
+      console.log('[Checkout] Creating PhonePe order with amount:', finalTotal, 'orderId:', uniqueOrderId);
 
-      // Create PhonePe order
+      // Create PhonePe order with final amount (includes COD charge if applicable)
       const phonepeRes = await fetch('/api/phonepe/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: baseTotal,
+          amount: finalTotal, // Use finalTotal which includes COD charge if selected
           orderId: uniqueOrderId,
           userId: user.id,
           mobileNumber: data.phone || undefined,
@@ -198,8 +175,10 @@ export function Checkout() {
       });
 
       const phonepeJson = await phonepeRes.json();
+      console.log('[Checkout] PhonePe response:', phonepeJson);
+
       if (!phonepeRes.ok || !phonepeJson.success || !phonepeJson.paymentUrl) {
-        console.error('PhonePe order init error', phonepeJson);
+        console.error('[Checkout] PhonePe order init error', phonepeJson);
         toast.error(phonepeJson?.error || 'Failed to initialize payment.');
         return;
       }
@@ -209,13 +188,15 @@ export function Checkout() {
         orderId: uniqueOrderId,
         items: orderItems,
         shipping: shippingDetails,
-        amount: baseTotal,
+        amount: finalTotal,
+        paymentMethod: paymentMethod, // Store payment method for reference
       }));
 
+      console.log('[Checkout] Redirecting to PhonePe:', phonepeJson.paymentUrl);
       // Redirect to PhonePe payment page
       window.location.href = phonepeJson.paymentUrl;
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error('[Checkout] Error:', error);
       toast.error('Unexpected error during checkout.');
     }
   };
@@ -459,6 +440,21 @@ export function Checkout() {
                     {formatPrice(getSubtotal())}
                   </span>
                 </div>
+
+                {/* Coupon Discount */}
+                {totals.discount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                      <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                        {couponCode || 'COUPON'}
+                      </span>
+                      Applied
+                    </span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                      -{formatPrice(totals.discount)}
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600 dark:text-slate-400">Tax</span>

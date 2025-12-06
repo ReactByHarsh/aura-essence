@@ -78,7 +78,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   error: null,
   couponCode: undefined,
 
-  addItem: async (product: Product, quantity = 1, selectedSize = '20ml', options?: CartMutationOptions) => {
+  addItem: async (product: Product, quantity = 1, selectedSize = '30ml', options?: CartMutationOptions) => {
     try {
       set({ error: null });
       const response = await fetch('/api/cart', {
@@ -141,7 +141,7 @@ export const useCartStore = create<CartState>((set, get) => ({
               JSON.stringify({ items: mappedItems, totals: resolvedTotals })
             )
           }
-        } catch {}
+        } catch { }
       }
       // Don't auto-open cart, just update the count
     } catch (error) {
@@ -212,7 +212,7 @@ export const useCartStore = create<CartState>((set, get) => ({
               JSON.stringify({ items: mappedItems, totals: resolvedTotals })
             )
           }
-        } catch {}
+        } catch { }
       }
     } catch (error) {
       console.error('Error removing item from cart:', error);
@@ -287,7 +287,7 @@ export const useCartStore = create<CartState>((set, get) => ({
             JSON.stringify({ items: mappedItems, totals: resolvedTotals })
           )
         }
-      } catch {}
+      } catch { }
     } catch (error) {
       console.error('Error updating cart quantity:', error);
       const message = error instanceof Error ? error.message : 'Failed to update cart quantity';
@@ -311,13 +311,13 @@ export const useCartStore = create<CartState>((set, get) => ({
       }
 
       set({ items: [], totals: EMPTY_TOTALS });
-      
+
       // Clear localStorage cache
       try {
         if (typeof window !== 'undefined') {
           window.localStorage.removeItem(CART_CACHE_KEY);
         }
-      } catch {}
+      } catch { }
     } catch (error) {
       console.error('Error clearing cart:', error);
       const message = error instanceof Error ? error.message : 'Failed to clear cart';
@@ -335,7 +335,7 @@ export const useCartStore = create<CartState>((set, get) => ({
         const totals = parsed.totals && typeof parsed.totals === 'object' ? parsed.totals : EMPTY_TOTALS
         set({ items, totals })
       }
-    } catch {}
+    } catch { }
     set({ isOpen: true });
   },
 
@@ -407,7 +407,7 @@ export const useCartStore = create<CartState>((set, get) => ({
             JSON.stringify({ items: mappedItems, totals: resolvedTotals })
           )
         }
-      } catch {}
+      } catch { }
     } catch (error) {
       console.error('Error loading cart:', error);
       set({ error: 'Failed to load cart', items: [], totals: EMPTY_TOTALS });

@@ -13,6 +13,7 @@ export interface CODConfig {
 
 export interface DefaultPrices {
     '20ml': number;
+    '30ml': number;
     '50ml': number;
     '100ml': number;
 }
@@ -89,14 +90,16 @@ export async function getDefaultPrices(): Promise<DefaultPrices> {
 
         // Fallback to default values
         return {
-            '20ml': 269,
+            '20ml': 299,
+            '30ml': 369,
             '50ml': 499,
             '100ml': 699
         };
     } catch (error) {
         console.error('Error fetching default prices:', error);
         return {
-            '20ml': 269,
+            '20ml': 299,
+            '30ml': 369,
             '50ml': 499,
             '100ml': 699
         };

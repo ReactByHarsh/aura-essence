@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import type { CartItem as CartItemType } from '@/types';
 import Image from 'next/image';
 
-const DEFAULT_SIZES = ['20ml', '50ml', '100ml'];
+const DEFAULT_SIZES = ['30ml', '50ml'];
 
 export function CartDrawer() {
   const {
@@ -28,6 +28,7 @@ export function CartDrawer() {
 
   const router = useRouter();
   const [loadingItems, setLoadingItems] = useState<Set<string>>(new Set());
+  const [isNavigating, setIsNavigating] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const [shippingConfig, setShippingConfig] = useState({ freeThreshold: 400, charge: 40 });
 
@@ -55,6 +56,9 @@ export function CartDrawer() {
   // Click outside handler
   useEffect(() => {
     if (!isOpen) return;
+
+    // Reset navigating state when cart opens
+    setIsNavigating(false);
 
     function handleClickOutside(event: MouseEvent) {
       if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
@@ -245,7 +249,7 @@ export function CartDrawer() {
                 const isItemLoading = loadingItems.has(itemKey);
                 const unitPrice = item.unitPrice ?? item.product.price;
                 const lineTotal = item.lineTotal ?? unitPrice * item.quantity;
-                const sizeOptions = item.product.sizes ? Object.keys(item.product.sizes) : DEFAULT_SIZES;
+                const sizeOptions = (item.product.sizes ? Object.keys(item.product.sizes) : DEFAULT_SIZES).filter(s => s === '30ml' || s === '50ml');
                 const coverImage = item.product.images[0] ?? '/perfume-logo.png';
 
                 return (
@@ -390,22 +394,33 @@ export function CartDrawer() {
               {/* Action Buttons */}
               <div className="space-y-3 pt-2">
                 <Button
-                  className="w-full bg-black hover:bg-slate-800 text-white font-bold h-12 text-sm transition-all duration-300 shadow-lg flex items-center justify-between px-6 group"
+                  className="w-full bg-black hover:bg-slate-800 text-white font-bold h-12 text-sm transition-all duration-300 shadow-lg flex items-center justify-between px-6 group disabled:opacity-70"
+                  disabled={isNavigating}
                   onClick={() => {
+                    setIsNavigating(true);
                     closeCart();
-                    setTimeout(() => router.push('/checkout'), 250);
+                    router.push('/checkout');
                   }}
                 >
-                  <span>BUY NOW</span>
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1 opacity-80">
-                      {/* Simple payment indicators */}
-                      <div className="h-1.5 w-1.5 rounded-full bg-blue-500"></div>
-                      <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
-                      <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
-                    </div>
-                    <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+                  {isNavigating ? (
+                    <>
+                      <span>Loading...</span>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                    </>
+                  ) : (
+                    <>
+                      <span>BUY NOW</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex gap-1 opacity-80">
+                          {/* Simple payment indicators */}
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-500"></div>
+                          <div className="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+                          <div className="h-1.5 w-1.5 rounded-full bg-orange-500"></div>
+                        </div>
+                        <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </>
+                  )}
                 </Button>
               </div>
             </div>

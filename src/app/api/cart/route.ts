@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     });
 
     const body = await request.json();
-    const { action, productId, quantity, selectedSize = '100ml' } = body;
+    const { action, productId, quantity, selectedSize = '30ml' } = body;
 
     if (!action) {
       return NextResponse.json(

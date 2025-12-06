@@ -31,7 +31,7 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   const [product, setProduct] = useState<Product | null>(initialProduct);
   const [relatedProducts, setRelatedProducts] = useState<AppProduct[]>(initialRelated);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string>('20ml');
+  const [selectedSize, setSelectedSize] = useState<string>('30ml');
   const [currentPrice, setCurrentPrice] = useState<number>(349);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -158,9 +158,9 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
   const getSizePrice = (): number => {
     const sizes = product?.sizes as any;
     if (sizes && sizes[selectedSize]) {
-      return sizes[selectedSize].price || (selectedSize === '20ml' ? 269 : selectedSize === '50ml' ? 499 : 699);
+      return sizes[selectedSize].price || (selectedSize === '20ml' ? 299 : selectedSize === '30ml' ? 369 : selectedSize === '50ml' ? 499 : 699);
     }
-    return selectedSize === '20ml' ? 269 : selectedSize === '50ml' ? 499 : 699;
+    return selectedSize === '20ml' ? 299 : selectedSize === '30ml' ? 369 : selectedSize === '50ml' ? 499 : 699;
   };
 
   const getSlashedPrice = (price: number): number => {
@@ -266,8 +266,9 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
               </div>
 
               {product.images.length > 1 && (
-                <div className="grid grid-cols-4 gap-3">
-                  {product.images.map((image, index) => (
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Only show first 2 images */}
+                  {product.images.slice(0, 2).map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImageIndex(index)}
@@ -364,17 +365,18 @@ export function ProductDetail({ initialProduct = null, initialRelated = [], pref
                 <label className="font-medium text-slate-900 dark:text-white text-sm">
                   Select Size
                 </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {['20ml', '50ml', '100ml'].map((size) => {
+                <div className="grid grid-cols-4 gap-2">
+                  {/* ['20ml', '30ml', '50ml', '100ml'] - Commented out 20ml and 100ml */}
+                  {['30ml', '50ml'].map((size) => {
                     const sizes = product.sizes as any;
-                    const price = sizes?.[size]?.price || (size === '20ml' ? 269 : size === '50ml' ? 499 : 699);
+                    const price = sizes?.[size]?.price || (size === '20ml' ? 299 : size === '30ml' ? 369 : size === '50ml' ? 499 : 699);
                     const slashedPrice = getSlashedPrice(price);
                     const discount = Math.round((1 - price / slashedPrice) * 100);
                     return (
                       <button
                         key={size}
                         onClick={() => handleSizeChange(size)}
-                        className={`py-3 px-2 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${selectedSize === size
+                        className={`py-3 px-1 rounded-lg border transition-all text-sm flex flex-col items-center justify-center ${selectedSize === size
                           ? 'border-amber-500 bg-amber-50 dark:bg-amber-900/10 text-amber-900 dark:text-amber-100 ring-1 ring-amber-500'
                           : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600 bg-white dark:bg-slate-900'
                           }`}

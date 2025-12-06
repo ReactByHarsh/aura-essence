@@ -21,10 +21,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const getMinPrice = () => {
     if (product.sizes) {
-      const prices = Object.values(product.sizes)
-        .map((s: any) => s?.price)
-        .filter((p: any) => typeof p === 'number');
-      if (prices.length > 0) return Math.min(...prices);
+      const sizes = product.sizes as any;
+      // Show 30ml price as requested
+      if (sizes['30ml']?.price) return sizes['30ml'].price;
+
+      // Fallback to 369 if 30ml is missing
+      return 369;
     }
     return product.price;
   };
@@ -84,15 +86,17 @@ export function ProductCard({ product }: ProductCardProps) {
       href={`/product/${product.id}`}
       className="group block bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:scale-[1.02]"
     >
-      <div className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-900">
+      <div
+        className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-900"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         <Image
           src={getImageForIndex(currentImageIndex)}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          className="object-cover transition-all duration-300 group-hover:scale-105"
         />
 
         {/* Badges */}
@@ -109,17 +113,17 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           <Heart
             className={`h-5 w-5 sm:h-4 sm:w-4 transition-colors ${isWishlisted
-                ? 'fill-red-500 text-red-500'
-                : 'text-slate-600 dark:text-gray-400'
+              ? 'fill-red-500 text-red-500'
+              : 'text-slate-600 dark:text-gray-400'
               }`}
           />
         </button>
 
-        {/* Quick add to cart - Desktop only */}
-        <div className="hidden sm:block absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {/* Quick add to cart */}
+        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <Button
             onClick={handleAddToCart}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg min-h-[36px] font-semibold"
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg min-h-[44px] sm:min-h-[36px] font-semibold"
             size="sm"
           >
             <ShoppingBag className="h-4 w-4 mr-2" />
