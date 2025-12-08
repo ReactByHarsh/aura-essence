@@ -42,33 +42,132 @@ function AppContent({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const baseUrl = 'https://auraelixir.co.in';
+
+  // Organization Schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    "name": "Aura Elixir",
+    "alternateName": ["Aura Elixir India", "Aura Elixir Perfumes", "AuraElixir"],
+    "url": baseUrl,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${baseUrl}/perfume-logo.png`,
+      "width": 512,
+      "height": 512
+    },
+    "description": "Aura Elixir - India's premium destination for luxury inspired perfumes and fragrances for men, women, and unisex.",
+    "foundingDate": "2024",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-9028709575",
+      "contactType": "Customer Service",
+      "email": "help@auraelixir.co.in",
+      "availableLanguage": ["English", "Hindi", "Marathi"],
+      "areaServed": "IN"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Balaji Colony",
+      "addressLocality": "Barshi",
+      "addressRegion": "Maharashtra",
+      "postalCode": "413401",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.instagram.com/auraelixir.in",
+      "https://www.facebook.com/auraelixir"
+    ]
+  };
+
+  // WebSite Schema with SearchAction
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${baseUrl}/#website`,
+    "url": baseUrl,
+    "name": "Aura Elixir",
+    "alternateName": "Aura Elixir Perfumes India",
+    "description": "Premium luxury inspired perfumes and fragrances online store in India. Shop best quality EDP and EDT perfumes for men, women, and unisex.",
+    "publisher": {
+      "@id": `${baseUrl}/#organization`
+    },
+    "inLanguage": "en-IN"
+  };
+
+  // Local Business Schema
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "@id": `${baseUrl}/#store`,
+    "name": "Aura Elixir",
+    "image": `${baseUrl}/perfume-logo.png`,
+    "priceRange": "₹₹",
+    "telephone": "+91-9028709575",
+    "email": "help@auraelixir.co.in",
+    "url": baseUrl,
+    "description": "Premium luxury inspired perfumes and fragrances store in India. Shop best EDP and EDT perfumes for men, women and unisex. Free shipping above ₹399.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Balaji Colony",
+      "addressLocality": "Barshi",
+      "addressRegion": "Maharashtra",
+      "postalCode": "413401",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "18.2346",
+      "longitude": "75.6958"
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:30",
+      "closes": "18:00"
+    },
+    "paymentAccepted": "Cash, Credit Card, Debit Card, UPI, PhonePe",
+    "currenciesAccepted": "INR"
+  };
+
   return (
     <html lang="en">
       <head>
-        <title>Aura Elixir - Premium Luxury Perfumes & Fragrances Online India</title>
-        <meta name="description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women. Shop premium EDP, EDT, and niche fragrances online in India with fast shipping." />
-        <meta name="keywords" content="luxury perfumes, premium fragrances, perfumes for men, perfumes for women, EDP perfume, EDT fragrance, niche perfumes India, buy perfumes online, Aura Elixir, long lasting perfumes, designer fragrances, combo perfume packs" />
+        <title>Aura Elixir - Premium Luxury Perfumes & Inspired Fragrances Online India</title>
+        <meta name="description" content="Shop Aura Elixir - India's trusted destination for premium inspired perfumes & luxury fragrances. Long-lasting EDP & EDT for men & women. Free shipping above ₹399. Starting ₹369 only." />
+        <meta name="keywords" content="Aura Elixir, aura elixir perfumes, aura elixir india, luxury perfumes, premium fragrances, inspired perfumes, perfumes for men, perfumes for women, unisex perfumes, EDP perfume, EDT fragrance, buy perfumes online india, long lasting perfumes, best perfumes india, aura elixir price, aura elixir review" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://auraelixir.co.in/" />
-        <meta property="og:title" content="Aura Elixir - Premium Luxury Perfumes & Fragrances Online India" />
-        <meta property="og:description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women. Shop premium EDP, EDT, and niche fragrances online in India." />
+        <meta property="og:title" content="Aura Elixir - Premium Luxury Perfumes & Inspired Fragrances Online India" />
+        <meta property="og:description" content="Shop Aura Elixir for premium inspired perfumes & luxury fragrances. Long-lasting EDP & EDT for men & women. Free shipping above ₹399." />
         <meta property="og:image" content="https://auraelixir.co.in/perfume-logo.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="Aura Elixir" />
+        <meta property="og:locale" content="en_IN" />
 
         {/* Twitter */}
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://auraelixir.co.in/" />
-        <meta property="twitter:title" content="Aura Elixir - Premium Luxury Perfumes & Fragrances Online India" />
-        <meta property="twitter:description" content="Discover Aura Elixir's exquisite collection of luxury perfumes and fragrances for men and women." />
-        <meta property="twitter:image" content="https://auraelixir.co.in/perfume-logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://auraelixir.co.in/" />
+        <meta name="twitter:title" content="Aura Elixir - Premium Luxury Perfumes India" />
+        <meta name="twitter:description" content="Shop Aura Elixir for premium inspired perfumes. Long-lasting fragrances for men & women. Free shipping above ₹399." />
+        <meta name="twitter:image" content="https://auraelixir.co.in/perfume-logo.png" />
 
         {/* Additional SEO Meta Tags */}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="googlebot" content="index, follow" />
+        <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="bingbot" content="index, follow" />
         <meta name="author" content="Aura Elixir" />
         <meta name="language" content="English" />
+        <meta name="revisit-after" content="3 days" />
+        <meta name="rating" content="general" />
+        <meta name="distribution" content="global" />
+
+        {/* Geo Tags */}
         <meta name="geo.region" content="IN-MH" />
         <meta name="geo.placename" content="Barshi, Maharashtra, India" />
         <meta name="geo.position" content="18.2346;75.6958" />
@@ -78,84 +177,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="canonical" href="https://auraelixir.co.in/" />
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
 
         {/* Theme Color */}
         <meta name="theme-color" content="#7c3aed" />
+        <meta name="msapplication-TileColor" content="#7c3aed" />
 
-        {/* Verification (add later with actual codes) */}
-        {/* <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> */}
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* DNS Prefetch */}
+        <link rel="dns-prefetch" href="https://auraelixir.co.in" />
+
+        {/* Verification (uncomment and add your codes) */}
+        {/* <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" /> */}
+        {/* <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" /> */}
 
         {/* Structured Data - Organization Schema */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Aura Elixir",
-              "url": "https://auraelixir.co.in",
-              "logo": "https://auraelixir.co.in/perfume-logo.png",
-              "description": "Premium luxury perfumes and fragrances for discerning individuals",
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+91-9028709575",
-                "contactType": "Customer Service",
-                "email": "help@auraelixir.co.in",
-                "availableLanguage": ["English", "Hindi"]
-              },
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Balaji Colony",
-                "addressLocality": "Barshi",
-                "addressRegion": "Maharashtra",
-                "postalCode": "413401",
-                "addressCountry": "IN"
-              },
-              "sameAs": [
-                "https://www.facebook.com/auraelixir",
-                "https://www.instagram.com/auraelixir",
-                "https://twitter.com/auraelixir"
-              ]
-            })
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+
+        {/* Structured Data - WebSite Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
 
         {/* Structured Data - Local Business Schema */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "Aura Elixir",
-              "image": "https://auraelixir.co.in/perfume-logo.png",
-              "priceRange": "₹₹₹",
-              "telephone": "+91-9028709575",
-              "email": "help@auraelixir.co.in",
-              "url": "https://auraelixir.co.in",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Balaji Colony",
-                "addressLocality": "Barshi",
-                "addressRegion": "MH",
-                "postalCode": "413401",
-                "addressCountry": "IN"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": "18.2346",
-                "longitude": "75.6958"
-              },
-              "openingHoursSpecification": {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                "opens": "09:30",
-                "closes": "18:00"
-              }
-            })
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
       </head>
       <body className={inter.className}>

@@ -170,8 +170,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Top notes preview */}
         <p className="text-xs text-slate-600 dark:text-gray-400 line-clamp-1">
-          {product.notes.top.slice(0, 2).join(', ')}
-          {product.notes.top.length > 2 && '...'}
+          {product.notes?.top?.slice(0, 2).join(', ') || 'Premium fragrance'}
+          {(product.notes?.top?.length ?? 0) > 2 && '...'}
         </p>
       </div>
     </Link>

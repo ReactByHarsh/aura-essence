@@ -202,16 +202,26 @@ export const getFeaturedProducts = unstable_cache(getFeaturedProductsDb, ['featu
   tags: ['products']
 });
 
-// Get products by category
+// Get products by category (includes unisex products in men's and women's collections)
 async function getProductsByCategoryDb(category: string, limit: number = 12): Promise<Product[]> {
-  const products = await sql`
-    SELECT id, name, brand, price, original_price, images, category, type, notes,
-           rating, is_new, is_best_seller, is_on_sale, created_at, updated_at, stock, sizes
-    FROM public.products
-    WHERE category = ${category}
-    ORDER BY created_at DESC
-    LIMIT ${limit}
-  `;
+  // If category is 'men' or 'women', also include 'unisex' products
+  const products = category === 'unisex'
+    ? await sql`
+        SELECT id, name, brand, price, original_price, images, category, type, notes,
+               rating, is_new, is_best_seller, is_on_sale, created_at, updated_at, stock, sizes
+        FROM public.products
+        WHERE category = 'unisex'
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `
+    : await sql`
+        SELECT id, name, brand, price, original_price, images, category, type, notes,
+               rating, is_new, is_best_seller, is_on_sale, created_at, updated_at, stock, sizes
+        FROM public.products
+        WHERE category = ${category} OR category = 'unisex'
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `;
 
   return products.map(mapProduct);
 }
