@@ -137,7 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <title>Aura Elixir - Premium Luxury Perfumes & Inspired Fragrances Online India</title>
         <meta name="description" content="Shop Aura Elixir - India's trusted destination for premium inspired perfumes & luxury fragrances. Long-lasting EDP & EDT for men & women. Free shipping above ₹399. Starting ₹369 only." />
-        <meta name="keywords" content="Aura Elixir, aura elixir perfumes, aura elixir india, luxury perfumes, premium fragrances, inspired perfumes, perfumes for men, perfumes for women, unisex perfumes, EDP perfume, EDT fragrance, buy perfumes online india, long lasting perfumes, best perfumes india, aura elixir price, aura elixir review" />
+        <meta name="keywords" content="Aura Elixir, aura elixir perfumes, search elixir, elixir perfumes, luxury perfumes, premium fragrances, inspired perfumes, perfumes for men, perfumes for women, unisex perfumes, EDP perfume, EDT fragrance, buy perfumes online india, long lasting perfumes, best perfumes india, aura elixir price, Arabian Aromas, Bella Vita, Adil Qadri, Celestial, Ajmal, branded perfumes, best in class perfumes" />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
@@ -193,8 +193,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://auraelixir.co.in" />
 
-        {/* Verification (uncomment and add your codes) */}
-        {/* <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_CODE" /> */}
+        {/* Verification */}
+        <meta name="google-site-verification" content="-8xZG3mirtcSKtuYwTfpcStCESWEpCA8VtoyzsU2DXE" />
         {/* <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" /> */}
 
         {/* Structured Data - Organization Schema */}

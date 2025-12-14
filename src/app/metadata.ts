@@ -12,6 +12,8 @@ export const siteMetadata: Metadata = {
   keywords: [
     'Aura Elixir',
     'aura elixir perfumes',
+    'search elixir',
+    'elixir perfumes',
     'aura elixir india',
     'luxury perfumes india',
     'inspired perfumes',
@@ -30,6 +32,11 @@ export const siteMetadata: Metadata = {
     'gift perfumes',
     'niche perfumes india',
     'aura elixir perfume price',
+    'Arabian Aromas',
+    'Bella Vita',
+    'Adil Qadri',
+    'Celestial',
+    'Ajmal',
   ],
   authors: [{ name: 'Aura Elixir', url: baseUrl }],
   creator: 'Aura Elixir',
@@ -78,7 +85,7 @@ export const siteMetadata: Metadata = {
   },
   verification: {
     // Add your verification codes here when available
-    // google: 'your-google-verification-code',
+    google: '-8xZG3mirtcSKtuYwTfpcStCESWEpCA8VtoyzsU2DXE',
     // yandex: 'your-yandex-verification-code',
   },
   category: 'shopping',

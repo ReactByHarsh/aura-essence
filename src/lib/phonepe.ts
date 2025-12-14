@@ -8,7 +8,7 @@ const PHONEPE_CLIENT_ID = process.env.PHONEPE_MERCHANT_ID || '';
 const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_SALT_KEY || '';
 const PHONEPE_ENV = process.env.PHONEPE_ENV || 'production';
 
-// API URLs - Production endpoints as per PhonePe documentation
+// API URLs
 const PHONEPE_AUTH_URL = PHONEPE_ENV === 'production'
   ? 'https://api.phonepe.com/apis/identity-manager/v1/oauth/token'
   : 'https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token';
