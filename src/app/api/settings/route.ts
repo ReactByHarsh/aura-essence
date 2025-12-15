@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getShippingConfig, getCODConfig, getDefaultPrices } from '@/lib/neon/settings';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/settings
  * Returns site-wide configuration settings

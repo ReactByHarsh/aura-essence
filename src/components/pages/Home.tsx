@@ -38,7 +38,7 @@ export function Home({
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    
+
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
 
@@ -163,16 +163,22 @@ export function Home({
     {
       name: 'Elena Vasquez',
       rating: 5,
+      date: '2 weeks ago',
+      verified: true,
       comment: 'Aura Élixir Midnight Noir has become my signature scent. The depth and sophistication are unparalleled - I receive compliments wherever I go. Pure luxury in a bottle.'
     },
     {
       name: 'Marcus Thompson',
       rating: 5,
+      date: '1 month ago',
+      verified: true,
       comment: 'As a fragrance connoisseur, I\'ve tried countless brands. Aura Élixir stands apart with their masterful compositions and exceptional longevity. Forest King is simply extraordinary.'
     },
     {
       name: 'Sophia Chen',
       rating: 5,
+      date: '3 weeks ago',
+      verified: true,
       comment: 'The attention to detail in every Aura Élixir creation is remarkable. Royal Rose captures the essence of timeless elegance. Worth every penny of this premium experience.'
     }
   ];
@@ -180,18 +186,18 @@ export function Home({
   const features = [
     {
       icon: Award,
-      title: 'Premium Quality',
-      description: 'Carefully crafted with the finest ingredients sourced globally'
+      title: 'Long Lasting Formula',
+      description: 'High concentration EDPs designed to last over 12+ hours'
     },
     {
       icon: Shield,
-      title: 'Authentic Products',
-      description: '100% genuine fragrances with quality guarantee and authenticity certificates'
+      title: 'Certified Authentic',
+      description: '100% original formulations with quality guarantee certificate'
     },
     {
       icon: Crown,
-      title: 'Luxury Experience',
-      description: 'Indulge in unparalleled sophistication and royal treatment with every purchase'
+      title: '10k+ Happy Customers',
+      description: 'Join the community of fragrance lovers who trust Aura Élixir'
     }
   ];
 
@@ -202,7 +208,7 @@ export function Home({
         {/* Background Image/Gradient - Subtle & Sophisticated */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1615634260167-c8cdede054de?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 dark:opacity-20 mix-blend-overlay"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:from-transparent dark:via-slate-900/50 dark:to-slate-900"></div>
-        
+
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto py-12">
           <div className="mb-6 inline-flex items-center gap-3 animate-fade-in">
             <div className="h-[1px] w-8 bg-amber-500/50"></div>
@@ -211,19 +217,19 @@ export function Home({
             </span>
             <div className="h-[1px] w-8 bg-amber-500/50"></div>
           </div>
-          
+
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 leading-[1.1] font-serif">
             Aura <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Élixir</span>
           </h1>
-          
+
           <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
             Discover a collection of premium fragrances, meticulously crafted to elevate your presence and express your unique identity.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up">
-            <Button 
-              size="lg" 
-              className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 min-h-[56px] px-8 rounded-full text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1" 
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up mb-12">
+            <Button
+              size="lg"
+              className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 min-h-[56px] px-8 rounded-full text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               asChild
             >
               <Link href="/collections/men">
@@ -231,14 +237,25 @@ export function Home({
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 min-h-[56px] px-8 rounded-full text-base font-medium backdrop-blur-sm" 
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 min-h-[56px] px-8 rounded-full text-base font-medium backdrop-blur-sm"
               asChild
             >
               <Link href="/about">Our Story</Link>
             </Button>
+          </div>
+
+          <div className="flex items-center justify-center gap-6 text-slate-400 grayscale opacity-70">
+            {/* Trust signals (Logos could be added here later) */}
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
+              <Shield className="h-4 w-4" /> Authentic Guarantee
+            </div>
+            <div className="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></div>
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
+              <Truck className="h-4 w-4" /> Free Shipping
+            </div>
           </div>
         </div>
       </section>
@@ -265,20 +282,20 @@ export function Home({
             <div className="flex-1 md:sticky md:top-24 self-start text-center md:text-left">
               <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">Most Loved</span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
-                Bestselling <br/> Fragrances
+                Bestselling <br /> Fragrances
               </h2>
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Our most coveted scents, chosen by connoisseurs worldwide. These signature fragrances have captured hearts and become timeless favorites.
               </p>
-              <Link 
-                href="/collections/men" 
+              <Link
+                href="/collections/men"
                 className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
               >
-                View All Best Sellers 
+                View All Best Sellers
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-            
+
             <div className="flex-1 w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
@@ -309,14 +326,14 @@ export function Home({
                 Bold, sophisticated fragrances that capture the essence of modern masculinity.
                 From fresh and crisp to deep and woody, find your signature scent.
               </p>
-              <Link 
-                href="/collections/men" 
+              <Link
+                href="/collections/men"
                 className="inline-flex items-center px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Explore Men's <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
-            
+
             <div className="flex-1 w-full">
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
                 {loading ? (
@@ -347,14 +364,14 @@ export function Home({
                 Elegantly captivating fragrances that celebrate femininity and grace.
                 Discover floral, fruity, and oriental scents that turn heads.
               </p>
-              <Link 
-                href="/collections/women" 
+              <Link
+                href="/collections/women"
                 className="inline-flex items-center px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-medium hover:bg-slate-800 dark:hover:bg-slate-200 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Explore Women's <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
-            
+
             <div className="flex-1 w-full">
               <div className="grid grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
@@ -384,15 +401,15 @@ export function Home({
               <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
                 Fresh additions to our luxury fragrance collection. Discover the latest masterpieces crafted by our perfumers.
               </p>
-              <Link 
-                href="/collections/women" 
+              <Link
+                href="/collections/women"
                 className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
               >
-                View All New Arrivals 
+                View All New Arrivals
                 <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-            
+
             <div className="flex-1 w-full">
               <div className="grid grid-cols-2 gap-6 sm:gap-8">
                 {loading ? (
@@ -416,7 +433,7 @@ export function Home({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {features.map((feature, index) => (
               <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                   <feature.icon className="h-8 w-8 text-slate-900 dark:text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
@@ -449,26 +466,37 @@ export function Home({
               Join thousands of satisfied customers worldwide
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
-                <div className="flex items-center mb-6 gap-1">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
-                  ))}
+              <div key={index} className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1 duration-300">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex gap-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
+                    ))}
+                  </div>
+                  <span className="text-xs text-slate-500 font-mono">{testimonial.date}</span>
                 </div>
+
                 <p className="text-slate-300 mb-6 leading-relaxed italic font-light">
                   "{testimonial.comment}"
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-purple-600 flex items-center justify-center text-sm font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-purple-600 flex items-center justify-center text-sm font-bold shadow-lg">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="font-semibold text-white text-sm">
-                      {testimonial.name}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-white text-sm">
+                        {testimonial.name}
+                      </p>
+                      {testimonial.verified && (
+                        <span className="bg-green-500/20 text-green-400 text-[10px] px-1.5 py-0.5 rounded-full border border-green-500/30 flex items-center gap-1">
+                          <Shield className="h-2 w-2" /> Verified
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-slate-500">Verified Buyer</p>
                   </div>
                 </div>
