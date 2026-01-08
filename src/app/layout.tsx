@@ -3,7 +3,7 @@ import { StackProvider, StackTheme } from "@stackframe/stack";
 import { stackClientApp } from "../stack/client";
 import React, { Suspense } from 'react';
 import './globals.css';
-import { Inter } from 'next/font/google';
+import { Playfair_Display, Montserrat } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import { ToasterProvider } from '@/components/ui/ToasterProvider';
 
@@ -11,8 +11,8 @@ import { ToasterProvider } from '@/components/ui/ToasterProvider';
 const Navbar = dynamic(() => import('@/components/layout/Navbar').then(mod => ({ default: mod.Navbar })), {
   ssr: true,
   loading: () => (
-    <div className="h-16 bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-b border-gray-200 dark:border-slate-700/50 shadow-sm flex items-center justify-center">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+    <div className="h-16 bg-primary-950 border-b border-primary-800 shadow-sm flex items-center justify-center">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent-500"></div>
     </div>
   )
 });
@@ -28,15 +28,19 @@ const CartDrawer = dynamic(
 
 // Toast container is handled by ToasterProvider
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+import { FloatingWhatsApp } from '@/components/common/FloatingWhatsApp';
+
+const playfair = Playfair_Display({ subsets: ['latin'], display: 'swap', variable: '--font-playfair' });
+const montserrat = Montserrat({ subsets: ['latin'], display: 'swap', variable: '--font-montserrat' });
 
 function AppContent({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-neutral-100 dark:bg-primary-950 transition-colors duration-200">
+    <div className="min-h-screen bg-primary-950 text-neutral-100 transition-colors duration-200">
       <Navbar />
       <main>{children}</main>
       <Footer />
       <CartDrawer />
+      <FloatingWhatsApp />
     </div>
   );
 }
@@ -133,7 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
       <head>
         <title>Aura Elixir - Premium Luxury Perfumes & Inspired Fragrances Online India</title>
         <meta name="description" content="Shop Aura Elixir - India's trusted destination for premium inspired perfumes & luxury fragrances. Long-lasting EDP & EDT for men & women. Free shipping above ₹399. Starting ₹369 only." />
@@ -183,8 +187,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="manifest" href="/manifest.json" />
 
         {/* Theme Color */}
-        <meta name="theme-color" content="#7c3aed" />
-        <meta name="msapplication-TileColor" content="#7c3aed" />
+        <meta name="theme-color" content="#121212" />
+        <meta name="msapplication-TileColor" content="#D4AF37" />
 
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -215,7 +219,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
       </head>
-      <body className={inter.className}>
+      <body className="font-sans antialiased bg-primary-950 text-neutral-100">
         <StackProvider app={stackClientApp}>
           <StackTheme>
             <ToasterProvider>

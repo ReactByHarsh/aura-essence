@@ -5,21 +5,17 @@
 
 @layer base {
     * {
-        @apply border-primary-200 dark:border-primary-800;
+        @apply border-primary-800;
     }
 
     body {
-        @apply bg-neutral-100 text-primary-950 dark:bg-primary-950 dark:text-neutral-100;
-        font-family: 'Inter', system-ui, sans-serif;
+        @apply bg-primary-950 text-neutral-100;
+        font-family: var(--font-montserrat), system-ui, sans-serif;
     }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        @apply tracking-wider;
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-playfair), serif;
+        @apply tracking-wide text-neutral-50;
     }
 }
 

@@ -6,6 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { fetchFeatured, fetchProducts } from '@/lib/api/products';
 import type { Product } from '@/types';
+import { HeroCarousel } from '@/components/home/HeroCarousel';
+import { TrustStrip } from '@/components/home/TrustStrip';
+import { ShopByPersonality } from '@/components/home/ShopByPersonality';
+import { DiscoveryBanner } from '@/components/home/DiscoveryBanner';
 
 type HomeProps = {
   initialBestSellers?: Product[];
@@ -183,82 +187,12 @@ export function Home({
     }
   ];
 
-  const features = [
-    {
-      icon: Award,
-      title: 'Long Lasting Formula',
-      description: 'High concentration EDPs designed to last over 12+ hours'
-    },
-    {
-      icon: Shield,
-      title: 'Certified Authentic',
-      description: '100% original formulations with quality guarantee certificate'
-    },
-    {
-      icon: Crown,
-      title: '10k+ Happy Customers',
-      description: 'Join the community of fragrance lovers who trust Aura Élixir'
-    }
-  ];
+  // features array is removed as we use TrustStrip, but testimonials and categories are used below.
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
-      {/* Premium Hero Section - Clean & Elegant */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900">
-        {/* Background Image/Gradient - Subtle & Sophisticated */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1615634260167-c8cdede054de?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 dark:opacity-20 mix-blend-overlay"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/50 to-slate-50 dark:from-transparent dark:via-slate-900/50 dark:to-slate-900"></div>
-
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto py-12">
-          <div className="mb-6 inline-flex items-center gap-3 animate-fade-in">
-            <div className="h-[1px] w-8 bg-amber-500/50"></div>
-            <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-medium tracking-[0.3em] uppercase">
-              Essence of Luxury
-            </span>
-            <div className="h-[1px] w-8 bg-amber-500/50"></div>
-          </div>
-
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 leading-[1.1] font-serif">
-            Aura <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-700">Élixir</span>
-          </h1>
-
-          <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-            Discover a collection of premium fragrances, meticulously crafted to elevate your presence and express your unique identity.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up mb-12">
-            <Button
-              size="lg"
-              className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 min-h-[56px] px-8 rounded-full text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              asChild
-            >
-              <Link href="/collections/men">
-                Shop Collection
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 min-h-[56px] px-8 rounded-full text-base font-medium backdrop-blur-sm"
-              asChild
-            >
-              <Link href="/about">Our Story</Link>
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-center gap-6 text-slate-400 grayscale opacity-70">
-            {/* Trust signals (Logos could be added here later) */}
-            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
-              <Shield className="h-4 w-4" /> Authentic Guarantee
-            </div>
-            <div className="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></div>
-            <div className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase">
-              <Truck className="h-4 w-4" /> Free Shipping
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-primary-950 text-neutral-100">
+      <HeroCarousel />
+      <TrustStrip />
 
       {/* Best Sellers Section - Clean Grid */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950">
@@ -278,40 +212,38 @@ export function Home({
             </div>
           )}
 
-          <div className="flex flex-col md:flex-row gap-12 lg:gap-16 items-start">
-            <div className="flex-1 md:sticky md:top-24 self-start text-center md:text-left">
-              <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-2 block">Most Loved</span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
-                Bestselling <br /> Fragrances
-              </h2>
-              <p className="text-slate-600 dark:text-slate-400 mb-8 text-lg leading-relaxed">
-                Our most coveted scents, chosen by connoisseurs worldwide. These signature fragrances have captured hearts and become timeless favorites.
-              </p>
-              <Link
-                href="/collections/men"
-                className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
-              >
-                View All Best Sellers
-                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+          <div className="text-center mb-12">
+            <span className="text-amber-500 font-bold tracking-wider text-sm uppercase mb-3 block">Most Loved</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-serif">
+              Bestselling Fragrances
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed mb-8">
+              Our most coveted scents, chosen by connoisseurs worldwide. These signature fragrances have captured hearts and become timeless favorites.
+            </p>
+            <Link
+              href="/collections/men"
+              className="inline-flex items-center text-slate-900 dark:text-white font-semibold border-b-2 border-slate-900 dark:border-white pb-1 hover:text-amber-600 hover:border-amber-600 dark:hover:text-amber-400 dark:hover:border-amber-400 transition-all group"
+            >
+              View All Best Sellers
+              <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
 
-            <div className="flex-1 w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-                {loading ? (
-                  Array.from({ length: 4 }).map((_, index) => (
-                    <div key={index} className="bg-slate-100 dark:bg-slate-900 rounded-2xl aspect-[3/4] animate-pulse"></div>
-                  ))
-                ) : (
-                  bestSellers.map((product: Product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))
-                )}
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {loading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="bg-slate-100 dark:bg-slate-900 rounded-none aspect-[4/5] animate-pulse"></div>
+              ))
+            ) : (
+              bestSellers.map((product: Product) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
           </div>
         </div>
       </section>
+
+      <ShopByPersonality />
 
       {/* Men's Collection Section - Alternating Background */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900/50">
@@ -350,6 +282,9 @@ export function Home({
           </div>
         </div>
       </section>
+
+
+      <DiscoveryBanner />
 
       {/* Women's Collection Section - Clean White */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950">
@@ -428,25 +363,7 @@ export function Home({
       </section>
 
       {/* Features Section - Minimalist */}
-      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-900 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                  <feature.icon className="h-8 w-8 text-slate-900 dark:text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* Testimonials - Dark Luxury Theme */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-900 text-white relative overflow-hidden">
@@ -509,8 +426,8 @@ export function Home({
       {/* Brand Story Section - Clean Bottom CTA */}
       <section className="py-20 sm:py-28 px-4 sm:px-6 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
         <div className="max-w-4xl mx-auto text-center">
-          <span className="text-purple-600 text-xs sm:text-sm font-semibold tracking-widest">OUR LEGACY</span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 mt-3 sm:mt-4 px-4">
+          <span className="text-accent-500 text-xs sm:text-sm font-semibold tracking-widest uppercase">OUR LEGACY</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 mt-3 sm:mt-4 px-4 font-serif">
             The Aura Élixir Story
           </h2>
           <p className="text-base sm:text-lg text-slate-600 dark:text-gray-300 mb-8 sm:mb-10 leading-relaxed px-4">
@@ -518,11 +435,11 @@ export function Home({
             Our master perfumers blend rare essences from the world's most prestigious regions, creating olfactory masterpieces
             that tell your unique story and leave an indelible impression.
           </p>
-          <Button size="lg" className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white hover:scale-105 shadow-xl hover:shadow-2xl transition-all min-h-[56px] text-base font-semibold px-10" asChild>
+          <Button size="lg" className="bg-accent-600 text-primary-950 hover:bg-accent-500 hover:scale-105 shadow-xl hover:shadow-2xl transition-all min-h-[56px] text-base font-semibold px-10 rounded-none uppercase tracking-wider" asChild>
             <Link href="/about">Explore Our Heritage</Link>
           </Button>
         </div>
       </section>
-    </div>
+    </div >
   );
 }

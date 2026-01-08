@@ -6,7 +6,7 @@ import { useCartStore } from '@/stores/cart';
 import { useWishlistStore } from '@/stores/wishlist';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { formatPrice, formatRating } from '@/lib/utils';
+import { formatRating } from '@/lib/utils';
 import type { Product } from '@/types';
 
 interface ProductCardProps {
@@ -22,26 +22,22 @@ export function ProductCard({ product }: ProductCardProps) {
   const getMinPrice = () => {
     if (product.sizes) {
       const sizes = product.sizes as any;
-      // Show 30ml price as requested
       if (sizes['30ml']?.price) return sizes['30ml'].price;
-
-      // Fallback to 369 if 30ml is missing
       return 369;
     }
     return product.price;
   };
 
-  const getSlashedPrice = (price: number) => {
-    // Add ~43% markup to show as slashed price
-    return Math.round(price * 1.43);
-  };
+  const currentPrice = getMinPrice();
+  // Standard luxury markup visualization
+  const slashedPrice = Math.round(currentPrice * 1.4);
+  const discount = Math.round((1 - currentPrice / slashedPrice) * 100);
 
   const getImageForIndex = (index: number) => {
     const image = product.images[index] ?? product.images[0];
     return image ?? '/perfume-logo.png';
   };
 
-  // Update wishlist state when store changes
   useEffect(() => {
     setIsWishlisted(isInWishlist(product.id));
   }, [product.id, isInWishlist]);
@@ -51,10 +47,8 @@ export function ProductCard({ product }: ProductCardProps) {
     e.stopPropagation();
     try {
       await addItem(product);
-      // console.log('✅ Added to cart:', product.name);
     } catch (error) {
-      console.error('❌ Error adding to cart:', error);
-      // Could add a toast notification here for user feedback
+      console.error('Error adding to cart:', error);
     }
   };
 
@@ -71,108 +65,87 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   };
 
-  const handleMouseEnter = () => {
-    if (product.images.length > 1) {
-      setCurrentImageIndex(1);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setCurrentImageIndex(0);
-  };
-
   return (
     <Link
       href={`/product/${product.id}`}
-      className="group block bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:scale-[1.02]"
+      className="group block bg-primary-900 rounded-none overflow-hidden border border-primary-800 hover:border-accent-500/50 transition-all duration-500 hover:shadow-[0_0_20px_rgba(212,175,55,0.15)]"
     >
       <div
-        className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-900"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className="relative aspect-[4/5] overflow-hidden bg-primary-950"
+        onMouseEnter={() => product.images.length > 1 && setCurrentImageIndex(1)}
+        onMouseLeave={() => setCurrentImageIndex(0)}
       >
         <Image
           src={getImageForIndex(currentImageIndex)}
           alt={product.name}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-          className="object-cover transition-all duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
         />
 
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-950/80 via-transparent to-transparent opacity-60"></div>
+
         {/* Badges */}
-        <div className="absolute top-3 left-3 space-y-1">
-          {product.isNew && <Badge variant="accent" size="sm">New</Badge>}
-          {product.isBestSeller && <Badge variant="success" size="sm">Best Seller</Badge>}
-          {product.isOnSale && <Badge variant="danger" size="sm">Sale</Badge>}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {product.isNew && <Badge className="bg-accent-600 text-primary-950 border-none font-serif tracking-wider">NEW</Badge>}
+          {product.isBestSeller && <Badge className="bg-neutral-100 text-primary-950 border-none font-serif tracking-wider">BESTSELLER</Badge>}
+          {product.isOnSale && <Badge className="bg-red-900/80 text-white border-red-800 font-serif tracking-wider">SALE</Badge>}
         </div>
 
         {/* Wishlist button */}
         <button
           onClick={handleWishlist}
-          className="absolute top-3 right-3 p-2.5 sm:p-2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm rounded-full shadow-lg hover:scale-110 transition-transform duration-200 min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0 flex items-center justify-center"
+          className="absolute top-2 right-2 p-2 rounded-full bg-primary-950/50 backdrop-blur-sm border border-primary-800 text-neutral-400 hover:text-accent-500 hover:border-accent-500 transition-all duration-300"
         >
           <Heart
-            className={`h-5 w-5 sm:h-4 sm:w-4 transition-colors ${isWishlisted
-              ? 'fill-red-500 text-red-500'
-              : 'text-slate-600 dark:text-gray-400'
-              }`}
+            className={`h-4 w-4 ${isWishlisted ? 'fill-accent-500 text-accent-500' : ''}`}
           />
         </button>
 
-        {/* Quick add to cart */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Button
-            onClick={handleAddToCart}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg min-h-[44px] sm:min-h-[36px] font-semibold"
-            size="sm"
-          >
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
-        </div>
+
       </div>
 
-      <div className="p-3 sm:p-5">
-        {/* Brand & Type */}
-        <div className="flex items-center justify-between text-xs text-slate-600 dark:text-gray-400 mb-1">
-          {/* <span className="font-medium">{product.brand}</span> */}
-          <span className="text-amber-600 dark:text-amber-400">{product.type}</span>
+      <div className="p-4 text-center">
+        {/* Type/Brand */}
+        <div className="text-xs text-accent-500 mb-1 uppercase tracking-[0.2em]">
+          {product.type || 'Eau De Parfum'}
         </div>
 
-        {/* Product name */}
-        <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white mb-1.5 line-clamp-1">
+        {/* Name */}
+        <h3 className="font-serif text-lg text-neutral-100 mb-2 line-clamp-1 group-hover:text-accent-400 transition-colors">
           {product.name}
         </h3>
 
-        {/* Rating and Price in one line with compact spacing for mobile */}
-        <div className="flex items-center justify-between gap-2 mb-1">
-          {/* Rating */}
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
-            <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-gray-300">
-              {formatRating(product.rating)}
-            </span>
-          </div>
-
-          {/* Price - Compact for mobile */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-              ₹{getMinPrice()}
-            </span>
-            <span className="text-xs text-slate-500 dark:text-gray-500 line-through">
-              ₹{getSlashedPrice(getMinPrice())}
-            </span>
-            <span className="text-[9px] sm:text-[10px] font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1 py-0.5 rounded">
-              -{Math.round((1 - getMinPrice() / getSlashedPrice(getMinPrice())) * 100)}%
-            </span>
-          </div>
+        {/* Rating */}
+        <div className="flex items-center justify-center gap-1 mb-3">
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              className={`h-3 w-3 ${i < Math.floor(product.rating || 5) ? 'fill-accent-500 text-accent-500' : 'fill-primary-800 text-primary-800'}`}
+            />
+          ))}
+          <span className="text-xs text-neutral-500 ml-1">({product.reviewCount || 24})</span>
         </div>
 
-        {/* Top notes preview */}
-        <p className="text-xs text-slate-600 dark:text-gray-400 line-clamp-1">
-          {product.notes?.top?.slice(0, 2).join(', ') || 'Premium fragrance'}
-          {(product.notes?.top?.length ?? 0) > 2 && '...'}
-        </p>
+        {/* Price */}
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="text-lg font-medium text-neutral-100">
+            ₹{currentPrice}
+          </span>
+          <span className="text-sm text-neutral-600 line-through">
+            ₹{slashedPrice}
+          </span>
+        </div>
+
+        {/* Add to Cart Button - Visible on Hover/Always visible on mobile if desired, but request asked for 'below' */}
+        <Button
+          onClick={handleAddToCart}
+          className="w-full bg-transparent border border-accent-600 text-accent-500 hover:bg-accent-600 hover:text-primary-950 font-bold uppercase tracking-wider rounded-none transition-all duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0"
+        >
+          <ShoppingBag className="h-4 w-4 mr-2" />
+          Add to Bag
+        </Button>
       </div>
     </Link>
   );

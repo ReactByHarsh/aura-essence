@@ -6,7 +6,7 @@ export interface Product {
   originalPrice?: number;
   images: string[];
   category: 'men' | 'women' | 'unisex' | 'solid';
-  type: 'EDP' | 'EDT' | 'Extrait' | 'Solid';
+  type: 'EDP' | 'EDT' | 'Extrait' | 'Solid' | 'Discovery Set';
   notes: {
     top: string[];
     heart: string[];
@@ -15,6 +15,7 @@ export interface Product {
   longevity: number; // hours
   sillage: 'soft' | 'moderate' | 'strong';
   rating: number;
+  reviewCount?: number;
   stock: number;
   description: string;
   sizes?: Record<string, { price?: number }>;

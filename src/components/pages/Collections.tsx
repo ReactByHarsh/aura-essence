@@ -142,149 +142,143 @@ export function Collections() {
     }, [products, sortBy]);
 
     return (
-        <div className="min-h-screen">
-            {/* Breadcrumb Navigation */}
-            <section className="py-4 px-4 sm:px-6 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800">
+        <div className="min-h-screen bg-neutral-50 dark:bg-primary-950">
+            {/* Breadcrumb Navigation - Dark Theme */}
+            <section className="mt-20 py-4 px-4 sm:px-6 bg-primary-950 border-b border-primary-900">
                 <div className="max-w-7xl mx-auto">
                     <nav className="flex items-center space-x-2 text-sm">
-                        <Link href="/" className="flex items-center text-slate-500 hover:text-amber-600 dark:text-slate-400 dark:hover:text-amber-400 transition-colors">
+                        <Link href="/" className="flex items-center text-neutral-400 hover:text-accent-500 transition-colors">
                             <Home className="h-4 w-4 mr-1" />
                             Home
                         </Link>
-                        <ChevronRight className="h-4 w-4 text-slate-300 dark:text-slate-600" />
-                        <span className="text-slate-900 dark:text-white font-medium">
+                        <ChevronRight className="h-4 w-4 text-neutral-600" />
+                        <span className="text-neutral-200 font-medium">
                             {categoryTitle}
                         </span>
                     </nav>
                 </div>
             </section>
 
-            {/* Premium Hero Section for Collections - Clean & Modern */}
-            <section className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden bg-slate-50 dark:bg-slate-900">
-                {/* Subtle Background Pattern */}
-                <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] bg-[radial-gradient(#4f46e5_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            {/* Premium Hero Section for Collections */}
+            <section className="relative py-20 sm:py-28 px-4 sm:px-6 overflow-hidden bg-primary-950 text-center">
 
-                <div className="relative z-10 max-w-4xl mx-auto text-center">
+                {/* Background Element */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary-900/40 via-primary-950 to-primary-950"></div>
+
+                <div className="relative z-10 max-w-4xl mx-auto">
                     <div className="mb-6 inline-flex items-center gap-3 animate-fade-in">
-                        <div className="h-[1px] w-8 bg-amber-500/50"></div>
-                        <span className="text-amber-600 dark:text-amber-400 text-xs sm:text-sm font-medium tracking-[0.3em] uppercase">
-                            {activeCategory === 'men' ? 'FOR HIM' : 'FOR HER'}
+                        <div className="h-[1px] w-12 bg-accent-500"></div>
+                        <span className="text-accent-500 text-xs sm:text-sm font-bold tracking-[0.3em] uppercase">
+                            {activeCategory === 'men' ? 'POUR HOMME' : 'POUR FEMME'}
                         </span>
-                        <div className="h-[1px] w-8 bg-amber-500/50"></div>
+                        <div className="h-[1px] w-12 bg-accent-500"></div>
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-900 dark:text-white mb-6 font-serif">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-neutral-50 mb-6 font-serif">
                         {categoryTitle}
                     </h1>
 
-                    <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 tracking-wide font-light max-w-2xl mx-auto px-4 mb-8">
+                    <p className="text-lg sm:text-xl text-neutral-400 font-light max-w-2xl mx-auto mb-10 leading-relaxed">
                         {categoryDescription}
                     </p>
 
-                    <p className="text-base text-slate-500 dark:text-slate-400 max-w-3xl mx-auto px-4 mb-10 leading-relaxed">
+                    <p className="text-base text-neutral-500 max-w-3xl mx-auto mb-12 leading-relaxed">
                         {activeCategory === 'men'
-                            ? 'From woody earth tones to fresh aquatic notes, our men\'s collection features signature fragrances from renowned perfumers worldwide. Each scent is crafted with the finest ingredients for lasting impression and confidence.'
-                            : 'Elegant florals, sensual orientals, and sophisticated chypres define our women\'s collection. Discover fragrances that capture the essence of femininity, from delicate daytime scents to captivating evening aromas.'
+                            ? 'Masterfully blended notes of oud, leather, and fresh spice. Designed for the man who commands attention without speaking a word.'
+                            : 'A symphony of rare florals, warm vanilla, and exotic spices. Created for the woman who leaves a lingering trace of elegance.'
                         }
                     </p>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
-                        <Button
-                            size="lg"
-                            className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 min-h-[56px] px-8 rounded-full text-base font-medium"
-                            asChild
-                        >
-                            <Link href="#products">
-                                Shop Collection
-                            </Link>
-                        </Button>
-                    </div>
                 </div>
             </section>
 
-            {/* Products Grid Section - Mobile First */}
-            <section id="products" className="py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 bg-white dark:bg-slate-950">
+            {/* Products Grid Section */}
+            <section id="products" className="py-12 sm:py-16 px-4 sm:px-6 bg-white dark:bg-primary-950 border-t border-primary-900/50">
                 <div className="max-w-7xl mx-auto">
                     {errorMessage && (
-                        <div className="mb-6 sm:mb-8 flex flex-col items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 sm:px-6 py-4 sm:py-5 text-center text-red-700 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-300 shadow-sm">
+                        <div className="mb-8 flex flex-col items-center gap-3 rounded-none border border-red-900/30 bg-red-900/10 px-6 py-5 text-center text-red-400">
                             <p className="text-sm sm:text-base font-medium">{errorMessage}</p>
                             <Button
-                                size="lg"
-                                variant="secondary"
+                                size="sm"
+                                variant="outline"
                                 onClick={handleRetry}
                                 disabled={loading}
-                                className="border border-red-200 text-red-700 dark:text-red-300 min-h-[48px] px-6 font-semibold hover:bg-red-100 dark:hover:bg-red-900/40"
+                                className="border-red-900/50 text-red-400 hover:bg-red-900/20"
                             >
                                 {loading ? 'Refreshing...' : 'Retry Now'}
                             </Button>
                         </div>
                     )}
 
-                    {/* Sort Dropdown */}
-                    {products.length > 0 && (
-                        <div className="mb-6 sm:mb-8 flex justify-end">
+                    {/* Sort & Filter Bar */}
+                    <div className="mb-10 flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-primary-900/50 pb-6">
+                        <span className="text-neutral-400 text-sm">
+                            Showing <span className="text-white font-semibold">{products.length}</span> results
+                        </span>
+
+                        {products.length > 0 && (
                             <div className="flex items-center gap-3">
-                                <label className="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wider text-xs">Sort by</label>
+                                <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider">Sort by</label>
                                 <div className="relative">
                                     <select
                                         value={sortBy}
                                         onChange={(e) => setSortBy(e.target.value as any)}
-                                        className="appearance-none pl-4 pr-10 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 font-medium hover:border-amber-500 transition-colors focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 shadow-sm cursor-pointer text-sm"
+                                        className="appearance-none pl-4 pr-10 py-2.5 rounded-none border border-primary-800 bg-primary-900 text-neutral-300 font-medium hover:border-accent-600 transition-colors focus:outline-none focus:border-accent-500 text-sm"
                                     >
                                         <option value="name">Name (A-Z)</option>
                                         <option value="price-low">Price: Low to High</option>
                                         <option value="price-high">Price: High to Low</option>
                                         <option value="rating">Top Rated</option>
                                     </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-neutral-500">
                                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
 
                     {/* Products Display */}
                     {loading ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                             {Array.from({ length: 8 }).map((_, i) => (
-                                <div key={i} className="bg-gray-200 dark:bg-slate-800 rounded-xl aspect-square animate-pulse"></div>
+                                <div key={i} className="bg-primary-900 aspect-[4/5] animate-pulse"></div>
                             ))}
                         </div>
                     ) : sortedProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                             {sortedProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-16 sm:py-20 px-4">
-                            <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 dark:bg-slate-900 rounded-full mb-6 shadow-sm border border-slate-100 dark:border-slate-800">
-                                <ShoppingBag className="h-10 w-10 sm:h-12 sm:w-12 text-slate-400" />
+                        <div className="text-center py-24 px-4 bg-primary-900/30 border border-primary-900 border-dashed">
+                            <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-900 rounded-full mb-6 text-neutral-600">
+                                <ShoppingBag className="h-10 w-10" />
                             </div>
-                            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
+                            <h3 className="text-2xl font-bold text-neutral-200 mb-3 font-serif">
                                 No Products Found
                             </h3>
-                            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mb-6">
+                            <p className="text-neutral-500 mb-8">
                                 Check back soon for new arrivals in our {categoryTitle.toLowerCase()}
                             </p>
-                            <Button className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200" asChild>
-                                <Link href="/">Browse All Collections</Link>
+                            <Button className="bg-accent-600 text-primary-950 font-bold hover:bg-accent-500" asChild>
+                                <Link href="/">Return to Home</Link>
                             </Button>
                         </div>
                     )}
 
                     {/* Load more */}
                     {products.length > 0 && currentPage < totalPages && (
-                        <div className="mt-8 flex justify-center">
+                        <div className="mt-16 flex justify-center">
                             <Button
                                 onClick={handleLoadMore}
                                 disabled={loading}
-                                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold"
+                                variant="outline"
+                                className="border-accent-600 text-accent-500 hover:bg-accent-950 hover:text-accent-400 font-semibold px-8 py-6 rounded-none uppercase tracking-widest text-xs"
                             >
-                                {loading ? 'Loading...' : 'Load More'}
+                                {loading ? 'Loading...' : 'Load More Products'}
                             </Button>
                         </div>
                     )}

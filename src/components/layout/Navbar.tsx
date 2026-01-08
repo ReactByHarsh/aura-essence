@@ -7,17 +7,11 @@ import {
     Search,
     ShoppingBag,
     User,
-    Moon,
-    Sun,
     Menu,
     X,
-    ChevronDown
 } from 'lucide-react';
-import { useThemeStore } from '@/stores/theme';
 import { useCartStore } from '@/stores/cart';
 import { useUser, useStackApp } from '@stackframe/stack';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { fetchProducts } from '@/lib/api/products';
 import type { Product } from '@/types';
 
@@ -32,26 +26,32 @@ const getInitials = (email: string): string => {
 
 export function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isCollectionsOpen, setIsCollectionsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<Product[]>([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [showSearchDropdown, setShowSearchDropdown] = useState(false);
 
-    const collectionsRef = useRef<HTMLDivElement>(null);
     const userMenuRef = useRef<HTMLDivElement>(null);
-    const searchRef = useRef<HTMLFormElement>(null);
+    const searchRef = useRef<HTMLDivElement>(null);
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
 
-    const { theme, toggleTheme } = useThemeStore();
     const openCart = useCartStore(s => s.openCart);
     const loadCart = useCartStore(s => s.loadCart);
     const itemCount = useCartStore(s => s.items.reduce((t, i) => t + i.quantity, 0));
     const stackUser = useUser({ or: 'return-null' });
     const stackApp = useStackApp();
     const router = useRouter();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     // Load cart on mount and when auth user changes (only if authenticated)
     useEffect(() => {
@@ -71,14 +71,11 @@ export function Navbar() {
     // Click outside handler
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (collectionsRef.current && !collectionsRef.current.contains(event.target as Node)) {
-                setIsCollectionsOpen(false);
-            }
             if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
                 setIsUserMenuOpen(false);
             }
             if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-                setShowSearchDropdown(false);
+                setIsSearchOpen(false);
             }
         }
 
@@ -92,64 +89,31 @@ export function Navbar() {
     const handleSearchInput = (value: string) => {
         setSearchQuery(value);
 
-        // Clear previous timeout
-        if (searchTimeoutRef.current) {
-            clearTimeout(searchTimeoutRef.current);
-        }
-
-        // Abort previous request
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
+        if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+        if (abortControllerRef.current) abortControllerRef.current.abort();
 
         if (value.trim().length === 0) {
             setSearchResults([]);
-            setShowSearchDropdown(false);
             return;
         }
 
-        setShowSearchDropdown(true);
         setIsSearching(true);
-
-        // Debounce search by 300ms
         searchTimeoutRef.current = setTimeout(async () => {
             try {
                 abortControllerRef.current = new AbortController();
-
-                // Use API search instead of client-side filtering
-                const searchResults = await fetchProducts({
+                const results = await fetchProducts({
                     search: value.trim(),
-                    limit: 8,
+                    limit: 5,
                     signal: abortControllerRef.current.signal
                 });
-                setSearchResults(searchResults.products);
+                setSearchResults(results.products);
             } catch (error: any) {
-                if (error.name !== 'AbortError') {
-                    console.error('Search error:', error);
-                    setSearchResults([]);
-                }
+                if (error.name !== 'AbortError') setSearchResults([]);
             } finally {
                 setIsSearching(false);
             }
         }, 300);
     };
-
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            if (searchTimeoutRef.current) {
-                clearTimeout(searchTimeoutRef.current);
-            }
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
-    }, []);
-
-    const collections = [
-        { name: "Men's", slug: 'men' },
-        { name: "Women's", slug: 'women' },
-    ];
 
     const handleLogout = async () => {
         await stackApp.signOut();
@@ -158,312 +122,166 @@ export function Navbar() {
     };
 
     return (
-        <nav className="sticky top-0 z-40 bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 border-b border-gray-200 dark:border-slate-700/50 shadow-sm dark:shadow-slate-900/20 backdrop-blur-sm dark:backdrop-blur-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Mobile menu button */}
-                    <div className="md:hidden">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="text-slate-900 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors"
-                        >
-                            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                        </Button>
-                    </div>
+        <>
+            {/* Announcement Bar */}
+            <div className="bg-accent-900 text-accent-100 text-xs font-medium py-2 text-center tracking-widest uppercase border-b border-accent-800/50">
+                <span className="animate-pulse-subtle">✨ Buy 2 Get 1 Free | Free Shipping on Prepaid Orders ✨</span>
+            </div>
 
-                    {/* Logo */}
-                    <div className="flex-shrink-0">
-                        <Link
-                            href="/"
-                            className="hover:opacity-80 transition-opacity group"
-                        >
-                            <span className="text-3xl font-bold text-slate-900 dark:text-white font-serif tracking-tight">
-                                Aura Élixir
-                            </span>
-                        </Link>
-                    </div>
-
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
-                        {/* Collections Dropdown */}
-                        <div className="relative" ref={collectionsRef}>
-                            <Button
-                                variant="ghost"
-                                className="flex items-center space-x-1 text-slate-700 dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors"
-                                onClick={() => setIsCollectionsOpen(!isCollectionsOpen)}
-                            >
-                                <span>Collections</span>
-                                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isCollectionsOpen ? 'rotate-180' : ''}`} />
-                            </Button>
-
-                            {isCollectionsOpen && (
-                                <div className="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-slide-up">
-                                    {collections.map(collection => (
-                                        <Link
-                                            key={collection.slug}
-                                            href={`/collections/${collection.slug}`}
-                                            className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
-                                            onClick={() => setIsCollectionsOpen(false)}
-                                        >
-                                            {collection.name}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
+            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-primary-950/90 backdrop-blur-md shadow-2xl border-b border-primary-800' : 'bg-transparent border-b border-white/10'
+                } mt-8`}>
+                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+                    <div className="flex items-center justify-between h-20">
+                        {/* Mobile Menu Button */}
+                        <div className="md:hidden">
+                            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-neutral-100 p-2">
+                                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
                         </div>
 
-                        {/* Search */}
-                        <form onSubmit={(e) => e.preventDefault()} className="relative hidden lg:block" ref={searchRef}>
-                            <div className="flex items-center relative">
-                                <Input
-                                    type="search"
-                                    placeholder="Search fragrances..."
-                                    value={searchQuery}
-                                    onChange={(e) => handleSearchInput(e.target.value)}
-                                    onFocus={() => searchQuery && setShowSearchDropdown(true)}
-                                    className="w-64 pl-10 border-slate-200 dark:border-slate-700 focus:border-amber-500 focus:ring-amber-500 rounded-full bg-slate-50 dark:bg-slate-800/50 text-sm"
-                                />
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+                        {/* Navigation Links (Left) */}
+                        <div className="hidden md:flex items-center space-x-8">
+                            {[
+                                { name: 'Shop Men', href: '/collections/men' },
+                                { name: 'Shop Women', href: '/collections/women' },
+                                //{ name: 'Unisex', href: '/collections/unisex' },
+                                //{ name: 'Discovery Sets', href: '/collections/discovery-sets' },
+                            ].map((link) => (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    className="text-sm font-medium text-neutral-300 hover:text-accent-400 transition-colors tracking-wide uppercase"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
 
-                                {/* Search Dropdown */}
-                                {showSearchDropdown && searchQuery.trim() && (
-                                    <div className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 z-50 max-h-96 overflow-y-auto">
-                                        {isSearching ? (
-                                            <div className="p-4 text-center text-slate-500 dark:text-slate-400">
-                                                <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500"></div>
-                                                <p className="mt-2 text-sm">Searching...</p>
-                                            </div>
-                                        ) : searchResults.length > 0 ? (
-                                            <div className="py-1">
-                                                {searchResults.map((product) => (
-                                                    <Link
-                                                        key={product.id}
-                                                        href={`/product/${product.id}`}
-                                                        onClick={() => {
-                                                            setSearchQuery('');
-                                                            setShowSearchDropdown(false);
-                                                            setSearchResults([]);
-                                                        }}
-                                                        className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
-                                                    >
-                                                        {product.images?.[0] && (
-                                                            <div className="relative w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
-                                                                <Image
-                                                                    src={product.images[0]}
-                                                                    alt={product.name}
-                                                                    fill
-                                                                    className="object-cover"
-                                                                    sizes="40px"
-                                                                />
+                        {/* Logo (Center) */}
+                        <div className="absolute left-1/2 transform -translate-x-1/2">
+                            <Link href="/">
+                                <span className="text-2xl md:text-3xl font-serif font-bold text-neutral-50 tracking-wider">
+                                    Aura Élixir
+                                </span>
+                            </Link>
+                        </div>
+
+                        {/* Actions (Right) */}
+                        <div className="flex items-center space-x-6">
+                            {/* Search Icon */}
+                            <div className="relative" ref={searchRef}>
+                                <button
+                                    onClick={() => setIsSearchOpen(!isSearchOpen)}
+                                    className="text-neutral-300 hover:text-accent-400 transition-colors"
+                                >
+                                    <Search size={20} />
+                                </button>
+                                {isSearchOpen && (
+                                    <div className="absolute right-0 mt-4 w-80 bg-primary-900 border border-primary-700 rounded-sm shadow-2xl p-4">
+                                        <input
+                                            type="text"
+                                            placeholder="Search..."
+                                            value={searchQuery}
+                                            onChange={(e) => handleSearchInput(e.target.value)}
+                                            className="w-full bg-primary-800 text-neutral-100 px-4 py-2 text-sm border border-primary-700 focus:border-accent-500 outline-none placeholder:text-neutral-500"
+                                            autoFocus
+                                        />
+                                        {/* Search Results Dropdown */}
+                                        {searchQuery && (
+                                            <div className="mt-2 max-h-60 overflow-y-auto">
+                                                {isSearching ? (
+                                                    <p className="text-xs text-neutral-500 text-center py-2">Searching...</p>
+                                                ) : searchResults.length > 0 ? (
+                                                    searchResults.map(p => (
+                                                        <Link key={p.id} href={`/product/${p.id}`} className="flex items-center gap-3 p-2 hover:bg-primary-800 transition-colors">
+                                                            {p.images?.[0] && (
+                                                                <Image src={p.images[0]} alt={p.name} width={32} height={32} className="rounded-sm object-cover" />
+                                                            )}
+                                                            <div className="text-sm">
+                                                                <p className="text-neutral-200">{p.name}</p>
+                                                                <p className="text-accent-400 text-xs">₹{p.price}</p>
                                                             </div>
-                                                        )}
-                                                        <div className="flex-1 min-w-0">
-                                                            <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
-                                                                {product.name}
-                                                            </p>
-                                                            <p className="text-xs text-slate-500 dark:text-slate-400">
-                                                                {product.brand}
-                                                            </p>
-                                                        </div>
-                                                    </Link>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <div className="p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
-                                                No products found
+                                                        </Link>
+                                                    ))
+                                                ) : (
+                                                    <p className="text-xs text-neutral-500 text-center py-2">No results.</p>
+                                                )}
                                             </div>
                                         )}
                                     </div>
                                 )}
                             </div>
-                        </form>
-                    </div>
 
-                    {/* Right side buttons */}
-                    <div className="flex items-center space-x-1 md:space-x-4 pr-1 sm:pr-0">
-                        {/* Theme toggle */}
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={toggleTheme}
-                            className="p-2 text-slate-700 dark:text-slate-200 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
-                            title="Toggle dark mode"
-                        >
-                            {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-                        </Button>
-
-                        {/* User menu */}
-                        <div className="relative" ref={userMenuRef}>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors"
-                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                            >
-                                {user ? (
-                                    // User avatar circle with initials
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-sm shadow-md hover:shadow-lg transition-shadow">
-                                        {getInitials(user.email || 'User')}
-                                    </div>
-                                ) : (
-                                    <User className="h-5 w-5 text-slate-700 dark:text-slate-200" />
-                                )}
-                            </Button>
-
-                            {isUserMenuOpen && (
-                                <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-gradient-to-b dark:from-slate-800 dark:to-slate-900 rounded-lg shadow-xl border border-gray-200 dark:border-slate-600/50 py-2 z-50 animate-slide-up backdrop-blur-sm">
+                            {/* Account */}
+                            <div className="relative" ref={userMenuRef}>
+                                <button
+                                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                    className="text-neutral-300 hover:text-accent-400 transition-colors"
+                                >
                                     {user ? (
-                                        <>
-                                            <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-t-lg">
-                                                <p className="text-xs uppercase tracking-widest text-amber-700 dark:text-amber-300 font-semibold">Account</p>
-                                                <p className="text-sm font-medium text-slate-900 dark:text-slate-100 mt-1 truncate" title={user.email}>{user.email}</p>
-                                            </div>
-                                            <Link
-                                                href="/account"
-                                                className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
-                                                onClick={() => setIsUserMenuOpen(false)}
-                                            >
-                                                My Account
-                                            </Link>
-                                            <Link
-                                                href="/orders"
-                                                className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
-                                                onClick={() => setIsUserMenuOpen(false)}
-                                            >
-                                                My Orders
-                                            </Link>
-                                            <button
-                                                onClick={handleLogout}
-                                                className="block w-full text-left px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-red-600 dark:hover:text-red-400 transition-colors font-medium border-t border-gray-200 dark:border-slate-600/50"
-                                            >
-                                                Sign Out
-                                            </button>
-                                        </>
+                                        <div className="w-8 h-8 rounded-full bg-accent-600 text-primary-950 flex items-center justify-center text-xs font-bold">
+                                            {getInitials(user.email)}
+                                        </div>
                                     ) : (
-                                        <>
-                                            <Link
-                                                href="/handler/sign-in"
-                                                className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium"
-                                                onClick={() => setIsUserMenuOpen(false)}
-                                            >
-                                                Sign In
-                                            </Link>
-                                            <Link
-                                                href="/handler/sign-up"
-                                                className="block px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700/50 hover:text-amber-600 dark:hover:text-amber-400 transition-colors font-medium border-t border-gray-200 dark:border-slate-600/50"
-                                                onClick={() => setIsUserMenuOpen(false)}
-                                            >
-                                                Sign Up
-                                            </Link>
-                                        </>
+                                        <User size={20} />
                                     )}
-                                </div>
-                            )}
-                        </div>
+                                </button>
+                                {isUserMenuOpen && (
+                                    <div className="absolute right-0 mt-4 w-48 bg-primary-900 border border-primary-700 shadow-xl py-2">
+                                        {user ? (
+                                            <>
+                                                <div className="px-4 py-2 border-b border-primary-800">
+                                                    <p className="text-xs text-accent-400 uppercase tracking-wider">Signed in as</p>
+                                                    <p className="text-sm text-neutral-200 truncate">{user.email}</p>
+                                                </div>
+                                                <Link href="/account" className="block px-4 py-2 text-sm text-neutral-300 hover:bg-primary-800 hover:text-accent-400">Account</Link>
+                                                <Link href="/orders" className="block px-4 py-2 text-sm text-neutral-300 hover:bg-primary-800 hover:text-accent-400">Orders</Link>
+                                                <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-primary-800">Sign Out</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Link href="/handler/sign-in" className="block px-4 py-2 text-sm text-neutral-300 hover:bg-primary-800 hover:text-accent-400">Sign In</Link>
+                                                <Link href="/handler/sign-up" className="block px-4 py-2 text-sm text-neutral-300 hover:bg-primary-800 hover:text-accent-400">Create Account</Link>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
 
-                        {/* Cart */}
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="p-2 relative text-slate-700 dark:text-slate-200 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:text-amber-600 dark:hover:text-amber-400 transition-colors mr-1"
-                            onClick={openCart}
-                            title="Open shopping cart"
-                        >
-                            <ShoppingBag className="h-5 w-5" />
-                            {itemCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-gradient-to-br from-amber-500 to-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-md ring-2 ring-white dark:ring-slate-900">
-                                    {itemCount}
-                                </span>
-                            )}
-                        </Button>
+                            {/* Cart */}
+                            <button onClick={openCart} className="text-neutral-300 hover:text-accent-400 transition-colors relative">
+                                <ShoppingBag size={20} />
+                                {itemCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-accent-500 text-primary-950 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                        {itemCount}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {/* Mobile menu */}
+                {/* Mobile Menu Overlay */}
                 {isMenuOpen && (
-                    <div className="md:hidden border-t border-slate-100 dark:border-slate-800 py-4 space-y-4">
-                        {/* Mobile search */}
-                        <form onSubmit={(e) => e.preventDefault()} className="px-2 relative" ref={searchRef}>
-                            <Input
-                                type="search"
-                                placeholder="Search fragrances..."
-                                value={searchQuery}
-                                onChange={(e) => handleSearchInput(e.target.value)}
-                                onFocus={() => searchQuery && setShowSearchDropdown(true)}
-                                className="w-full border-slate-200 dark:border-slate-700 focus:border-amber-500 focus:ring-amber-500 rounded-lg bg-slate-50 dark:bg-slate-800/50"
-                            />
-
-                            {/* Mobile search dropdown */}
-                            {showSearchDropdown && searchQuery.trim() && (
-                                <div className="absolute top-full left-2 right-2 mt-2 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-100 dark:border-slate-800 z-50 max-h-64 overflow-y-auto">
-                                    {isSearching ? (
-                                        <div className="p-4 text-center text-slate-500 dark:text-slate-400">
-                                            <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500"></div>
-                                            <p className="mt-2 text-sm">Searching...</p>
-                                        </div>
-                                    ) : searchResults.length > 0 ? (
-                                        <div className="py-1">
-                                            {searchResults.map((product) => (
-                                                <Link
-                                                    key={product.id}
-                                                    href={`/product/${product.id}`}
-                                                    onClick={() => {
-                                                        setSearchQuery('');
-                                                        setShowSearchDropdown(false);
-                                                        setSearchResults([]);
-                                                        setIsMenuOpen(false);
-                                                    }}
-                                                    className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-50 dark:border-slate-800 last:border-b-0"
-                                                >
-                                                    {product.images && product.images[0] && (
-                                                        <div className="w-10 h-10 flex-shrink-0 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
-                                                            <Image
-                                                                src={product.images[0]}
-                                                                alt={product.name}
-                                                                fill
-                                                                className="object-cover"
-                                                                sizes="40px"
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{product.name}</p>
-                                                        <p className="text-xs text-slate-500 dark:text-slate-400">{product.brand}</p>
-                                                    </div>
-                                                    <p className="text-sm font-medium text-amber-600 dark:text-amber-400">₹{product.price}</p>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="p-4 text-center text-slate-500 dark:text-slate-400">
-                                            <p className="text-sm">No products found</p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </form>
-
-                        {/* Mobile collections */}
-                        <div className="px-2">
-                            <h3 className="font-bold text-slate-900 dark:text-white mb-3 text-xs uppercase tracking-widest">Collections</h3>
-                            <div className="space-y-1">
-                                {collections.map(collection => (
-                                    <Link
-                                        key={collection.slug}
-                                        href={`/collections/${collection.slug}`}
-                                        className="block text-sm text-slate-600 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 font-medium transition-colors py-2 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800"
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        {collection.name}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
+                    <div className="md:hidden absolute top-20 left-0 w-full bg-primary-950 border-t border-primary-800 p-6 flex flex-col space-y-4 shadow-2xl">
+                        {[
+                            { name: 'Shop Men', href: '/collections/men' },
+                            { name: 'Shop Women', href: '/collections/women' },
+                            //{ name: 'Unisex', href: '/collections/unisex' },
+                            //{ name: 'Discovery Sets', href: '/collections/discovery-sets' },
+                        ].map((link) => (
+                            <Link
+                                key={link.name}
+                                href={link.href}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="text-lg font-medium text-neutral-300 hover:text-accent-400 border-b border-primary-800 pb-2"
+                            >
+                                {link.name}
+                            </Link>
+                        ))}
                     </div>
                 )}
-            </div>
-        </nav>
+            </nav>
+        </>
     );
 }

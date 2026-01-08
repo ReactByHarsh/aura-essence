@@ -30,6 +30,7 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       { protocol: 'https', hostname: 'images.pexels.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'via.placeholder.com' },
       // Temporary: allow existing seeded Supabase image URLs
       { protocol: 'https', hostname: 'wnaxppdlvfcfeluxlvxn.supabase.co' }
