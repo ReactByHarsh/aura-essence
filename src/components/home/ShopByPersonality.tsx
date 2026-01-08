@@ -23,7 +23,7 @@ const personalities = [
         id: 3,
         name: "The Adventurer",
         role: "Freedom & Spirit",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=256&h=256&auto=format&fit=crop",
         link: "/collections/fresh"
     },
     {
@@ -37,7 +37,7 @@ const personalities = [
         id: 5,
         name: "The Icon",
         role: "Bold & Legendary",
-        image: "https://images.unsplash.com/photo-1531384441138-2736e62e0f19?q=80&w=256&h=256&auto=format&fit=crop",
+        image: "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?q=80&w=256&h=256&auto=format&fit=crop",
         link: "/collections/party"
     },
     {

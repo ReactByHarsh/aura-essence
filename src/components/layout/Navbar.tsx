@@ -158,9 +158,9 @@ export function Navbar() {
                         </div>
 
                         {/* Logo (Center) */}
-                        <div className="absolute left-1/2 transform -translate-x-1/2">
-                            <Link href="/">
-                                <span className="text-2xl md:text-3xl font-serif font-bold text-neutral-50 tracking-wider">
+                        <div className="absolute left-1/2 transform -translate-x-1/2 w-40 text-center flex justify-center z-10 pointer-events-none md:pointer-events-auto">
+                            <Link href="/" className="pointer-events-auto">
+                                <span className="text-xl md:text-3xl font-serif font-bold text-neutral-50 tracking-wider whitespace-nowrap">
                                     Aura Élixir
                                 </span>
                             </Link>

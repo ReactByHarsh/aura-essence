@@ -201,24 +201,25 @@ export function Checkout() {
     }
   };
   const handleBackToCart = useCallback(() => {
-    openCart();
-  }, [openCart]);
+    router.push('/');
+    setTimeout(() => openCart(), 100);
+  }, [openCart, router]);
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-white dark:bg-slate-950 py-16 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-primary-950 py-16 px-4 flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
           <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-slate-50 dark:bg-slate-900 rounded-full mb-6">
-              <ShoppingBag className="h-10 w-10 text-slate-400" />
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-primary-900 rounded-full mb-6 border border-primary-800">
+              <ShoppingBag className="h-10 w-10 text-accent-500" />
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-3 font-serif">
+            <h1 className="text-3xl font-bold text-neutral-50 mb-3 font-serif">
               Your Cart is Empty
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+            <p className="text-neutral-400 mb-8 leading-relaxed">
               Looks like you haven't added anything to your cart yet.
             </p>
-            <Button size="lg" asChild className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-medium shadow-lg rounded-full px-8 min-h-[50px]">
+            <Button size="lg" asChild className="bg-accent-600 hover:bg-accent-500 text-primary-950 font-bold shadow-lg rounded-none px-8 min-h-[50px] uppercase tracking-widest text-xs">
               <Link href="/collections/men">Start Shopping</Link>
             </Button>
           </div>
@@ -229,14 +230,14 @@ export function Checkout() {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 sm:py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-primary-950 py-8 sm:py-12 pt-24 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header - Clean */}
         <div className="flex items-center mb-8">
           <Button
             type="button"
             variant="ghost"
-            className="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 px-0 hover:px-4 transition-all"
+            className="text-neutral-400 hover:text-accent-500 hover:bg-primary-900 px-0 hover:px-4 transition-all rounded-none"
             onClick={handleBackToCart}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -248,8 +249,8 @@ export function Checkout() {
           {/* Checkout Form */}
           <div>
             <div className="mb-5 sm:mb-6">
-              <span className="text-amber-600 dark:text-amber-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase">Secure Checkout</span>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mt-1.5 leading-tight font-serif">
+              <span className="text-accent-500 text-[10px] sm:text-xs font-bold tracking-widest uppercase">Secure Checkout</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-50 mt-1.5 leading-tight font-serif">
                 Shipping Details
               </h1>
             </div>
@@ -257,7 +258,7 @@ export function Checkout() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
               {/* Contact Information */}
               <div>
-                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
+                <h2 className="text-base font-semibold text-neutral-200 mb-3">
                   Contact Information
                 </h2>
                 <Input
@@ -271,7 +272,7 @@ export function Checkout() {
                     label="Phone Number"
                     type="tel"
                     placeholder="10-digit mobile number"
-                    startAdornment={<span className="text-slate-500 font-medium">+91</span>}
+                    startAdornment={<span className="text-neutral-500 font-medium">+91</span>}
                     {...register('phone')}
                     error={errors.phone?.message}
                     maxLength={10}
@@ -284,7 +285,7 @@ export function Checkout() {
 
               {/* Shipping Address */}
               <div>
-                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">
+                <h2 className="text-base font-semibold text-neutral-200 mb-3">
                   Shipping Address
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
@@ -356,8 +357,8 @@ export function Checkout() {
 
               {/* Payment Method (Online / COD) */}
               <div>
-                <h2 className="text-base font-semibold text-slate-900 dark:text-white mb-3">Payment Method</h2>
-                <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-200 dark:border-slate-800 space-y-2.5">
+                <h2 className="text-base font-semibold text-neutral-200 mb-3">Payment Method</h2>
+                <div className="bg-primary-900/50 p-4 border border-primary-800 space-y-2.5">
                   <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
                       type="radio"
@@ -365,9 +366,9 @@ export function Checkout() {
                       value="online"
                       checked={paymentMethod === 'online'}
                       onChange={() => setPaymentMethod('online')}
-                      className="text-amber-600 focus:ring-amber-500"
+                      className="text-accent-500 focus:ring-accent-500 bg-primary-950 border-primary-700"
                     />
-                    <span className="text-slate-900 dark:text-white font-medium">Pay Online (UPI / Card)</span>
+                    <span className="text-neutral-200 font-medium">Pay Online (UPI / Card)</span>
                   </label>
                   <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer">
                     <input
@@ -376,12 +377,12 @@ export function Checkout() {
                       value="cod"
                       checked={paymentMethod === 'cod'}
                       onChange={() => setPaymentMethod('cod')}
-                      className="text-amber-600 focus:ring-amber-500"
+                      className="text-accent-500 focus:ring-accent-500 bg-primary-950 border-primary-700"
                     />
-                    <span className="text-slate-900 dark:text-white font-medium">Cash on Delivery (₹{codCharge} extra)</span>
+                    <span className="text-neutral-200 font-medium">Cash on Delivery (₹{codCharge} extra)</span>
                   </label>
                   {paymentMethod === 'cod' && (
-                    <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold">COD Charge: ₹{codCharge} added</p>
+                    <p className="text-[10px] text-accent-400 font-semibold">COD Charge: ₹{codCharge} added</p>
                   )}
                 </div>
               </div>
@@ -390,7 +391,7 @@ export function Checkout() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 font-bold h-12 text-base shadow-md"
+                className="w-full bg-accent-600 hover:bg-accent-500 text-primary-950 font-bold h-12 text-sm uppercase tracking-widest shadow-md rounded-none"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Processing...' : `Place Order - ${formatPrice(finalTotal)}`}
@@ -400,8 +401,8 @@ export function Checkout() {
 
           {/* Order Summary */}
           <div>
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 sticky top-8">
-              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-4 font-serif">
+            <div className="bg-primary-900/40 rounded-sm p-4 sm:p-6 border border-primary-800 sticky top-8">
+              <h2 className="text-lg sm:text-xl font-bold text-neutral-50 mb-4 font-serif">
                 Order Summary
               </h2>
 
@@ -409,7 +410,7 @@ export function Checkout() {
               <div className="space-y-3 mb-6">
                 {items.map(item => (
                   <div key={item.id} className="flex items-center space-x-3">
-                    <div className="relative w-12 h-12 rounded-md overflow-hidden border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+                    <div className="relative w-12 h-12 border border-primary-800 bg-primary-900">
                       <Image
                         src={item.product.images[0]}
                         alt={item.product.name}
@@ -418,25 +419,24 @@ export function Checkout() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                      <h3 className="text-sm font-medium text-neutral-200 truncate">
                         {item.product.name}
                       </h3>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-neutral-500">
                         Qty: {item.quantity}
                       </p>
                     </div>
-                    <span className="text-sm font-medium text-slate-900 dark:text-white">
-                      {formatPrice(item.product.price * item.quantity)}
+                    <span className="text-sm font-medium text-neutral-200">
+                      {formatPrice(item.unitPrice ? item.unitPrice * item.quantity : item.product.price * item.quantity)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* Totals */}
-              <div className="space-y-2 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <div className="space-y-2 mb-6 pt-4 border-t border-primary-800">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
-                  <span className="text-slate-900 dark:text-white font-medium">
+                  <span className="text-neutral-400">Subtotal</span>
+                  <span className="text-neutral-200 font-medium">
                     {formatPrice(getSubtotal())}
                   </span>
                 </div>
@@ -444,42 +444,42 @@ export function Checkout() {
                 {/* Coupon Discount */}
                 {totals.discount > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                      <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                    <span className="text-green-400 flex items-center gap-1">
+                      <span className="bg-green-900/30 text-green-400 text-[10px] font-bold px-1.5 py-0.5 border border-green-800">
                         {couponCode || 'COUPON'}
                       </span>
                       Applied
                     </span>
-                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                    <span className="text-green-400 font-medium">
                       -{formatPrice(totals.discount)}
                     </span>
                   </div>
                 )}
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-400">Tax</span>
-                  <span className="text-slate-900 dark:text-white font-medium">
+                  <span className="text-neutral-400">Tax</span>
+                  <span className="text-neutral-200 font-medium">
                     {formatPrice(getTax())}
                   </span>
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-400">Shipping</span>
-                  <span className="text-slate-900 dark:text-white font-medium">
+                  <span className="text-neutral-400">Shipping</span>
+                  <span className="text-neutral-200 font-medium">
                     {shipping === 0 ? 'Free' : formatPrice(shipping)}
                   </span>
                 </div>
                 {paymentMethod === 'cod' && (
-                  <div className="flex justify-between text-sm text-amber-600 dark:text-amber-400">
+                  <div className="flex justify-between text-sm text-accent-500">
                     <span>COD Charge</span>
                     <span className="font-medium">+ {formatPrice(codCharge)}</span>
                   </div>
                 )}
 
-                <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-3">
+                <div className="border-t border-primary-800 pt-3 mt-3">
                   <div className="flex justify-between text-lg font-bold">
-                    <span className="text-slate-900 dark:text-white">Total</span>
-                    <span className="text-slate-900 dark:text-white">
+                    <span className="text-neutral-50">Total</span>
+                    <span className="text-accent-500 font-serif">
                       {formatPrice(finalTotal)}
                     </span>
                   </div>
@@ -487,7 +487,7 @@ export function Checkout() {
               </div>
 
               {/* Security Badge */}
-              <div className="text-center text-[10px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 py-2 rounded-lg border border-slate-100 dark:border-slate-800">
+              <div className="text-center text-[10px] text-neutral-500 bg-primary-950 py-2 border border-primary-800 mt-4">
                 <Lock className="h-3 w-3 inline mr-1" />
                 Your payment information is secure
               </div>
@@ -496,10 +496,10 @@ export function Checkout() {
         </div>
       </div>
       {verifying && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 rounded-xl px-6 py-5 shadow-2xl ring-1 ring-white/10 flex items-center gap-3">
-            <div className="h-5 w-5 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
-            <p className="text-sm text-slate-700 dark:text-slate-200">Confirming payment and preparing your order…</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="bg-primary-950 rounded-sm px-6 py-5 shadow-2xl border border-primary-800 flex items-center gap-3">
+            <div className="h-5 w-5 rounded-full border-2 border-accent-500 border-t-transparent animate-spin" />
+            <p className="text-sm text-neutral-200">Confirming payment and preparing your order…</p>
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stackServerApp } from '@/stack/server';
-import { getCartItems, addToCart, updateCartItemQuantity, removeFromCart, clearCart, ensureUserProfile } from '@/lib/neon/cart';
+import { getCartItems, addToCart, updateCartItemQuantity, removeFromCart, clearCart, ensureUserProfile, syncCartFromLocalStorage } from '@/lib/neon/cart';
 import { getProduct } from '@/lib/neon/products';
 import { getDefaultPrices } from '@/lib/neon/settings';
 
@@ -142,6 +142,13 @@ export async function POST(request: NextRequest) {
 
       case 'clear':
         await clearCart(user.id);
+        break;
+
+      case 'sync':
+        const { items } = body;
+        if (Array.isArray(items) && items.length > 0) {
+          await syncCartFromLocalStorage(user.id, items);
+        }
         break;
 
       default:

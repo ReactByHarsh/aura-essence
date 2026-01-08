@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Star, Shield, Truck, Award, ChevronRight, Crown } from 'lucide-react';
+import { ArrowRight, Star, Shield, Truck, Award, ChevronRight, Crown, StarHalf } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { fetchFeatured, fetchProducts } from '@/lib/api/products';
@@ -165,25 +165,25 @@ export function Home({
 
   const testimonials = [
     {
-      name: 'Elena Vasquez',
-      rating: 5,
-      date: '2 weeks ago',
+      name: 'Aslam Shaikh',
+      rating: 4.5,
+      date: '1 week ago',
       verified: true,
-      comment: 'Aura Élixir Midnight Noir has become my signature scent. The depth and sophistication are unparalleled - I receive compliments wherever I go. Pure luxury in a bottle.'
+      comment: 'I was hesitant to buy perfume online, but Aura Élixir exceeded my expectations. The packaging feels very premium, and the scent lasts all day. "Tobacco Oud" has a very unique woody note that I love. Highly recommended!'
     },
     {
-      name: 'Marcus Thompson',
-      rating: 5,
-      date: '1 month ago',
-      verified: true,
-      comment: 'As a fragrance connoisseur, I\'ve tried countless brands. Aura Élixir stands apart with their masterful compositions and exceptional longevity. Forest King is simply extraordinary.'
-    },
-    {
-      name: 'Sophia Chen',
+      name: 'Priya Sharma',
       rating: 5,
       date: '3 weeks ago',
       verified: true,
-      comment: 'The attention to detail in every Aura Élixir creation is remarkable. Royal Rose captures the essence of timeless elegance. Worth every penny of this premium experience.'
+      comment: 'Absolutely in love with "Royal Rose". It’s not your typical rose scent; it has a depth and mystery to it that is just stunning. I wore it to a wedding and got so many compliments. Will definitely repurchase.'
+    },
+    {
+      name: 'Vikram Malhotra',
+      rating: 5,
+      date: '1 month ago',
+      verified: true,
+      comment: 'The quality is on par with international luxury brands but at a much better price point. The delivery was fast, and the samples included were a nice touch. A truly premium Indian brand.'
     }
   ];
 
@@ -389,9 +389,14 @@ export function Home({
               <div key={index} className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1 duration-300">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex gap-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
-                    ))}
+                    <div className="flex gap-1">
+                      {[...Array(Math.floor(testimonial.rating))].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-amber-500 text-amber-500" />
+                      ))}
+                      {testimonial.rating % 1 !== 0 && (
+                        <StarHalf className="h-4 w-4 fill-amber-500 text-amber-500" />
+                      )}
+                    </div>
                   </div>
                   <span className="text-xs text-slate-500 font-mono">{testimonial.date}</span>
                 </div>

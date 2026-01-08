@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Minus, Plus, Trash2, ShoppingBag, Tag, ChevronRight } from 'lucide-react';
 import { useCartStore } from '@/stores/cart';
+import { useAuthStore } from '@/stores/auth-neon';
+
 import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -399,7 +401,12 @@ export function CartDrawer() {
                   onClick={() => {
                     setIsNavigating(true);
                     closeCart();
-                    router.push('/checkout');
+
+                    if (useAuthStore.getState().user) {
+                      router.push('/checkout');
+                    } else {
+                      router.push('/handler/sign-in?after_auth_return_to=/checkout');
+                    }
                   }}
                 >
                   {isNavigating ? (
